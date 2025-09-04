@@ -75,7 +75,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'''Medidas''[Real Penetracao ER]'"
+                                "Value": "'''Medidas''[Real NPS Satis. Entrega]'"
                               }
                             }
                           ]
@@ -103,7 +103,7 @@
                                 "0": [
                                   {
                                     "Literal": {
-                                      "Value": "'''Medidas''[Real Penetracao ER]'"
+                                      "Value": "'''Medidas''[Real NPS Satis. Entrega]'"
                                     }
                                   }
                                 ]
@@ -127,7 +127,7 @@
                         },
                         "valueMap": [
                           {
-                            "0": "Penetração no ER"
+                            "0": "+ Satisfação Entrega"
                           }
                         ]
                       }
@@ -234,5 +234,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "31e79768e6c5b3e5c3b4",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "p_Indicadores Realizado"
+              }
+            },
+            "Property": "p_Indicadores Realizado"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

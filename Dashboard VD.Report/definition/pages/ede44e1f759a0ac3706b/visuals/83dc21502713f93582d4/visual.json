@@ -42,12 +42,12 @@
                       "Entity": "Medidas"
                     }
                   },
-                  "Property": "Real Penetracao ER"
+                  "Property": "Real NPS Satis. Entrega"
                 }
               },
-              "queryRef": "Medidas.Real Penetracao ER",
-              "nativeQueryRef": "Penetração no ER",
-              "displayName": "Penetração no ER"
+              "queryRef": "Medidas.Real NPS Satis. Entrega",
+              "nativeQueryRef": "+ Satisfação Entrega",
+              "displayName": "+ Satisfação Entrega"
             },
             {
               "field": {
@@ -57,10 +57,10 @@
                       "Entity": "Medidas"
                     }
                   },
-                  "Property": "Meta Penetracao ER"
+                  "Property": "Meta NPS Satis. Entrega"
                 }
               },
-              "queryRef": "Medidas.Meta Penetracao ER",
+              "queryRef": "Medidas.Meta NPS Satis. Entrega",
               "nativeQueryRef": "Meta",
               "displayName": "Meta"
             }

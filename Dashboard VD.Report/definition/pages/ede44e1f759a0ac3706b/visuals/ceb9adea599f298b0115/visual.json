@@ -23,12 +23,12 @@
                       "Entity": "Medidas"
                     }
                   },
-                  "Property": "Real Penetracao ER"
+                  "Property": "Real NPS Satis. Entrega"
                 }
               },
-              "queryRef": "Medidas.Real Penetracao ER",
-              "nativeQueryRef": "Penetração no ER",
-              "displayName": "Penetração no ER"
+              "queryRef": "Medidas.Real NPS Satis. Entrega",
+              "nativeQueryRef": "+ Satisfação Entrega",
+              "displayName": "+ Satisfação Entrega"
             }
           ],
           "fieldParameters": [
@@ -59,7 +59,7 @@
                     "Entity": "Medidas"
                   }
                 },
-                "Property": "Real Penetracao ER"
+                "Property": "Real NPS Satis. Entrega"
               }
             },
             "direction": "Descending"
