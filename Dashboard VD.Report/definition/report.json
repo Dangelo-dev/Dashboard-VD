@@ -56,11 +56,6 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "01._Dashboard16821748375171486.png",
-          "path": "01._Dashboard16821748375171486.png",
-          "type": "Image"
-        },
-        {
           "name": "02._Estrutura7439686719410725.png",
           "path": "02._Estrutura7439686719410725.png",
           "type": "Image"
@@ -98,6 +93,11 @@
         {
           "name": "09._Receita_GMV13885235846918997.png",
           "path": "09._Receita_GMV13885235846918997.png",
+          "type": "Image"
+        },
+        {
+          "name": "01._Dashboard3144656558241661.png",
+          "path": "01._Dashboard3144656558241661.png",
           "type": "Image"
         }
       ]
