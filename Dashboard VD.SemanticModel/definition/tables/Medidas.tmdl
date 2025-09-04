@@ -1515,7 +1515,13 @@ table Medidas
 		displayFolder: OptOut
 		lineageTag: 4bd2391b-6c42-410a-88bf-fba9340b24a1
 
-	measure 'Meta OptOut' = 0.05
+	measure 'Meta OptOut' =
+			
+			CALCULATE(
+			    SELECTEDVALUE(d_MetaIndicadores[Meta]),
+			    d_MetaIndicadores[Indicador] = "OptOut",
+			    TREATAS( VALUES( d_MetaIndicadores[Ciclo]), d_Ciclos[Ciclo Captação] )
+			)
 		formatString: 0.00%;-0.00%;0.00%
 		displayFolder: OptOut
 		lineageTag: 0b7c36d8-addc-41b2-bc33-1feaa010ba72
@@ -1641,7 +1647,10 @@ table Medidas
 
 	measure 'Meta Penetracao ER' =
 			
-			0.36
+			CALCULATE(
+			    AVERAGE(d_MetaIndicadores[Meta]),
+			    d_MetaIndicadores[Indicador] = "Penetração ER"
+			)
 		formatString: 0.00%;-0.00%;0.00%
 		displayFolder: PenetracaoER
 		lineageTag: 9a3a9c56-c41e-4623-9ece-072a59506cf5
@@ -1656,7 +1665,7 @@ table Medidas
 		displayFolder: PenetracaoER
 		lineageTag: 1851436a-702b-48b3-80ac-cbd65ea48952
 
-	measure Cor_Atingimento = ```
+	measure 'Cor_Atingimento %' = ```
 			
 			VAR _RealizadoOrder = SELECTEDVALUE('p_Indicadores Realizado'[p_Indicadores Realizado Order])
 			VAR _MetaOrder = SELECTEDVALUE('p_Indicadores Meta'[p_Indicadores Meta Order])
@@ -1685,15 +1694,24 @@ table Medidas
 			        6, [Real OptOut],
 			        BLANK()
 			    )
-			VAR _Cores = 
-			    SWITCH(
-			        TRUE(),
-			        _MapReal > _MapMeta, "#00B050", // Verde
-			        _MapReal < _MapMeta, "#FF0000", // Vermelho
-			        "#00000" // Preto
+			
+			VAR _Percentual =
+			    DIVIDE(_MapReal, _MapMeta, BLANK())
+			
+			VAR _Limite =
+			    MAXX (
+			        FILTER (
+			            d_CoresDinamicas,
+			            _Percentual >= d_CoresDinamicas[LimiteMin]
+			        ),
+			        d_CoresDinamicas[LimiteMin]
 			    )
+			
 			RETURN
-			_Cores
+			LOOKUPVALUE (
+			    d_CoresDinamicas[CorHex],
+			    d_CoresDinamicas[LimiteMin], _Limite
+			)
 			```
 		displayFolder: Formatação
 		lineageTag: d21fd195-77f1-4847-a56e-7b66c6a58e02
@@ -1868,7 +1886,8 @@ table Medidas
 			        "CD Pedidos", [Pedido % consultor],
 			        "CD Pedido Medio", [pedido medio % consultor],
 			        "CD Itens por pedido", [Itens por pedido % consultor],
-			        "Receita Mensal", [% Mensal Receita MTD]
+			        "Receita Mensal", [% Mensal Receita MTD],
+			        "Indicador", [% IR estrutura]
 			    )
 			VAR _Percentual = _MapIndicador
 			VAR _Limite =
@@ -1901,6 +1920,49 @@ table Medidas
 		lineageTag: 0acec4ad-632c-4b96-a221-37273673f491
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cor_Atingimento = ```
+			
+			VAR _RealizadoOrder = SELECTEDVALUE('p_Indicadores Realizado'[p_Indicadores Realizado Order]) 
+			VAR _MetaOrder = SELECTEDVALUE('p_Indicadores Meta'[p_Indicadores Meta Order]) 
+			
+			VAR _MapMeta = 
+			    SWITCH( 
+			        _MetaOrder, 
+			        0, [Meta Penetracao ER], 
+			        1, [Meta NPS CSAT Médio], 
+			        2, [Meta NPS Satis. Entrega], 
+			        3, [Meta NPS Satis. ER], 
+			        4, [Meta NPS Satis. Supervisora], 
+			        5, [Meta NPS ER + SUP], 
+			        6, [Meta OptOut], 
+			        BLANK() 
+			    ) 
+			
+			VAR _MapReal = 
+			    SWITCH( 
+			        _RealizadoOrder, 
+			        0, [Real Penetracao ER], 
+			        1, [Real NPS CSAT Médio], 
+			        2, [Real NPS Satis. Entrega], 
+			        3, [Real NPS Satis. ER], 
+			        4, [Real NPS Satis. Supervisora], 
+			        5, [Real NPS ER + SUP], 
+			        6, [Real OptOut], 
+			        BLANK() 
+			    ) 
+			VAR _Cores = 
+			    SWITCH( 
+			        TRUE(), 
+			        _MapReal > _MapMeta, "#00B050", // Verde 
+			        _MapReal < _MapMeta, "#FF0000", // Vermelho 
+			        "#00000" // Preto 
+			    ) 
+			RETURN 
+			_Cores
+			```
+		displayFolder: Formatação
+		lineageTag: dc6fc7ab-acc0-4720-8141-f84f4e4d1d50
 
 	column Column
 		isHidden

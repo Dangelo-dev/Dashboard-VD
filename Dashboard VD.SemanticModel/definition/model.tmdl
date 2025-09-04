@@ -15,7 +15,7 @@ queryGroup ConsultaPedidos
 
 	annotation PBI_QueryGroupOrder = 1
 
-annotation PBI_QueryOrder = ["d_DataAtualização","d_MetaDiariaEstrutura","d_MetaTotalEstrutura","d_MetaPDV","d_Ciclos","d_MetaConsultores","d_MetaConsultoresDiaria","d_Lojas","f_BaseAtivaINICIAL","f_BaseAtivaDiaria","RangeStart","RangeEnd","Sample File","Parameter1","Transform File","Transform Sample File","f_ConsultaPedidos","PastaLocal","fxBaseAtiva","f_NPS","f_OptOut","f_PenetracaoER","f_ReceitaGMV"]
+annotation PBI_QueryOrder = ["d_DataAtualização","d_MetaDiariaEstrutura","d_MetaTotalEstrutura","d_MetaPDV","d_Ciclos","d_MetaConsultores","d_MetaConsultoresDiaria","d_Lojas","f_BaseAtivaINICIAL","f_BaseAtivaDiaria","RangeStart","RangeEnd","Sample File","Parameter1","Transform File","Transform Sample File","f_ConsultaPedidos","PastaLocal","fxBaseAtiva","f_NPS","f_OptOut","f_PenetracaoER","f_ReceitaGMV","d_MetaIndicadores"]
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
@@ -54,6 +54,7 @@ ref table d_Lojas
 ref table d_CoresDinamicas
 ref table d_IndicadorFiltrado
 ref table d_Estruturas
+ref table d_MetaIndicadores
 
 ref cultureInfo pt-BR
 

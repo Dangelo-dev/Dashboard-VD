@@ -6851,7 +6851,7 @@ cultureInfo pt-BR
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Medidas",
-			          "ConceptualProperty": "Cor_Atingimento"
+			          "ConceptualProperty": "Cor_Atingimento %"
 			        }
 			      },
 			      "State": "Generated",

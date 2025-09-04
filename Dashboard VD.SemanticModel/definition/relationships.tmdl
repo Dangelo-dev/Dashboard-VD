@@ -158,3 +158,12 @@ relationship 966d15d8-56a2-664c-24b4-dea0b67c0139
 	fromColumn: f_ReceitaGMV.Unidade
 	toColumn: d_Lojas.UNIDADE
 
+relationship 4bd5159a-b32f-2036-5c1c-7c1a1884c66d
+	toCardinality: many
+	fromColumn: d_MetaIndicadores.PDV
+	toColumn: d_Lojas.'COD PDV'
+
+relationship 80c52ee4-e7cb-fb93-be7a-7f090a8c5d71
+	fromColumn: d_MetaIndicadores.Ciclo
+	toColumn: d_Ciclos.'Ciclo Captação'
+

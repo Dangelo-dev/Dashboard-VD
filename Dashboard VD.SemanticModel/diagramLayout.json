@@ -441,6 +441,20 @@
           },
           "zIndex": 28,
           "expandedHeight": 200
+        },
+        {
+          "location": {
+            "x": 1514.0623571329024,
+            "y": 209.70572859985282
+          },
+          "nodeIndex": "d_MetaIndicadores",
+          "nodeLineageTag": "3eddcbab-976c-4c21-be46-5c9cf13af688",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0,
+          "expandedHeight": 176
         }
       ],
       "name": "Todas as tabelas",

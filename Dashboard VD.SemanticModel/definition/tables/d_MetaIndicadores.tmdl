@@ -1,0 +1,74 @@
+table d_MetaIndicadores
+	lineageTag: 3eddcbab-976c-4c21-be46-5c9cf13af688
+
+	column PDV
+		dataType: string
+		lineageTag: e07b5784-9e32-4c59-beab-e9ab7cb6af3f
+		summarizeBy: none
+		sourceColumn: PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column Indicador
+		dataType: string
+		lineageTag: 62360cd4-8c39-463e-869c-9275a94d9f6e
+		summarizeBy: none
+		sourceColumn: Indicador
+
+		annotation SummarizationSetBy = Automatic
+
+	column Meta
+		dataType: double
+		lineageTag: 533b3590-f0d3-495c-a41c-f72dc2c059a3
+		summarizeBy: sum
+		sourceColumn: Meta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Ciclo
+		dataType: string
+		lineageTag: b70e22b9-471e-486c-bb2e-14f002befc88
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_MetaIndicadores = m
+		mode: import
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="Metas"]}[Content]
+				    {[Name="Meta Indicadores"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				
+				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name]],
+				    
+				    fxMetaIndicadores = 
+				        ( arquivo as binary ) as table =>
+				        let
+				            Source = Excel.Workbook ( arquivo, true ){0}[Data],
+				
+				            DefinirTipagem = Table.TransformColumnTypes( Source,{ {"PDV", type text}, {"Indicador", type text}, {"Meta", Percentage.Type}, {"Ciclo", type text} } )
+				        in
+				            DefinirTipagem,
+				    
+				    ListaTabelas = Table.AddColumn(
+				        ColunasSelecionadas, 
+				        "Tabelas", each 
+				        fxMetaIndicadores(
+				            [Content]
+				        ), type table)[Tabelas],
+				    
+				    CombinarTabelas = Table.Combine ( ListaTabelas )
+				in
+				    CombinarTabelas
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
