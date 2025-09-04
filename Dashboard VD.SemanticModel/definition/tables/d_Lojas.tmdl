@@ -1,0 +1,57 @@
+table d_Lojas
+	lineageTag: a143f6d5-d280-46fc-965b-0dd4ff95c301
+
+	column 'COD PDV'
+		dataType: string
+		lineageTag: 258526b9-3679-4300-8ab1-a00cfa7a9cf0
+		summarizeBy: none
+		sourceColumn: COD PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column PDV
+		dataType: string
+		lineageTag: 4c3d06e7-671a-4ead-a6a0-b6c2ad330c1f
+		summarizeBy: none
+		sourceColumn: PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NOME PDV'
+		dataType: string
+		lineageTag: a5eb5379-cfc7-4f50-9cb4-128a4ecd6eec
+		summarizeBy: none
+		sourceColumn: NOME PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ESTRUTURA PDV'
+		dataType: string
+		lineageTag: 92341f85-2cd2-4490-b892-d1ad7ed26da8
+		summarizeBy: none
+		sourceColumn: ESTRUTURA PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column UNIDADE
+		dataType: string
+		lineageTag: 63e2671e-1f74-4f30-a23c-46bf30955dbb
+		summarizeBy: none
+		sourceColumn: UNIDADE
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_Lojas = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("T:\12-TI\DASHBOARD\DASHBOARD VD\dLojas.xlsx"), null, true),
+				    PDV_VD_Table = Source{[Item="PDV_VD",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(PDV_VD_Table,{{"COD PDV", type text}, {"PDV", type text}, {"NOME PDV", type text}, {"ESTRUTURA PDV", type text}, {"UNIDADE", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

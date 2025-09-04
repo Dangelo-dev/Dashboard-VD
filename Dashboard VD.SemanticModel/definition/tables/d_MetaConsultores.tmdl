@@ -1,0 +1,192 @@
+table d_MetaConsultores
+	lineageTag: 5292138b-6962-4fd0-8c60-f7e25b6eba4d
+
+	column 'Cod Consultor'
+		dataType: string
+		lineageTag: 907d00b8-4519-432b-93c3-1ebb3c9d45a4
+		summarizeBy: none
+		sourceColumn: Cod Consultor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Consultor(a)
+		dataType: string
+		lineageTag: 04d34c97-b395-44a6-bda0-64f63381c5a3
+		summarizeBy: none
+		sourceColumn: Consultor(a)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nº Pedidos'
+		dataType: double
+		formatString: 0
+		lineageTag: 53eb17ea-68c6-4f8c-b0e1-ab23927a5d95
+		summarizeBy: sum
+		sourceColumn: Nº Pedidos
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column 'Itens Pedido'
+		dataType: double
+		lineageTag: 8785b95c-329c-4ee7-ae2d-5cd8b1a0ded7
+		summarizeBy: sum
+		sourceColumn: Itens Pedido
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Pedido Médio (R$)'
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: c5e1a912-07e3-4f32-9a66-d80233dba301
+		summarizeBy: sum
+		sourceColumn: Pedido Médio (R$)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Receita Líquida (R$)'
+		dataType: decimal
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		lineageTag: 085ba462-3464-4dcb-a4fa-c2e0b51f058b
+		summarizeBy: sum
+		sourceColumn: Receita Líquida (R$)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column Ciclo
+		dataType: string
+		lineageTag: ddbcda70-ee17-493c-b6df-b4293582d90b
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key ConsultorCiclo' =
+			
+			IF(
+			    NOT ISBLANK(d_MetaConsultores[Cod Consultor]),
+			    d_MetaConsultores[Cod Consultor] & " - " & d_MetaConsultores[Ciclo],
+			    ""
+			)
+		lineageTag: bb598b18-cc7c-41ac-8c78-09f4aaadc208
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key PDVCiclo' =
+			
+			d_MetaConsultores[PDV] &
+			" - " &
+			d_MetaConsultores[Ciclo]
+		lineageTag: de161d23-0c4f-49da-8342-11e768c5fc0f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column PDV
+		dataType: string
+		lineageTag: 16385652-d875-4742-8e73-bdc6bd86e904
+		summarizeBy: none
+		sourceColumn: PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Qtd. Itens'
+		dataType: int64
+		formatString: 0
+		lineageTag: 27a8a859-96ee-49de-ac64-db0a34b4eeb9
+		summarizeBy: sum
+		sourceColumn: Qtd. Itens
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidade
+		dataType: string
+		lineageTag: 0c2b47e6-de37-48bb-94c6-2f7c3486563a
+		summarizeBy: none
+		sourceColumn: Unidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key UnidadeCiclo' =
+			
+			d_MetaConsultores[Unidade] & " - " & d_MetaConsultores[Ciclo]
+		lineageTag: 7cd6a7fd-e163-4b66-8667-eeb493a1b549
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_MetaConsultores = m
+		mode: import
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="Metas"]}[Content]
+				    {[Name="Meta consultores"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				    
+				    SelectColumns = FiltrarArquivos[[Content], [Name]],
+				    
+				    SplitName = Table.SplitColumn(SelectColumns, "Name", Splitter.SplitTextByDelimiter(" ", QuoteStyle.Csv), {"Ciclo", "unidade"}),
+				
+				    ReplacedValue = Table.ReplaceValue(SplitName,".xlsx","",Replacer.ReplaceText,{"unidade"}),
+				    
+				    fxMetaConsultores = 
+				        ( arquivo as binary, ciclo as text, unidade as text ) as table =>
+				        let
+				            Source = Excel.Workbook( arquivo, true){0}[Data],
+				            
+				            RemoverNulos = Table.SelectRows( Source, 
+				                each not List.IsEmpty( List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				            
+				            PromoverCabecalhos = Table.PromoteHeaders( RemoverNulos, [PromoteAllScalars=true] ),
+				            
+				            FiltrarLinhas = Table.SelectRows( PromoverCabecalhos, 
+				            each (
+				                [PDV] <> "TOTAL GVO" and 
+				                [PDV] <> "TOTAL GERAL GVO" and 
+				                [PDV] <> "VALIDAÇÃO TOTAL RICARDO" )),
+				            
+				            SelecionarColunas = Table.SelectColumns( FiltrarLinhas,{ 
+				                "PDV", "Cod Consultor", "Consultor(a)", 
+				                "Receita Líquida (R$)", "Pedido Médio (R$)", 
+				                "Nº Pedidos", "Itens Pedido", "Qtd. Itens" }),
+				            
+				            DefinirTipagem = Table.TransformColumnTypes( SelecionarColunas,{
+				                {"Cod Consultor", type text}, 
+				                {"Receita Líquida (R$)", Currency.Type}, 
+				                {"Pedido Médio (R$)", Currency.Type}, 
+				                {"Nº Pedidos", type number}, 
+				                {"Itens Pedido", type number}, 
+				                {"Qtd. Itens", Int64.Type }}),
+				            
+				            AddColumns =  
+				            Table.AddColumn(
+				                Table.AddColumn(DefinirTipagem, 
+				                "Ciclo", each ciclo, type text),
+				            "Unidade", each unidade, type text),
+				                
+				            ReplaceSymbol = Table.ReplaceValue( AddColumns, "-", "/", Replacer.ReplaceText, {"Ciclo"} )
+				        in
+				            ReplaceSymbol,
+				
+				    ListaTabelas = Table.AddColumn( ReplacedValue, 
+				    "Tabelas", each fxMetaConsultores( [Content], [Ciclo], [unidade] ), type table)[Tabelas],
+				    
+				    CombinarTabelas = Table.Combine ( ListaTabelas )
+				in
+				    CombinarTabelas
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

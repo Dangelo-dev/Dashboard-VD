@@ -1,0 +1,132 @@
+table d_MetaPDV
+	lineageTag: bf720dca-4c7a-4e9f-b4e1-e456d55c08bd
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 8b96dfbe-ae8a-42fe-a01e-ad6d959f2f9f
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Meta
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 41775948-25b9-4361-a88d-2f26b7c6ea34
+		summarizeBy: sum
+		sourceColumn: Meta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key PDVCiclo'
+		dataType: string
+		lineageTag: 46a69e1a-b8e9-486e-8965-ce84f1bef7b4
+		summarizeBy: none
+		sourceColumn: Key PDVCiclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column PESO
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 5c33ee44-6ed3-43a1-9e6b-70afb00fdf99
+		summarizeBy: sum
+		sourceColumn: PESO
+
+		annotation SummarizationSetBy = Automatic
+
+	column PDV
+		dataType: string
+		lineageTag: 3a6f4b54-a47f-48df-b603-94bafa466859
+		summarizeBy: none
+		sourceColumn: PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column AnoMes =
+			
+			YEAR(d_MetaPDV[Data]) * 100 + MONTH(d_MetaPDV[Data])
+		formatString: 0
+		lineageTag: aaf4634b-9dd9-4ec1-b66d-4bd0bb8b9c63
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodPDV = LEFT(d_MetaPDV[PDV], 5)
+		lineageTag: 4ae51e63-0069-4158-8838-b30b63766b05
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciclo
+		dataType: string
+		lineageTag: 434055b6-907d-4671-8fcb-68728973da3f
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_MetaPDV = m
+		mode: import
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="Metas"]}[Content]
+				    {[Name="Meta PDV"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				
+				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name]],
+				    
+				    SepararColunas = Table.SplitColumn(
+				        ColunasSelecionadas, "Name", Splitter.SplitTextByDelimiter(" ", QuoteStyle.Csv), {"Ciclo", "unidade"}),
+				    SepararUnidade = Table.SplitColumn(SepararColunas, "unidade", Splitter.SplitTextByEachDelimiter({"."}, QuoteStyle.Csv, false), {"unidade", "unidade.2"}),
+				    SelecionarColunasChaves = Table.SelectColumns(SepararUnidade,{"Content", "Ciclo", "unidade"}),
+				    
+				    fxMetaPDV = 
+				        ( arquivo as binary, ciclo as text, unidade as text) as table =>
+				
+				    let
+				        Source = Excel.Workbook( arquivo, true ){0}[Data],
+				
+				        AddColumnCiclo = 
+				            Table.ReplaceValue(
+				                Table.AddColumn(Source, "Ciclo", each ciclo, type text),
+				            "-","/", Replacer.ReplaceText, { "Ciclo" } ),
+				        
+				        AddColumnUnidade = Table.AddColumn( AddColumnCiclo, "Unidade", each unidade, type text),
+				
+				        AddColumnKey = Table.AddColumn( AddColumnUnidade, "Key PDVCiclo", each [PDV] & " - " & [Ciclo], type text),
+				        
+				        TratarPesosNulos = Table.ReplaceValue( AddColumnKey, null, 0, Replacer.ReplaceValue, { "PESO" } ),
+				
+				        ChangedType = Table.TransformColumnTypes( TratarPesosNulos,{ {"Meta", Currency.Type}, {"PESO", Percentage.Type} } ),
+				
+				        ColunasNecessarias = { "Data", "Ciclo", "Meta", "PDV", "Key PDVCiclo", "PESO" },
+				        SelecionarColunas = Table.SelectColumns( ChangedType, ColunasNecessarias ),
+				
+				        FiltrarNulos = Table.SelectRows( SelecionarColunas, each ( [Data] <> null ) )
+				    in
+				        FiltrarNulos,
+				    
+				    ListaTabelas = Table.AddColumn(
+				        SelecionarColunasChaves, 
+				        "Tabelas", each 
+				        fxMetaPDV(
+				            [Content], 
+				            [Ciclo], 
+				            [unidade]
+				        ), type table)[Tabelas],
+				    
+				    CombinarTabelas = Table.Combine ( ListaTabelas )
+				in
+				    CombinarTabelas
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

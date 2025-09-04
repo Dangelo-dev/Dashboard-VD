@@ -1,0 +1,212 @@
+expression fxBaseAtiva = ```
+		(archive as binary, dateModified as datetime) as table =>
+		
+		let
+		    Source = Excel.Workbook(archive, true){0}[Data],
+		    
+		    ChangedType = Table.TransformColumnTypes(Source,
+		    {
+		        {"Data Cadastro Intenção Revenda", type date}, 
+		        {"CiclosInatividade", Int64.Type}, 
+		        {"DataCadastroRevendedor", type date}, 
+		        {"Data Primeiro Pedido", type date},
+		        {"CodigoRevendedor", type text},
+		        {"CodigoEstruturaComercial", type text}
+		    }),
+		    
+		    FilterActivesMG = Table.SelectRows(ChangedType, 
+		    each ([EstadoResidencial] = "MG") and ([CiclosInatividade] <= 6)),
+		
+		    SelectColumns = Table.SelectColumns(FilterActivesMG,
+		    {
+		        "Data Cadastro Intenção Revenda",
+		        "CodigoRevendedor", 
+		        "CicloAtual", 
+		        "CicloPrimeiroPedido", 
+		        "CicloReativacao", 
+		        "CicloCessamento", 
+		        "CiclosInatividade", 
+		        "Papel", 
+		        "Data Primeiro Pedido", 
+		        "CodigoEstruturaComercial", 
+		        "CodigoEstruturaComercialPai",
+		        "OrigemCadastro"
+		    }),
+		    
+		    RemoveDOTs = 
+		        Table.ReplaceValue(
+		            Table.ReplaceValue(SelectColumns,
+		            ".","",Replacer.ReplaceText,{"CodigoRevendedor"}),
+		        ".","",Replacer.ReplaceText,{"CodigoEstruturaComercial"}),
+		
+		    SusbtituirCodigos = 
+		    Table.ReplaceValue(
+		        Table.ReplaceValue(
+		            Table.ReplaceValue(
+		                Table.ReplaceValue(
+		                    Table.ReplaceValue(
+		                        Table.ReplaceValue(
+		                            Table.ReplaceValue(
+		                                Table.ReplaceValue(
+		                                    Table.ReplaceValue(
+		                                        Table.ReplaceValue(
+		                                            Table.ReplaceValue(
+		                                                Table.ReplaceValue(
+		                                                    Table.ReplaceValue(
+		                                                        Table.ReplaceValue(
+		                                                            Table.ReplaceValue(
+		                                                                Table.ReplaceValue(RemoveDOTs,
+		                                                                "6270", "20507", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Malbec
+		                                                            "6182", "20498", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Portinari
+		                                                        "4551", "20495", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Arbo
+		                                                    "16927", "20514", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Coffee
+		                                                "13032", "20511", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Egeo
+		                                            "18876", "20516", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Iconique
+		                                        "18676", "20515", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Madeleine
+		                                    "6271", "20509", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Quasar
+		                                "18878", "20518", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Scapin
+		                            "1602", "20383", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Zaad
+		                        "6085", "20497", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Crescimento
+		                    "5468", "20496", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Acordes
+		                "6225", "20505", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Elysée
+		            "10058", "20384", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Glamour
+		        "1625", "20408", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Lily
+		    "10362", "20510", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Liz
+		    
+		    ReplacePapel = 
+		        Table.ReplaceValue(
+		            Table.ReplaceValue(SusbtituirCodigos,
+		            "Esmeralda GB","Esmeralda",Replacer.ReplaceValue,{"Papel"}),
+		        "Diamante GB", "Diamante", Replacer.ReplaceValue,{"Papel"}),
+		
+		    // Adicionando a coluna Key PessoaCiclo
+		    AddColumnPessoaCiclo = 
+		        Table.AddColumn(
+		            ReplacePapel, 
+		            "Key PessoaCiclo", 
+		            each [CodigoRevendedor] & " - " & [CicloAtual], 
+		            type text
+		        ),
+		
+		    // Adicionando a coluna Key CodEstruturaCiclo
+		    AddColumnEstruturaCiclo = 
+		        Table.AddColumn(
+		            AddColumnPessoaCiclo, 
+		            "Key CodEstruturaCiclo", 
+		            each [CodigoEstruturaComercial] & " - " & [CicloAtual], 
+		            type text
+		        ),
+		
+		    // Adicionando a coluna Key PessoaCodEstruturaCiclo
+		    AddColumnPessoaEstruturaCiclo = 
+		        Table.AddColumn(
+		            AddColumnEstruturaCiclo, 
+		            "Key PessoaCodEstruturaCiclo", 
+		            each [CodigoRevendedor] & " - " & [Key CodEstruturaCiclo], 
+		            type text
+		        ),
+		
+		    // Adicionando a coluna Key CicloDataCadastro
+		    AddColumnCicloDataCadastro = 
+		        Table.AddColumn(
+		            AddColumnPessoaEstruturaCiclo, 
+		            "Key CicloDataCadastro", 
+		            each [CicloAtual] & " - " & Text.From([Data Cadastro Intenção Revenda]), 
+		            type text
+		        ),
+		    
+		    AddColumnDateModified = Table.AddColumn(AddColumnCicloDataCadastro, "Date modified", each dateModified, type datetime)
+		    
+		in
+		    AddColumnDateModified
+		```
+	lineageTag: a0a99878-f9e3-43b0-9257-3c51d103f2e3
+	queryGroup: Globais
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Function
+
+expression PastaLocal = "T:\12-TI\DASHBOARD\DASHBOARD VD" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: c6af2a11-c625-46e3-a0d4-2208f76cbbe9
+	queryGroup: Globais
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+expression RangeStart = #datetime(2025, 8, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: b797ebbf-658e-4ac3-ad5b-5fc239151043
+	queryGroup: ConsultaPedidos
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = DateTime
+
+expression RangeEnd = #datetime(2025, 12, 31, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: d59922be-cc8c-4a62-a2ed-7e5dfb632842
+	queryGroup: ConsultaPedidos
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = DateTime
+
+expression Parameter1 = #"Sample File" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: bbdbfc58-6f24-42a1-a892-309b11816f9c
+	queryGroup: ConsultaPedidos
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Binary
+
+expression 'Sample File' = ```
+		let
+		    Source = Folder.Contents(PastaLocal) 
+		    {[Name="Consulta Pedidos"]}[Content],
+		
+		    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+		
+		    ColunasSelecionadas = FiltrarArquivos[[Content], [Name], [Date modified]],
+		    
+		    Navigation1 = ColunasSelecionadas{0}[Content]
+		in
+		    Navigation1
+		```
+	lineageTag: 1dd62d8c-a8f2-4247-bb59-b39f1ef0286c
+	queryGroup: ConsultaPedidos
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File' =
+		let
+		    Source = (Parameter1 as binary) => let
+		    Source = Excel.Workbook(Parameter1, null, true),
+		    Pag_Sheet = Source{[Item="Pag",Kind="Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(Pag_Sheet, [PromoteAllScalars=true])
+		in
+		    #"Promoted Headers"
+		in
+		    Source
+	lineageTag: cb728edd-7552-467c-8b6a-3ae91efbf0f8
+	queryGroup: ConsultaPedidos
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression 'Transform Sample File' =
+		let
+		    Source = Excel.Workbook(Parameter1, null, true),
+		    Pag_Sheet = Source{[Item="Pag",Kind="Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(Pag_Sheet, [PromoteAllScalars=true])
+		in
+		    #"Promoted Headers"
+	lineageTag: 6b7bb62d-7d46-4850-af85-a51a0a2b5c5f
+	queryGroup: ConsultaPedidos
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+

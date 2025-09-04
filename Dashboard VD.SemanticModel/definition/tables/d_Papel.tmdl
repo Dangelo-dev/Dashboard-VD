@@ -1,0 +1,38 @@
+table d_Papel
+	lineageTag: 69b19249-e119-48d5-b299-6e566b7e9b84
+
+	column Papel
+		lineageTag: e7ba7d9a-4fdf-4c44-9cef-8bc3e4331f94
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: f_ConsultaPedidos[Papel]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ciclo Captação'
+		lineageTag: bb198c97-03de-4c4d-879a-ada23bf8d9d3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: f_ConsultaPedidos[Ciclo Captação]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key PapelCiclo' =
+			
+			d_Papel[Papel] & " - " & d_Papel[Ciclo Captação]
+		lineageTag: a6b399ad-2ecb-4853-9bfd-4984ceb894e5
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_Papel = calculated
+		mode: import
+		source =
+				
+				SUMMARIZE(
+				    f_ConsultaPedidos,
+				    f_ConsultaPedidos[Papel], f_ConsultaPedidos[Ciclo Captação]
+				)
+
+	annotation PBI_Id = 2d12a6ad29f24e4189b243cf263cbf22
+

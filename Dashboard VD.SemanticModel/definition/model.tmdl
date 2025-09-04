@@ -1,0 +1,59 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup Globais
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup ConsultaPedidos
+
+	annotation PBI_QueryGroupOrder = 1
+
+annotation PBI_QueryOrder = ["d_DataAtualização","d_MetaDiariaEstrutura","d_MetaTotalEstrutura","d_MetaPDV","d_Ciclos","d_MetaConsultores","d_MetaConsultoresDiaria","d_Lojas","f_BaseAtivaINICIAL","f_BaseAtivaDiaria","RangeStart","RangeEnd","Sample File","Parameter1","Transform File","Transform Sample File","f_ConsultaPedidos","PastaLocal","fxBaseAtiva","f_NPS","f_OptOut","f_PenetracaoER","f_ReceitaGMV"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBIDesktopVersion = 2.146.1254.0 (25.08)+791a7518fadc83da883d79322a2658aff57c8db3
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Medidas
+ref table d_DataAtualização
+ref table 'p_Estrutura Realizado'
+ref table 'p_Estrutura Meta'
+ref table 'p_Estrutura %'
+ref table d_Calendario
+ref table d_Ciclos
+ref table f_ConsultaPedidos
+ref table f_BaseAtivaINICIAL
+ref table f_BaseAtivaDiaria
+ref table d_MetaPDV
+ref table d_MetaDiariaEstrutura
+ref table d_MetaTotalEstrutura
+ref table d_MetaConsultores
+ref table d_MetaConsultoresDiaria
+ref table 'p_Consultor Meta'
+ref table 'p_Consultor %'
+ref table 'p_Consultor Realizado'
+ref table d_Papel
+ref table f_NPS
+ref table f_OptOut
+ref table 'p_Indicadores Realizado'
+ref table 'p_Indicadores Meta'
+ref table 'p_Indicadores %'
+ref table f_PenetracaoER
+ref table f_ReceitaGMV
+ref table d_MetaGMV
+ref table d_Lojas
+ref table d_CoresDinamicas
+ref table d_IndicadorFiltrado
+ref table d_Estruturas
+
+ref cultureInfo pt-BR
+

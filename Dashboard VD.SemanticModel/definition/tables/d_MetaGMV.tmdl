@@ -1,0 +1,116 @@
+table d_MetaGMV
+	lineageTag: 9601cc6a-7056-411a-bebe-dbbb9dac60a4
+
+	column CodPDV
+		lineageTag: 526d6591-aa13-428f-bab0-4950e3496d46
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaPDV[CodPDV]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciclo
+		lineageTag: f9eb7c78-dc2b-4140-8f48-2cd33d3e8d51
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaPDV[Ciclo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Data
+		formatString: Short Date
+		lineageTag: 017a3bde-7511-4d93-af75-36e9d967f601
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaPDV[Data]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		lineageTag: 356fa46d-57af-4e3e-b135-e6449c38180e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Meta_Diarizada
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 3d502df8-1295-4bd8-8d57-8295f93b5b29
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Meta_Diarizada]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Key PDVCicloMarca' = d_MetaGMV[CodPDV] & " - " & d_MetaGMV[Ciclo] & " - " & d_MetaGMV[Value]
+		lineageTag: 9757c7a1-f9df-43e1-9b6f-464b3d321431
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_MetaGMV = calculated
+		mode: import
+		source = ```
+				
+				VAR Marcas = {
+				    "O Boticário",
+				    "Eudora",
+				    "O.U.I",
+				    "Quem Disse Berenice"
+				}
+				RETURN
+				ADDCOLUMNS (
+				    CROSSJOIN (
+				        SUMMARIZE (
+				            d_MetaPDV,
+				            d_MetaPDV[CodPDV],
+				            d_MetaPDV[Ciclo],
+				            d_MetaPDV[Data]
+				        ),
+				        Marcas
+				    ),
+				    "Meta_Diarizada",
+				        VAR CodPDV_ = [CodPDV]
+				        VAR Ciclo_  = [Ciclo]
+				        VAR Data_   = [Data]
+				        VAR Marca_  = [Value]   -- da tabela Marcas
+				        VAR MetaCiclo =
+				            LOOKUPVALUE (
+				                f_ReceitaGMV[META PEF],
+				                f_ReceitaGMV[PDV],   CodPDV_,
+				                f_ReceitaGMV[Ciclo], Ciclo_,
+				                f_ReceitaGMV[UN],    Marca_
+				            )
+				        VAR PesoDia =
+				            CALCULATE (
+				                SUM ( d_MetaPDV[PESO] ),
+				                FILTER (
+				                    d_MetaPDV,
+				                    d_MetaPDV[CodPDV] = CodPDV_ &&
+				                    d_MetaPDV[Ciclo]  = Ciclo_  &&
+				                    d_MetaPDV[Data]   = Data_
+				                )
+				            )
+				        VAR PesoCiclo =
+				            CALCULATE (
+				                SUM ( d_MetaPDV[PESO] ),
+				                FILTER (
+				                    d_MetaPDV,
+				                    d_MetaPDV[CodPDV] = CodPDV_ &&
+				                    d_MetaPDV[Ciclo]  = Ciclo_
+				                )
+				            )
+				        RETURN
+				            IF (
+				                NOT ISBLANK ( MetaCiclo ) && PesoCiclo > 0,
+				                MetaCiclo * DIVIDE ( PesoDia, PesoCiclo )
+				            )
+				)
+				
+				```
+
+	annotation PBI_Id = 57d6e4a864de4fdd9cc517969aaac18e
+

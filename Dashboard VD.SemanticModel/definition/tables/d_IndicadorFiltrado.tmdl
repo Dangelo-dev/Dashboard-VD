@@ -1,0 +1,39 @@
+table d_IndicadorFiltrado
+	lineageTag: 0ddd3d98-607c-40d7-9580-dd12ba89cc27
+
+	column 'Nome Indicador'
+		lineageTag: 4d582083-6f3a-4711-b88a-7842c926d4ab
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Nome Indicador]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_IndicadorFiltrado = calculated
+		mode: import
+		source = ```
+				
+				DATATABLE(
+				    "Nome Indicador", STRING,
+				    { 
+				        {"Atividade"},
+				        {"Ativos no Ciclo"},
+				        {"IR"},
+				        {"Ativos Totais Ciclo"},
+				        {"RPA"},
+				        {"Receita"},
+				        {"UPA"},
+				        {"Volume"},
+				        {"PDV"},
+				        {"CD Receita"},
+				        {"CD Pedidos"},
+				        {"CD Pedido Medio"},
+				        {"CD Itens por Pedido"},
+				        {"GMV"},
+				        {"Receita Mensal"}
+				    }
+				)
+				```
+
+	annotation PBI_Id = a636b724fd2a435d94f85faaabcf365a
+

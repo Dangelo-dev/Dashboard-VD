@@ -1,0 +1,155 @@
+table f_BaseAtivaDiaria
+	lineageTag: 86ac4b94-d058-4ded-95a5-f373fe4db33f
+
+	column CodigoRevendedor
+		dataType: string
+		lineageTag: 7bac67ca-80c6-404d-bf31-399b5d82ceae
+		summarizeBy: none
+		sourceColumn: CodigoRevendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column CicloAtual
+		dataType: string
+		lineageTag: 28bacd29-ff83-45c3-8ef3-e3300164e6cc
+		summarizeBy: none
+		sourceColumn: CicloAtual
+
+		annotation SummarizationSetBy = Automatic
+
+	column CicloPrimeiroPedido
+		dataType: string
+		lineageTag: 42304377-4250-4591-9ffa-727894e9b157
+		summarizeBy: none
+		sourceColumn: CicloPrimeiroPedido
+
+		annotation SummarizationSetBy = Automatic
+
+	column CicloReativacao
+		dataType: string
+		lineageTag: b7bd5c2c-efa9-4f9e-b456-5f029d6d4911
+		summarizeBy: none
+		sourceColumn: CicloReativacao
+
+		annotation SummarizationSetBy = Automatic
+
+	column CiclosInatividade
+		dataType: int64
+		formatString: 0
+		lineageTag: 150ca155-178e-4324-bff5-3594f93535fb
+		summarizeBy: sum
+		sourceColumn: CiclosInatividade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Papel
+		dataType: string
+		lineageTag: 99103dc4-a19d-4dc1-ac87-507a1649e925
+		summarizeBy: none
+		sourceColumn: Papel
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key PessoaCiclo'
+		dataType: string
+		lineageTag: 6d9df02a-0e74-444a-8b48-2c33fca4c3a5
+		summarizeBy: none
+		sourceColumn: Key PessoaCiclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key CodEstruturaCiclo'
+		dataType: string
+		lineageTag: ff4eb330-9515-4781-8422-870cd3dcb6e8
+		summarizeBy: none
+		sourceColumn: Key CodEstruturaCiclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key PapelCiclo' =
+			
+			f_BaseAtivaDiaria[Papel] & " - " & f_BaseAtivaDiaria[CicloAtual]
+		lineageTag: 0415f9c5-f65f-4267-8644-f9f77ca32484
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column BaseCongelada =
+			
+			VAR RevendedorCongelado =
+			    LOOKUPVALUE(
+			        f_BaseAtivaINICIAL[CodigoRevendedor],
+			        f_BaseAtivaINICIAL[CodigoRevendedor], f_BaseAtivaDiaria[CodigoRevendedor],
+			        f_BaseAtivaINICIAL[CicloAtual], f_BaseAtivaDiaria[CicloAtual]
+			    )
+			RETURN
+			IF(
+			    RevendedorCongelado <> BLANK(),
+			    "ATIVO",
+			    "IR"
+			)
+		lineageTag: ff00dd84-7357-4607-97bf-325e210b91c6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition f_BaseAtivaDiaria = m
+		mode: import
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal) 
+				    {[Name="Base Ativa Diaria"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				
+				    SelectColumns = FiltrarArquivos[[Content], [Name], [Date modified]],
+				    
+				    OrderDateModified = Table.Sort(SelectColumns,{{"Date modified", Order.Descending}}),
+				    
+				    ListaTables = Table.AddColumn(OrderDateModified, "Tabelas",
+				    each fxBaseAtiva([Content], [Date modified]), type table)[Tabelas],
+				    
+				    CombineTables = Table.Combine ( ListaTables ),
+				    
+				    SusbtituirCodigos = 
+				    Table.ReplaceValue(
+				        Table.ReplaceValue(
+				            Table.ReplaceValue(
+				                Table.ReplaceValue(
+				                    Table.ReplaceValue(
+				                        Table.ReplaceValue(
+				                            Table.ReplaceValue(
+				                                Table.ReplaceValue(
+				                                    Table.ReplaceValue(
+				                                        Table.ReplaceValue(
+				                                            Table.ReplaceValue(
+				                                                Table.ReplaceValue(
+				                                                    Table.ReplaceValue(
+				                                                        Table.ReplaceValue(
+				                                                            Table.ReplaceValue(
+				                                                                Table.ReplaceValue(CombineTables,
+				                                                                "6270", "20507", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Malbec
+				                                                            "6182", "20498", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Portinari
+				                                                        "4551", "20495", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Arbo
+				                                                    "16927", "20514", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Coffee
+				                                                "13032", "20511", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Egeo
+				                                            "18876", "20516", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Iconique
+				                                        "18676", "20515", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Madeleine
+				                                    "6271", "20509", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Quasar
+				                                "18878", "20518", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Scapin
+				                            "1602", "20383", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Zaad
+				                        "6085", "20497", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Crescimento
+				                    "5468", "20496", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Acordes
+				                "6225", "20505", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Elysée
+				            "10058", "20384", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Glamour
+				        "1625", "20408", Replacer.ReplaceText, {"CodigoEstruturaComercial"}), //Lily
+				    "10362", "20510", Replacer.ReplaceText, {"CodigoEstruturaComercial"}),
+				    #"Removed Columns" = Table.RemoveColumns(SusbtituirCodigos,{"Key PessoaCodEstruturaCiclo", "Key CicloDataCadastro", "CicloCessamento", "CodigoEstruturaComercial", "CodigoEstruturaComercialPai", "OrigemCadastro", "Data Cadastro Intenção Revenda", "Data Primeiro Pedido", "Date modified"}) //Liz
+				in
+				    #"Removed Columns"
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

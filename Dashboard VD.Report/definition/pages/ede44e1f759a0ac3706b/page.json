@@ -1,0 +1,103 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "ede44e1f759a0ac3706b",
+  "displayName": "Indicadores",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'06. Indicadores.png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "06._Indicadores9625864336169636.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Fit'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "2f161d0b2d61aed03d66",
+      "target": "83dc21502713f93582d4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c92c2c412fafa1b09e3e",
+      "target": "b6afaaed5352afd51a7c",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c92c2c412fafa1b09e3e",
+      "target": "227451027d438ecebef6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c92c2c412fafa1b09e3e",
+      "target": "6d8f5fe9c20681e88403",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c92c2c412fafa1b09e3e",
+      "target": "2a786f3b28d7a58a01c2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c92c2c412fafa1b09e3e",
+      "target": "fdf5ac4439459a79e988",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c92c2c412fafa1b09e3e",
+      "target": "3449a7bf6ef861c14d5c",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c92c2c412fafa1b09e3e",
+      "target": "8e44da327e42af6dc645",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c92c2c412fafa1b09e3e",
+      "target": "cca379842d1209426298",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c92c2c412fafa1b09e3e",
+      "target": "6ca1fa9d06c30086a4ad",
+      "type": "NoFilter"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+table d_DataAtualização
+	lineageTag: d86bd8d8-c4b6-4a0e-9664-0064883b2d92
+
+	column DataHora_Brasilia
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 09f49aee-2a7c-42e9-a66e-31a5c85fd3cc
+		summarizeBy: none
+		sourceColumn: DataHora_Brasilia
+
+		annotation SummarizationSetBy = Automatic
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 47b9db37-9ed5-44e5-bf26-3ec5a3f9ef11
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition d_DataAtualização = m
+		mode: import
+		source = ```
+				let
+				    // Captura a data e hora atual
+				    Fonte = DateTime.LocalNow(),
+				    
+				    // Converte a data e hora em uma tabela
+				    ConverterTabela = #table(1, {{Fonte}}),
+				    
+				    // Renomeia a coluna para 'DataHora'
+				    RenomearColuna = Table.RenameColumns(ConverterTabela, {{"Column1", "DataHora_Inicial"}}),
+				    AlterarTipo = Table.TransformColumnTypes(RenomearColuna,{{"DataHora_Inicial", type datetimezone}}),
+				    HorarioBrasilia = Table.AddColumn(AlterarTipo, "DataHora_Brasilia", each DateTimeZone.SwitchZone([DataHora_Inicial], -3), type datetimezone),
+				    #"Data Inserida" = Table.AddColumn(HorarioBrasilia, "Data", each DateTime.Date([DataHora_Brasilia]), type date),
+				    #"Removed Columns" = Table.RemoveColumns(#"Data Inserida",{"DataHora_Inicial"})
+				in
+				    #"Removed Columns"
+				```
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegação
+

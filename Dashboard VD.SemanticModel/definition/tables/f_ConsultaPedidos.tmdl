@@ -1,0 +1,785 @@
+table f_ConsultaPedidos
+	lineageTag: 5a111894-5a5b-42f6-9248-e7ee46092de3
+
+	refreshPolicy
+		policyType: basic
+		rollingWindowGranularity: year
+		rollingWindowPeriods: 1
+		incrementalGranularity: month
+		incrementalPeriods: 3
+		pollingExpression = let #"MaxDate modified" = List.Max(f_ConsultaPedidos[Date modified]), accountForNull = if #"MaxDate modified" = null then #datetime(1901, 01, 01, 00, 00, 00) else #"MaxDate modified" in accountForNull
+		sourceExpression = ```
+			let
+			    Source = Folder.Contents(PastaLocal) 
+			    {[Name="Consulta Pedidos"]}[Content],
+			
+			    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+			
+			    ColunasSelecionadas = FiltrarArquivos[[Content], [Name], [Date modified]],
+			
+			    InvocarFuncaoPersonalizada = Table.AddColumn(ColunasSelecionadas, "Transform File", each #"Transform File"([Content])),
+			
+			    SelecionarColunasExpansao = Table.SelectColumns(InvocarFuncaoPersonalizada,{"Date modified", "Transform File"}),
+			
+			    ExpandirTabela = Table.ExpandTableColumn(SelecionarColunasExpansao, "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+			    // Selecionar somente as colunas necessárioas no primeiro momento
+			    SelectColumns = Table.SelectColumns(ExpandirTabela, 
+			        { 
+			            "Date modified", 
+			            "CodigoPedido",
+			            "Pessoa", 
+			            "Papel", 
+			            "QtdeMateriais", 
+			            "ValorPedido", 
+			            "MeioCaptacao", 
+			            "ModeloComercial",
+			            "Tipo de Entrega", 
+			            "SituaçãoComercial", 
+			            "DataFaturamento", 
+			            "Ciclo Captação",
+			            "CicloIndicador", 
+			            "Cód Estrutura Pai", 
+			            "EstruturaPai", 
+			            "Cód Estrutura", 
+			            "Estrutura", 
+			            "Cód Usuário Finalização", 
+			            "Usuario de Finalização", 
+			            "CodCD", 
+			            "CanalDistribuicao"
+			        }),
+			    
+			    // Definindo os paramentros do Incremental Refresh na Data de Modificação dos arquivos
+			    FiltroIncrementalRefresh = Table.SelectRows(
+			        SelectColumns,
+			        each [Date modified] >= RangeStart and [Date modified] < RangeEnd
+			    ),
+			
+			    // Alteração de valores no papel para simplificar 
+			    ReplaceValueColumPapel = 
+			    Table.ReplaceValue(
+			        Table.ReplaceValue(FiltroIncrementalRefresh,
+			        "Diamante GB", "Diamante", Replacer.ReplaceText, {"Papel"}),
+			    "Esmeralda GB", "Esmeralda", Replacer.ReplaceText, {"Papel"}
+			    ),
+			
+			    // Retirar os pedidos cancelados
+			    FilterCanceled = Table.SelectRows(ReplaceValueColumPapel, each ([SituaçãoComercial] <> "Cancelado")), 
+			    
+			    // Criando um mapeamento para a coluna Unidade
+			    UnidadeMap = Record.FromList(
+			        {"UDI", "UDI", "BH", "BH", "BH"}, 
+			        {"1226", "1534", "699", "1405", "1324"}
+			    ),
+			
+			    // Adiciona uma coluna de unidade de acordo com o mapeamento realizado
+			    AddColumnUnidade = Table.AddColumn(FilterCanceled, "Unidade", each 
+			        Record.FieldOrDefault( UnidadeMap, Text.From([CodCD]), null), type text),
+			
+			    // Remoção de ponto no código da estrutura para poder relacionar com outras tabelas
+			    RemoveDot = 
+			        Table.ReplaceValue(AddColumnUnidade,".","",Replacer.ReplaceText,{"Cód Estrutura"}),
+			
+			    SusbtituirCodigos = // Alteração de codigos devido ao tombamento de bases no Ciclo 04/2025
+			    Table.ReplaceValue(
+			        Table.ReplaceValue(
+			            Table.ReplaceValue(
+			                Table.ReplaceValue(
+			                    Table.ReplaceValue(
+			                        Table.ReplaceValue(
+			                            Table.ReplaceValue(
+			                                Table.ReplaceValue(
+			                                    Table.ReplaceValue(
+			                                        Table.ReplaceValue(
+			                                            Table.ReplaceValue(
+			                                                Table.ReplaceValue(
+			                                                    Table.ReplaceValue(
+			                                                        Table.ReplaceValue(
+			                                                            Table.ReplaceValue(
+			                                                                Table.ReplaceValue(RemoveDot,
+			                                                                "6270", "20507", Replacer.ReplaceText, {"Cód Estrutura"}), //Malbec
+			                                                            "6182", "20498", Replacer.ReplaceText, {"Cód Estrutura"}), //Portinari
+			                                                        "4551", "20495", Replacer.ReplaceText, {"Cód Estrutura"}), //Arbo
+			                                                    "16927", "20514", Replacer.ReplaceText, {"Cód Estrutura"}), //Coffee
+			                                                "13032", "20511", Replacer.ReplaceText, {"Cód Estrutura"}), //Egeo
+			                                            "18876", "20516", Replacer.ReplaceText, {"Cód Estrutura"}), //Iconique
+			                                        "18676", "20515", Replacer.ReplaceText, {"Cód Estrutura"}), //Madeleine
+			                                    "6271", "20509", Replacer.ReplaceText, {"Cód Estrutura"}), //Quasar
+			                                "18878", "20518", Replacer.ReplaceText, {"Cód Estrutura"}), //Scapin
+			                            "1602", "20383", Replacer.ReplaceText, {"Cód Estrutura"}), //Zaad
+			                        "6085", "20497", Replacer.ReplaceText, {"Cód Estrutura"}), //Crescimento
+			                    "5468", "20496", Replacer.ReplaceText, {"Cód Estrutura"}), //Acordes
+			                "6225", "20505", Replacer.ReplaceText, {"Cód Estrutura"}), //Elysée
+			            "10058", "20384", Replacer.ReplaceText, {"Cód Estrutura"}), //Glamour
+			        "1625", "20408", Replacer.ReplaceText, {"Cód Estrutura"}), //Lily
+			    "10362", "20510", Replacer.ReplaceText, {"Cód Estrutura"}), //Liz
+			
+			    // Adiciona uma coluna que separa Captação de ER
+			    AddColumnPDV = 
+			        Table.AddColumn(SusbtituirCodigos, "PDV", each
+			            if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] <> "Modelo - Autosserviço" then "20844 Captação"
+			            else if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] = "Modelo - Autosserviço" then "20844 ER UDI"
+			            else if [CanalDistribuicao] = "23275 - ATT PERFUMARIA E COSMETICOS LTDA" then "23275 ER ARI"
+			            else if [CanalDistribuicao] = "13793 - COMERCIAL ATT LTDA" then "13793 Captação"
+			            else if [CanalDistribuicao] = "21433 - COMERCIAL ATT LTDA" then "21433 ER Rib. Neves"
+			            else if [CanalDistribuicao] = "22372 - COMERCIAL ATT LTDA" then "22372 ER Venda Nova"
+			            else "Unidade não cadastrada", type text
+			        ),
+			    
+			    AddColumnCodPDV = 
+			        Table.AddColumn( AddColumnPDV, "CodPDV", each Text.BeforeDelimiter([CanalDistribuicao], " -"), type text ),
+			
+			    // Criando um mapeamento para a coluna EstruturaPDV
+			    EstruturaPDVMap = Record.FromList(
+			        {"Captação", "Captação", "ER", "ER", "ER", "ER"}, 
+			        {
+			            "20844 Captação", 
+			            "13793 Captação", 
+			            "20844 ER UDI", 
+			            "23275 ER ARI", 
+			            "21433 ER Rib. Neves", 
+			            "22372 ER Venda Nova"
+			        }
+			    ),
+			
+			    // Adicionar uma coluna pai para separar Captação de ER de acordo com o mapeamento realizado
+			    AddColumnEstruturaPDV = Table.AddColumn(AddColumnCodPDV, "EstruturaPDV", each 
+			        Record.FieldOrDefault(EstruturaPDVMap, [PDV], "Unidade não cadastrada"), type text),
+			
+			    // Adiciona algumas colunas chave para identificação de relacionamentos 
+			    AddColumnsKey = 
+			        Table.AddColumn(
+			            Table.AddColumn(AddColumnEstruturaPDV,
+			            "Key PDVCiclo", each Text.From([PDV]) & " - " & Text.From([Ciclo Captação]), type text), //Necessário para relacionar com a tabela de MetaPDV
+			        "Key CicloData", each [Ciclo Captação] & " - " & Text.From([DataFaturamento]), type text), //Necessário para separar os Inicios Safra e Backlog
+			
+			    KeyPessoaCiclo = 
+			        Table.AddColumn(AddColumnsKey, 
+			        "Key PessoaCiclo", each Text.From(Number.ToText([Pessoa])) & " - " & Text.From([Ciclo Captação]), type text),
+			
+			    // União com a tabela Base Inicial
+			    MergeBase = Table.NestedJoin(
+			        KeyPessoaCiclo, {"Key PessoaCiclo"}, 
+			        f_BaseAtivaINICIAL, {"Key PessoaCiclo"}, 
+			        "f_BaseAtivaINICIAL", JoinKind.LeftOuter),
+			    
+			    // Expandir a coluna de Codigo Estrutura para identificar os revendedores presentes na base congelada
+			    ExpandBase = Table.ExpandTableColumn(
+			        MergeBase, "f_BaseAtivaINICIAL", {"CodigoEstruturaComercial"}, {"CodBaseInicial"}
+			    ),
+			
+			    // Alteração do tipo da coluna expandida para corresponder a texto
+			    ChangeTypeBase = Table.TransformColumnTypes(ExpandBase, {{"CodBaseInicial", type text}}),
+			
+			    // Substituição de retorno dos revendedores que não estão na base congelada, para trazer a informação que se trata de um IR
+			    ReplaceNull = Table.ReplaceValue(
+			        ChangeTypeBase, null, "Revendedor IR", Replacer.ReplaceValue, {"CodBaseInicial"}
+			    ),
+			
+			    // Adiciona uma coluna para definir a estruta dele de acordo com a informação da base congelada ou se tratando de um IR
+			    AddColumnCodFinal = Table.AddColumn(
+			        ReplaceNull, "CodFinal", each
+			            if [CodBaseInicial] = "Revendedor IR"
+			            then Text.From([Cód Estrutura])
+			            else Text.From([CodBaseInicial]),
+			        type text
+			    ),
+			
+			    // Adiciona a coluna de chave de estrutura
+			    AddColumnKeysStructure = 
+			        Table.AddColumn(
+			            Table.AddColumn(AddColumnCodFinal, 
+			            "Key CodEstruturaCiclo", each Text.From([CodFinal]) & " - " & Text.From([Ciclo Captação]), type text), //Necessário para relacionar as metas de cada estrutura no ciclo devido)
+			        "Key PapelCodEstruturaCiclo", each Text.From([Papel]) & " - " & Text.From([Key CodEstruturaCiclo]), type text), //Necessario para identificar os papeis que cada estrutura possui
+			
+			    // Seleção das colunas definitivas e ordenação das informações
+			    SelectColumnsFinal = Table.SelectColumns(AddColumnKeysStructure,
+			        {
+			            "Date modified", // Necessaria para o Incremental Refresh
+			            "CodigoPedido", //determinar o ID do pedido, desempate para o primeiro pedido
+			            "Pessoa", //ID do revendedor
+			            "Papel", //necessário para segmentação de base
+			            "QtdeMateriais", //volume de itens
+			            "ValorPedido", //valor em R$
+			            "Tipo de Entrega", //Necessário para DAX "pedido medio"
+			            "MeioCaptacao", //separação de pedido omnichannel
+			            "DataFaturamento", //ordenação do primeiro pedido pela data minima de faturamento no ciclo
+			            "Ciclo Captação", //ciclo atual
+			            "CodFinal", //estrutura a ser considerada para os calculos
+			            "Cód Usuário Finalização", //uso para a tabela "Vendas por assistente"
+			            "Usuario de Finalização", //Nome do vendedor
+			            "CodCD", //Separação do codigo de cada PDV -- Codigo interno Boticario. Qual a necessidade ?
+			            "Unidade", //RMBH ou UDI
+			            "CodPDV", // Codigo de cada PDV sem o nome, somente o numero
+			            "PDV", //codigo Captação ou ER
+			            "EstruturaPDV", //Nome Captação ou ER
+			            "Key CodEstruturaCiclo", //Capturar os resultados da estrutura no ciclo
+			            "Key PDVCiclo" //usado no relacionamento com a tabela de MetaPDV
+			        }),
+			    // Definir tipagem das colunas
+			    ChangedType = Table.TransformColumnTypes(
+			        SelectColumnsFinal,{
+			            {"QtdeMateriais", Int64.Type}, 
+			            {"ValorPedido", Currency.Type}, 
+			            {"DataFaturamento", type date}, 
+			            {"Pessoa", Int64.Type}, 
+			            {"Ciclo Captação", type text}, 
+			            {"CodigoPedido", type text}, 
+			            {"MeioCaptacao", type text}, 
+			            {"Tipo de Entrega", type text}
+			        })
+			in
+			    ChangedType
+			```
+
+	column Pessoa
+		dataType: string
+		lineageTag: 388b527c-64e6-4e16-ab77-f4e174b342f4
+		summarizeBy: none
+		sourceColumn: Pessoa
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Papel
+		dataType: string
+		lineageTag: 96ff24bd-61ce-4233-bd3d-62c4c622c1e4
+		summarizeBy: none
+		sourceColumn: Papel
+
+		annotation SummarizationSetBy = Automatic
+
+	column QtdeMateriais
+		dataType: int64
+		formatString: #,0
+		lineageTag: be28428f-3abb-4ae6-b0a9-090ae42773e2
+		summarizeBy: sum
+		sourceColumn: QtdeMateriais
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column ValorPedido
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 0919856e-f7df-444e-ba58-17453ef49fc1
+		summarizeBy: sum
+		sourceColumn: ValorPedido
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column MeioCaptacao
+		dataType: string
+		lineageTag: a9f317cc-bdf5-4e5a-ad10-6e77e039ee58
+		summarizeBy: none
+		sourceColumn: MeioCaptacao
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataFaturamento
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: efa27a36-3c57-4d74-b33b-ebd54ecc76b4
+		summarizeBy: none
+		sourceColumn: DataFaturamento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Ciclo Captação'
+		dataType: string
+		lineageTag: 3e3e030a-7898-478b-b078-0466e4ec4edc
+		summarizeBy: none
+		sourceColumn: Ciclo Captação
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cód Usuário Finalização'
+		dataType: string
+		lineageTag: 11a4fb91-e1af-4851-8b17-1b7a1c184d32
+		summarizeBy: none
+		sourceColumn: Cód Usuário Finalização
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Usuario de Finalização'
+		dataType: string
+		lineageTag: 7f3083c6-5f38-4017-9fe0-27b730004488
+		summarizeBy: none
+		sourceColumn: Usuario de Finalização
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodCD
+		dataType: string
+		lineageTag: c2cd0707-fd51-46e9-98f8-475815408bf7
+		summarizeBy: none
+		sourceColumn: CodCD
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidade
+		dataType: string
+		lineageTag: 975b9835-cd8c-457a-8e0b-088c8a0345e5
+		summarizeBy: none
+		sourceColumn: Unidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key CodEstruturaCiclo'
+		dataType: string
+		lineageTag: cfb1ee5d-efe6-49a0-82b7-f3cd7e39b07e
+		summarizeBy: none
+		sourceColumn: Key CodEstruturaCiclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column PDV
+		dataType: string
+		lineageTag: 281f46fc-caeb-43f2-a4c4-7e80977427df
+		summarizeBy: none
+		sourceColumn: PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column EstruturaPDV
+		dataType: string
+		lineageTag: fabf4f67-4ee3-4012-bc03-d2d2534c633d
+		summarizeBy: none
+		sourceColumn: EstruturaPDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key PDVCiclo'
+		dataType: string
+		lineageTag: e1b9ac74-13f4-4db0-87aa-8cddf003e92d
+		summarizeBy: none
+		sourceColumn: Key PDVCiclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo de Entrega'
+		dataType: string
+		lineageTag: 9c8b3d62-9326-4ad9-83b9-fb5a180ac9f2
+		summarizeBy: none
+		sourceColumn: Tipo de Entrega
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodigoPedido
+		dataType: string
+		lineageTag: bd3e2dcd-e5cf-422a-b558-4af54a2ef019
+		summarizeBy: none
+		sourceColumn: CodigoPedido
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodFinal
+		dataType: string
+		lineageTag: 94e71d2e-019d-4516-b274-b1520b815965
+		summarizeBy: none
+		sourceColumn: CodFinal
+
+		annotation SummarizationSetBy = Automatic
+
+	column CicloPrimeiroPedido = ```
+			
+			VAR LimpaCiclo = 
+			    FILTER(
+			        f_BaseAtivaDiaria,
+			        f_BaseAtivaDiaria[CodigoRevendedor] = f_ConsultaPedidos[Pessoa] &&
+			        f_BaseAtivaDiaria[CicloPrimeiroPedido] <> BLANK() &&
+			        f_BaseAtivaDiaria[CicloPrimeiroPedido] <> "" &&
+			        LEN(f_BaseAtivaDiaria[CicloPrimeiroPedido]) >= 7
+			    )
+			
+			VAR UltimoCiclo =
+			    MAXX(
+			        LimpaCiclo,
+			        VALUE(RIGHT(f_BaseAtivaDiaria[CicloPrimeiroPedido], 4) & 
+			              FORMAT(INT(LEFT(f_BaseAtivaDiaria[CicloPrimeiroPedido], 2)), "00"))
+			    )
+			
+			RETURN
+			    IF(NOT ISBLANK(UltimoCiclo),
+			       FORMAT(RIGHT(UltimoCiclo,2),"00") & "/" & LEFT(UltimoCiclo,4),
+			       BLANK()
+			    )
+			
+			```
+		lineageTag: 89af6e4d-b966-45ad-9f59-e9ca8f0560e4
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column CicloReativacao = ```
+			
+			VAR LimpaCiclo = 
+			    FILTER(
+			        f_BaseAtivaDiaria,
+			        f_BaseAtivaDiaria[CodigoRevendedor] = f_ConsultaPedidos[Pessoa] &&
+			        f_BaseAtivaDiaria[CicloReativacao] <> BLANK() &&
+			        f_BaseAtivaDiaria[CicloReativacao] <> "" &&
+			        LEN(f_BaseAtivaDiaria[CicloReativacao]) >= 7
+			    )
+			
+			VAR UltimoCiclo =
+			    MAXX(
+			        LimpaCiclo,
+			        VALUE(RIGHT(f_BaseAtivaDiaria[CicloReativacao], 4) & 
+			              FORMAT(INT(LEFT(f_BaseAtivaDiaria[CicloReativacao], 2)), "00"))
+			    )
+			
+			RETURN
+			    IF(NOT ISBLANK(UltimoCiclo),
+			       FORMAT(RIGHT(UltimoCiclo,2),"00") & "/" & LEFT(UltimoCiclo,4),
+			       BLANK()
+			    )
+			
+			```
+		lineageTag: 89bfcefb-a28b-4cb3-af1e-2c158287e154
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column SituacaoAtividade = ```
+			
+			VAR AtivoCongelado = 
+			    LOOKUPVALUE(
+			        f_BaseAtivaDiaria[BaseCongelada],
+			        f_BaseAtivaDiaria[CodigoRevendedor], f_ConsultaPedidos[Pessoa], 
+			        f_BaseAtivaDiaria[CicloAtual], f_ConsultaPedidos[Ciclo Captação]
+			    )
+			RETURN
+			
+			IF(
+			    AtivoCongelado = "ATIVO", "Revendedor Ativo",
+			    SWITCH(
+			        TRUE(),
+			        f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel" &&
+			        f_ConsultaPedidos[Ciclo Captação] = f_ConsultaPedidos[CicloPrimeiroPedido] &&
+			        f_ConsultaPedidos[CicloReativacao] <> BLANK(), "Reinicio",
+			
+			        f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel" &&
+			        f_ConsultaPedidos[Ciclo Captação] = f_ConsultaPedidos[CicloPrimeiroPedido] &&
+			        f_ConsultaPedidos[CicloReativacao] = BLANK(), "Inicio",
+			        
+			        "Revendedor Ativo"
+			    )
+			)
+			```
+		lineageTag: 7aa7f9aa-a5bd-4457-a8db-b9dfb65de4be
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column EstruturaFinal = ```
+			
+			LOOKUPVALUE(
+			    d_MetaTotalEstrutura[Estrutura], 
+			    d_MetaTotalEstrutura[Cód. Estrutura], f_ConsultaPedidos[CodFinal],
+			    d_MetaTotalEstrutura[Ciclo], f_ConsultaPedidos[Ciclo Captação])
+			```
+		lineageTag: 469814d6-5f27-494a-a9ef-26f0d85a7e03
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column PrimeiroPedido = ```
+			
+			VAR MinID_Pedido = 
+			    CALCULATE(
+			        MIN(f_ConsultaPedidos[CodigoPedido]),
+			        f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel",
+			        ALLEXCEPT(f_ConsultaPedidos, f_ConsultaPedidos[Pessoa], d_Ciclos[Ciclo Captação])
+			    )
+			RETURN
+			    IF(f_ConsultaPedidos[MeioCaptacao] = "Pedido Omnichannel", "",
+			        IF(f_ConsultaPedidos[CodigoPedido] = MinID_Pedido, "Sim", "Não")
+			    )
+			```
+		lineageTag: 466f8d4b-57a7-41f5-913e-faf0d8d956bb
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key ConsultorCiclo' = ```
+			
+			f_ConsultaPedidos[Cód Usuário Finalização] & 
+			" - " &
+			f_ConsultaPedidos[Ciclo Captação]
+			```
+		lineageTag: 0d8e96c9-5c55-4c1f-be82-3304357a8e3e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key PapelCiclo' =
+			
+			f_ConsultaPedidos[Papel] & " - " & f_ConsultaPedidos[Ciclo Captação]
+		lineageTag: ab87787b-f5b5-4420-95f6-f916f9e6f404
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key UnidadeCiclo' =
+			
+			f_ConsultaPedidos[Unidade] & " - " & f_ConsultaPedidos[Ciclo Captação]
+		lineageTag: 8bef68c6-eb21-4d24-893f-5c5e606eea88
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date modified'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 46a79a14-75af-41c8-bcdc-8afc839bb0a7
+		summarizeBy: none
+		sourceColumn: Date modified
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodPDV
+		dataType: string
+		lineageTag: cb011ab9-460a-46f8-8919-bd2e57f130f1
+		summarizeBy: none
+		sourceColumn: CodPDV
+
+		annotation SummarizationSetBy = Automatic
+
+	partition f_ConsultaPedidos = m
+		mode: import
+		queryGroup: ConsultaPedidos
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal) 
+				    {[Name="Consulta Pedidos"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				
+				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name], [Date modified]],
+				
+				    InvocarFuncaoPersonalizada = Table.AddColumn(ColunasSelecionadas, "Transform File", each #"Transform File"([Content])),
+				
+				    SelecionarColunasExpansao = Table.SelectColumns(InvocarFuncaoPersonalizada,{"Date modified", "Transform File"}),
+				
+				    ExpandirTabela = Table.ExpandTableColumn(SelecionarColunasExpansao, "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+				    // Selecionar somente as colunas necessárioas no primeiro momento
+				    SelectColumns = Table.SelectColumns(ExpandirTabela, 
+				        { 
+				            "Date modified", 
+				            "CodigoPedido",
+				            "Pessoa", 
+				            "Papel", 
+				            "QtdeMateriais", 
+				            "ValorPedido", 
+				            "MeioCaptacao", 
+				            "ModeloComercial",
+				            "Tipo de Entrega", 
+				            "SituaçãoComercial", 
+				            "DataFaturamento", 
+				            "Ciclo Captação",
+				            "CicloIndicador", 
+				            "Cód Estrutura Pai", 
+				            "EstruturaPai", 
+				            "Cód Estrutura", 
+				            "Estrutura", 
+				            "Cód Usuário Finalização", 
+				            "Usuario de Finalização", 
+				            "CodCD", 
+				            "CanalDistribuicao"
+				        }),
+				    
+				    // Definindo os paramentros do Incremental Refresh na Data de Modificação dos arquivos
+				    FiltroIncrementalRefresh = Table.SelectRows(
+				        SelectColumns,
+				        each [Date modified] >= RangeStart and [Date modified] < RangeEnd
+				    ),
+				
+				    // Alteração de valores no papel para simplificar 
+				    ReplaceValueColumPapel = 
+				    Table.ReplaceValue(
+				        Table.ReplaceValue(FiltroIncrementalRefresh,
+				        "Diamante GB", "Diamante", Replacer.ReplaceText, {"Papel"}),
+				    "Esmeralda GB", "Esmeralda", Replacer.ReplaceText, {"Papel"}
+				    ),
+				
+				    // Retirar os pedidos cancelados
+				    FilterCanceled = Table.SelectRows(ReplaceValueColumPapel, each ([SituaçãoComercial] <> "Cancelado")), 
+				    
+				    // Criando um mapeamento para a coluna Unidade
+				    UnidadeMap = Record.FromList(
+				        {"UDI", "UDI", "BH", "BH", "BH"}, 
+				        {"1226", "1534", "699", "1405", "1324"}
+				    ),
+				
+				    // Adiciona uma coluna de unidade de acordo com o mapeamento realizado
+				    AddColumnUnidade = Table.AddColumn(FilterCanceled, "Unidade", each 
+				        Record.FieldOrDefault( UnidadeMap, Text.From([CodCD]), null), type text),
+				
+				    // Remoção de ponto no código da estrutura para poder relacionar com outras tabelas
+				    RemoveDot = 
+				        Table.ReplaceValue(AddColumnUnidade,".","",Replacer.ReplaceText,{"Cód Estrutura"}),
+				
+				    SusbtituirCodigos = // Alteração de codigos devido ao tombamento de bases no Ciclo 04/2025
+				    Table.ReplaceValue(
+				        Table.ReplaceValue(
+				            Table.ReplaceValue(
+				                Table.ReplaceValue(
+				                    Table.ReplaceValue(
+				                        Table.ReplaceValue(
+				                            Table.ReplaceValue(
+				                                Table.ReplaceValue(
+				                                    Table.ReplaceValue(
+				                                        Table.ReplaceValue(
+				                                            Table.ReplaceValue(
+				                                                Table.ReplaceValue(
+				                                                    Table.ReplaceValue(
+				                                                        Table.ReplaceValue(
+				                                                            Table.ReplaceValue(
+				                                                                Table.ReplaceValue(RemoveDot,
+				                                                                "6270", "20507", Replacer.ReplaceText, {"Cód Estrutura"}), //Malbec
+				                                                            "6182", "20498", Replacer.ReplaceText, {"Cód Estrutura"}), //Portinari
+				                                                        "4551", "20495", Replacer.ReplaceText, {"Cód Estrutura"}), //Arbo
+				                                                    "16927", "20514", Replacer.ReplaceText, {"Cód Estrutura"}), //Coffee
+				                                                "13032", "20511", Replacer.ReplaceText, {"Cód Estrutura"}), //Egeo
+				                                            "18876", "20516", Replacer.ReplaceText, {"Cód Estrutura"}), //Iconique
+				                                        "18676", "20515", Replacer.ReplaceText, {"Cód Estrutura"}), //Madeleine
+				                                    "6271", "20509", Replacer.ReplaceText, {"Cód Estrutura"}), //Quasar
+				                                "18878", "20518", Replacer.ReplaceText, {"Cód Estrutura"}), //Scapin
+				                            "1602", "20383", Replacer.ReplaceText, {"Cód Estrutura"}), //Zaad
+				                        "6085", "20497", Replacer.ReplaceText, {"Cód Estrutura"}), //Crescimento
+				                    "5468", "20496", Replacer.ReplaceText, {"Cód Estrutura"}), //Acordes
+				                "6225", "20505", Replacer.ReplaceText, {"Cód Estrutura"}), //Elysée
+				            "10058", "20384", Replacer.ReplaceText, {"Cód Estrutura"}), //Glamour
+				        "1625", "20408", Replacer.ReplaceText, {"Cód Estrutura"}), //Lily
+				    "10362", "20510", Replacer.ReplaceText, {"Cód Estrutura"}), //Liz
+				
+				    // Adiciona uma coluna que separa Captação de ER
+				    AddColumnPDV = 
+				        Table.AddColumn(SusbtituirCodigos, "PDV", each
+				            if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] <> "Modelo - Autosserviço" then "20844 Captação"
+				            else if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] = "Modelo - Autosserviço" then "20844 ER UDI"
+				            else if [CanalDistribuicao] = "23275 - ATT PERFUMARIA E COSMETICOS LTDA" then "23275 ER ARI"
+				            else if [CanalDistribuicao] = "13793 - COMERCIAL ATT LTDA" then "13793 Captação"
+				            else if [CanalDistribuicao] = "21433 - COMERCIAL ATT LTDA" then "21433 ER Rib. Neves"
+				            else if [CanalDistribuicao] = "22372 - COMERCIAL ATT LTDA" then "22372 ER Venda Nova"
+				            else "Unidade não cadastrada", type text
+				        ),
+				    
+				    AddColumnCodPDV = 
+				        Table.AddColumn( AddColumnPDV, "CodPDV", each Text.BeforeDelimiter([CanalDistribuicao], " -"), type text ),
+				
+				    // Criando um mapeamento para a coluna EstruturaPDV
+				    EstruturaPDVMap = Record.FromList(
+				        {"Captação", "Captação", "ER", "ER", "ER", "ER"}, 
+				        {
+				            "20844 Captação", 
+				            "13793 Captação", 
+				            "20844 ER UDI", 
+				            "23275 ER ARI", 
+				            "21433 ER Rib. Neves", 
+				            "22372 ER Venda Nova"
+				        }
+				    ),
+				
+				    // Adicionar uma coluna pai para separar Captação de ER de acordo com o mapeamento realizado
+				    AddColumnEstruturaPDV = Table.AddColumn(AddColumnCodPDV, "EstruturaPDV", each 
+				        Record.FieldOrDefault(EstruturaPDVMap, [PDV], "Unidade não cadastrada"), type text),
+				
+				    // Adiciona algumas colunas chave para identificação de relacionamentos 
+				    AddColumnsKey = 
+				        Table.AddColumn(
+				            Table.AddColumn(AddColumnEstruturaPDV,
+				            "Key PDVCiclo", each Text.From([PDV]) & " - " & Text.From([Ciclo Captação]), type text), //Necessário para relacionar com a tabela de MetaPDV
+				        "Key CicloData", each [Ciclo Captação] & " - " & Text.From([DataFaturamento]), type text), //Necessário para separar os Inicios Safra e Backlog
+				
+				    KeyPessoaCiclo = 
+				        Table.AddColumn(AddColumnsKey, 
+				        "Key PessoaCiclo", each Text.From(Number.ToText([Pessoa])) & " - " & Text.From([Ciclo Captação]), type text),
+				
+				    // União com a tabela Base Inicial
+				    MergeBase = Table.NestedJoin(
+				        KeyPessoaCiclo, {"Key PessoaCiclo"}, 
+				        f_BaseAtivaINICIAL, {"Key PessoaCiclo"}, 
+				        "f_BaseAtivaINICIAL", JoinKind.LeftOuter),
+				    
+				    // Expandir a coluna de Codigo Estrutura para identificar os revendedores presentes na base congelada
+				    ExpandBase = Table.ExpandTableColumn(
+				        MergeBase, "f_BaseAtivaINICIAL", {"CodigoEstruturaComercial"}, {"CodBaseInicial"}
+				    ),
+				
+				    // Alteração do tipo da coluna expandida para corresponder a texto
+				    ChangeTypeBase = Table.TransformColumnTypes(ExpandBase, {{"CodBaseInicial", type text}}),
+				
+				    // Substituição de retorno dos revendedores que não estão na base congelada, para trazer a informação que se trata de um IR
+				    ReplaceNull = Table.ReplaceValue(
+				        ChangeTypeBase, null, "Revendedor IR", Replacer.ReplaceValue, {"CodBaseInicial"}
+				    ),
+				
+				    // Adiciona uma coluna para definir a estruta dele de acordo com a informação da base congelada ou se tratando de um IR
+				    AddColumnCodFinal = Table.AddColumn(
+				        ReplaceNull, "CodFinal", each
+				            if [CodBaseInicial] = "Revendedor IR"
+				            then Text.From([Cód Estrutura])
+				            else Text.From([CodBaseInicial]),
+				        type text
+				    ),
+				
+				    // Adiciona a coluna de chave de estrutura
+				    AddColumnKeysStructure = 
+				        Table.AddColumn(
+				            Table.AddColumn(AddColumnCodFinal, 
+				            "Key CodEstruturaCiclo", each Text.From([CodFinal]) & " - " & Text.From([Ciclo Captação]), type text), //Necessário para relacionar as metas de cada estrutura no ciclo devido)
+				        "Key PapelCodEstruturaCiclo", each Text.From([Papel]) & " - " & Text.From([Key CodEstruturaCiclo]), type text), //Necessario para identificar os papeis que cada estrutura possui
+				
+				    // Seleção das colunas definitivas e ordenação das informações
+				    SelectColumnsFinal = Table.SelectColumns(AddColumnKeysStructure,
+				        {
+				            "Date modified", // Necessaria para o Incremental Refresh
+				            "CodigoPedido", //determinar o ID do pedido, desempate para o primeiro pedido
+				            "Pessoa", //ID do revendedor
+				            "Papel", //necessário para segmentação de base
+				            "QtdeMateriais", //volume de itens
+				            "ValorPedido", //valor em R$
+				            "Tipo de Entrega", //Necessário para DAX "pedido medio"
+				            "MeioCaptacao", //separação de pedido omnichannel
+				            "DataFaturamento", //ordenação do primeiro pedido pela data minima de faturamento no ciclo
+				            "Ciclo Captação", //ciclo atual
+				            "CodFinal", //estrutura a ser considerada para os calculos
+				            "Cód Usuário Finalização", //uso para a tabela "Vendas por assistente"
+				            "Usuario de Finalização", //Nome do vendedor
+				            "CodCD", //Separação do codigo de cada PDV -- Codigo interno Boticario. Qual a necessidade ?
+				            "Unidade", //RMBH ou UDI
+				            "CodPDV", // Codigo de cada PDV sem o nome, somente o numero
+				            "PDV", //codigo Captação ou ER
+				            "EstruturaPDV", //Nome Captação ou ER
+				            "Key CodEstruturaCiclo", //Capturar os resultados da estrutura no ciclo
+				            "Key PDVCiclo" //usado no relacionamento com a tabela de MetaPDV
+				        }),
+				    // Definir tipagem das colunas
+				    ChangedType = Table.TransformColumnTypes(
+				        SelectColumnsFinal,{
+				            {"QtdeMateriais", Int64.Type}, 
+				            {"ValorPedido", Currency.Type}, 
+				            {"DataFaturamento", type date}, 
+				            {"Pessoa", Int64.Type}, 
+				            {"Ciclo Captação", type text}, 
+				            {"CodigoPedido", type text}, 
+				            {"MeioCaptacao", type text}, 
+				            {"Tipo de Entrega", type text}
+				        })
+				in
+				    ChangedType
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

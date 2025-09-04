@@ -1,0 +1,53 @@
+table 'p_Indicadores Realizado'
+	lineageTag: ecc913a3-715f-4bc4-b233-d556aaff5d11
+
+	column 'p_Indicadores Realizado'
+		lineageTag: ce2b84c2-6289-455b-96f1-9259a71f9205
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'p_Indicadores Realizado Order'
+
+		relatedColumnDetails
+			groupByColumn: 'p_Indicadores Realizado Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Indicadores Realizado Fields'
+		isHidden
+		lineageTag: 7d6418b2-713b-49a9-b8d8-2842a45c051d
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'p_Indicadores Realizado Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Indicadores Realizado Order'
+		isHidden
+		formatString: 0
+		lineageTag: aa0dcf99-252f-4c58-aec1-72522f9b2848
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'p_Indicadores Realizado' = calculated
+		mode: import
+		source =
+				{
+				    ("Penetração no ER", NAMEOF('Medidas'[Real Penetracao ER]), 0),
+				    ("Satisfação Revendedores (CSAT Médio)", NAMEOF('Medidas'[Real NPS CSAT Médio]), 1),
+				    ("+ Satisfação Entrega", NAMEOF('Medidas'[Real NPS Satis. Entrega]), 2),
+				    ("+ Satisfação ER", NAMEOF('Medidas'[Real NPS Satis. ER]), 3),
+				    ("+ Satisfação Supervisora", NAMEOF('Medidas'[Real NPS Satis. Supervisora]), 4),
+				    ("+ Satisfação ER & SUP", NAMEOF('Medidas'[Real NPS ER + SUP]), 5),
+				    ("OptOut", NAMEOF('Medidas'[Real OptOut]), 6)
+				}
+
+	annotation PBI_Id = 3bad0ac4dec547b8afe56f7d418bee17
+

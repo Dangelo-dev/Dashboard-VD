@@ -1,0 +1,50 @@
+table 'p_Consultor Meta'
+	lineageTag: ca9e69e1-7519-4462-8ff4-02073e99eeaa
+
+	column 'p_Consultor Meta'
+		lineageTag: 9436b66d-e162-4bed-83cd-2db6da69194f
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'p_Consultor Meta Order'
+
+		relatedColumnDetails
+			groupByColumn: 'p_Consultor Meta Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Consultor Meta Fields'
+		isHidden
+		lineageTag: a5b954c4-c9f8-4f4b-87b8-1aedc20f044a
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'p_Consultor Meta Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Consultor Meta Order'
+		isHidden
+		formatString: 0
+		lineageTag: 36c35cc0-8a42-4d32-bba9-7a6e95b9e15a
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'p_Consultor Meta' = calculated
+		mode: import
+		source =
+				{
+				    ("Meta Receita", NAMEOF('Medidas'[Receita Meta Consultor]), 0),
+				    ("Meta Pedido", NAMEOF('Medidas'[Pedido meta consultor]), 1),
+				    ("Meta Pedido Médio", NAMEOF('Medidas'[Meta Pedido Medio]), 2),
+				    ("Meta Itens por Pedido", NAMEOF('Medidas'[Meta Itens por Pedido]), 3)
+				}
+
+	annotation PBI_Id = 8c84ef5bfada4764bfdd3da85ffdea70
+

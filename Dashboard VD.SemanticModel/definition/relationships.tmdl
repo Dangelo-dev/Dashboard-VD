@@ -1,0 +1,160 @@
+relationship 60e8d586-f6e2-da28-974a-c9ef678e6fa1
+	fromColumn: 'p_Consultor Realizado'.'p_Consultor Realizado Order'
+	toColumn: 'p_Consultor %'.'p_Consultor % Order'
+
+relationship c0befede-e268-156a-69f6-f0b1796806b1
+	fromColumn: 'p_Estrutura %'.'Parâmetro Pedido'
+	toColumn: 'p_Estrutura Meta'.'Parâmetro Pedido'
+
+relationship 74b35e17-5edb-272d-a4fe-0c84793d6005
+	fromColumn: 'p_Consultor Meta'.'p_Consultor Meta Order'
+	toColumn: 'p_Consultor Realizado'.'p_Consultor Realizado Order'
+
+relationship 8f4c4301-0e8b-b1cc-5d6d-c03b23a77fc1
+	fromColumn: 'p_Consultor %'.'p_Consultor % Order'
+	toColumn: 'p_Consultor Meta'.'p_Consultor Meta Order'
+
+relationship fc8de36a-9a78-4808-03b2-ce446443f3cc
+	fromColumn: 'p_Indicadores Meta'.'p_Indicadores Meta Order'
+	toColumn: 'p_Indicadores %'.'p_Indicadores % Order'
+
+relationship 72aa555a-208b-c8c5-b194-b3f410b97755
+	fromColumn: 'p_Indicadores Realizado'.'p_Indicadores Realizado Order'
+	toColumn: 'p_Indicadores Meta'.'p_Indicadores Meta Order'
+
+relationship 0505f098-1c99-6595-7199-181a5a83d4ef
+	fromColumn: 'p_Indicadores %'.'p_Indicadores % Order'
+	toColumn: 'p_Indicadores Realizado'.'p_Indicadores Realizado Order'
+
+relationship 7803c68a-0f90-6556-6968-21ed7684b766
+	fromColumn: 'p_Estrutura Realizado'.'Parâmetro Pedido'
+	toColumn: 'p_Estrutura %'.'Parâmetro Pedido'
+
+relationship d0e94e00-2106-7670-81f3-f472d51b2d1a
+	fromColumn: 'p_Estrutura Meta'.'Parâmetro Pedido'
+	toColumn: 'p_Estrutura Realizado'.'Parâmetro Pedido'
+
+relationship 419b0dda-8235-ce31-f2b2-3abe5d723866
+	fromColumn: d_MetaPDV.Ciclo
+	toColumn: d_Ciclos.'Ciclo Captação'
+
+relationship e5bb4475-8f9c-3539-62a2-58f51b6d3762
+	fromColumn: d_MetaPDV.Data
+	toColumn: d_Calendario.Data
+
+relationship 62f6ceb1-9bf3-2764-cc5d-ab410155f4fb
+	toCardinality: many
+	fromColumn: f_ConsultaPedidos.Papel
+	toColumn: d_Papel.Papel
+
+relationship e0621954-89c9-0192-b73e-f635fd12654f
+	fromColumn: f_ConsultaPedidos.DataFaturamento
+	toColumn: d_Calendario.Data
+
+relationship e0f12c63-6e4d-4974-542c-9147be2304ac
+	toCardinality: many
+	fromColumn: f_BaseAtivaINICIAL.Papel
+	toColumn: d_Papel.Papel
+
+relationship fc6313be-bb0f-f432-f6eb-841a5d99ef57
+	toCardinality: many
+	fromColumn: f_BaseAtivaDiaria.Papel
+	toColumn: d_Papel.Papel
+
+relationship 510bc077-44ae-7d82-a60e-5cda240eb87d
+	fromColumn: f_PenetracaoER.Ciclo
+	toColumn: d_Ciclos.'Ciclo Captação'
+
+relationship adfc505d-5421-da78-6733-57830716ff52
+	toCardinality: many
+	fromColumn: f_PenetracaoER.PDV
+	toColumn: d_Lojas.'COD PDV'
+
+relationship fb00e372-9677-4309-b65d-0c861d8e8028
+	fromColumn: f_NPS.Ciclo
+	toColumn: d_Ciclos.'Ciclo Captação'
+
+relationship 9443da1c-2fc3-282e-94cc-92bb533ac6e1
+	toCardinality: many
+	fromColumn: f_NPS.'Codigo ER Alocacao'
+	toColumn: d_Lojas.'COD PDV'
+
+relationship 5089a9ed-df5c-b623-38e3-7d3005ad0471
+	toCardinality: many
+	fromColumn: f_OptOut.PDV
+	toColumn: d_Lojas.'COD PDV'
+
+relationship ce7debb6-8d72-d69c-3352-cadc8487e2bc
+	fromColumn: f_OptOut.Ciclo
+	toColumn: d_Ciclos.'Ciclo Captação'
+
+relationship db20302e-ffa8-6f4f-3c04-692ddfc482ed
+	fromColumn: d_MetaDiariaEstrutura.'Key CodEstruturaCiclo'
+	toColumn: d_MetaTotalEstrutura.'Key CodEstruturaCiclo'
+
+relationship 0d937ddb-d9de-57bf-0196-0da706b2cf74
+	fromColumn: f_ConsultaPedidos.PDV
+	toColumn: d_Lojas.PDV
+
+relationship 90529356-0a86-4fe4-d21d-f0a3eaec6ed0
+	fromColumn: d_MetaTotalEstrutura.'Key CodEstruturaCiclo'
+	toColumn: d_Estruturas.'Key CodEstruturaCiclo'
+
+relationship 4d20890c-17ed-d84d-e242-27ad2780f069
+	fromColumn: f_ConsultaPedidos.'Key CodEstruturaCiclo'
+	toColumn: d_Estruturas.'Key CodEstruturaCiclo'
+
+relationship 9b3b2d04-ffc4-b90a-67c9-7afe5d7e5121
+	fromColumn: f_BaseAtivaINICIAL.'Key CodEstruturaCiclo'
+	toColumn: d_Estruturas.'Key CodEstruturaCiclo'
+
+relationship ff23c32c-2709-680b-e213-ec75b4e30a30
+	fromColumn: f_BaseAtivaDiaria.'Key CodEstruturaCiclo'
+	toColumn: d_Estruturas.'Key CodEstruturaCiclo'
+
+relationship dfaec9e4-16da-cc6b-26a7-a1a6c3ba59b4
+	fromColumn: d_Estruturas.Ciclo
+	toColumn: d_Ciclos.'Ciclo Captação'
+
+relationship e7bf9cc9-bfbe-6b8c-ca7e-ecd6d9283ef7
+	toCardinality: many
+	fromColumn: d_Estruturas.Unidade
+	toColumn: d_Lojas.UNIDADE
+
+relationship a21f4e09-edc7-e6d0-60e2-457c57ff481f
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: d_MetaConsultoresDiaria.'Key ConsultorCiclo'
+	toColumn: d_MetaConsultores.'Key ConsultorCiclo'
+
+relationship 0b226259-3197-89d2-54b2-2fc0779e6c25
+	fromColumn: d_MetaPDV.PDV
+	toColumn: d_Lojas.PDV
+
+relationship 759d965d-d016-b339-e749-9ee1c4d06e0b
+	fromColumn: d_MetaConsultores.PDV
+	toColumn: d_Lojas.PDV
+
+relationship 7a71a157-1bd1-166f-cd0d-cb29d124cd84
+	fromColumn: d_MetaConsultores.Ciclo
+	toColumn: d_Ciclos.'Ciclo Captação'
+
+relationship 2c2b8648-47b2-3cf8-5afa-5b6ce91513cc
+	toCardinality: many
+	fromColumn: f_ConsultaPedidos.'Key ConsultorCiclo'
+	toColumn: d_MetaConsultores.'Key ConsultorCiclo'
+
+relationship a3f109e3-e279-b815-3fb0-3c7623f3a434
+	crossFilteringBehavior: bothDirections
+	fromColumn: d_MetaGMV.'Key PDVCicloMarca'
+	toColumn: f_ReceitaGMV.'Key PDVCicloMarca'
+
+relationship 1d299785-1f5e-b98f-ff2b-88a2b80ab680
+	fromColumn: f_ReceitaGMV.Ciclo
+	toColumn: d_Ciclos.'Ciclo Captação'
+
+relationship 966d15d8-56a2-664c-24b4-dea0b67c0139
+	toCardinality: many
+	fromColumn: f_ReceitaGMV.Unidade
+	toColumn: d_Lojas.UNIDADE
+

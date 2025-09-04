@@ -1,0 +1,53 @@
+table 'p_Estrutura Realizado'
+	lineageTag: f9d271df-9f2d-4a38-ab2c-e1951acdcc54
+
+	column Realizado
+		lineageTag: 56586a3a-ccad-45ab-b7c3-05f8c7ae379d
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Parâmetro Pedido'
+
+		relatedColumnDetails
+			groupByColumn: 'Parâmetro Campos'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parâmetro Campos'
+		lineageTag: fc36ee9e-7e9c-4f25-b667-df8655565756
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Parâmetro Pedido'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parâmetro Pedido'
+		formatString: 0
+		lineageTag: 957c77bc-d1f8-4ccd-a923-79883d7bf3a7
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'p_Estrutura Realizado' = calculated
+		mode: import
+		source =
+				{
+				    ("Receita Líquida", NAMEOF('Medidas'[Receita (sem OMNI)]), 0),
+				    ("RPA", NAMEOF('Medidas'[RPA GERA]), 1),
+				    ("UPA", NAMEOF('Medidas'[UPA]), 2),
+				    ("% Atividade", NAMEOF('Medidas'[% Atividade Realizada]), 3),
+				    ("Recuperados", NAMEOF('Medidas'[Ativos Recuperado]), 4),
+				    ("Ativos no Ciclo", NAMEOF('Medidas'[Ativos no Ciclo]), 5),
+				    ("IR", NAMEOF('Medidas'[IR Realizado]), 6),
+				    ("Ativos totais ciclo", NAMEOF('Medidas'[Ativos Totais Ciclo]), 7),
+				    ("Volume", NAMEOF('Medidas'[Volume (sem OMNI)]), 8)
+				}
+
+	annotation PBI_Id = 46f4b9628d434fd0a6c40b0e2e4b5876
+

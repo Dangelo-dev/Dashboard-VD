@@ -1,0 +1,50 @@
+table 'p_Consultor %'
+	lineageTag: daaf819c-0abf-4283-ad03-a1c6adbe7006
+
+	column 'p_Consultor %'
+		lineageTag: 68da1184-22f4-4ad4-acde-6a7eb33d0db8
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'p_Consultor % Order'
+
+		relatedColumnDetails
+			groupByColumn: 'p_Consultor % Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Consultor % Fields'
+		isHidden
+		lineageTag: 417518fe-72ca-4f28-bf01-94e1492a89c0
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'p_Consultor % Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Consultor % Order'
+		isHidden
+		formatString: 0
+		lineageTag: 1dee1149-2489-443d-8ae9-b865024be2c9
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'p_Consultor %' = calculated
+		mode: import
+		source =
+				{
+				    ("Receita % ", NAMEOF('Medidas'[Receita % Consultor]), 0),
+				    ("Pedido % ", NAMEOF('Medidas'[Pedido % consultor]), 1),
+				    ("pedido medio % ", NAMEOF('Medidas'[pedido medio % consultor]), 2),
+				    ("Itens por pedido % ", NAMEOF('Medidas'[Itens por pedido % consultor]), 3)
+				}
+
+	annotation PBI_Id = 922744288b71429989f5bf8b3c871b3d
+

@@ -1,0 +1,1922 @@
+table Medidas
+	lineageTag: dc391532-6a09-45b2-bf24-fd1f1b00fe46
+
+	measure 'Receita (sem OMNI)' =
+			
+			CALCULATE(
+			    SUM('f_ConsultaPedidos'[ValorPedido]),
+			    'f_ConsultaPedidos'[MeioCaptacao] <> "Pedido Omnichannel",
+			    REMOVEFILTERS(d_Calendario))
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\Receita
+		lineageTag: 46afb278-45b6-4701-b1f8-9478c6cafb57
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure Receita =
+			
+			SUM(
+			    'f_ConsultaPedidos'[ValorPedido]
+			)
+		formatString: "R$"#,0.00;-"R$"#,0.00;"R$"#,0.00
+		displayFolder: KPIs\Receita
+		lineageTag: 49debcd0-ce23-4ab8-b8dc-0f7f1b4d6bf3
+
+		annotation PBI_FormatHint = {"currencyCulture":"es-BR"}
+
+	measure 'Volume (sem OMNI)' =
+			
+			CALCULATE(
+			    SUM('f_ConsultaPedidos'[QtdeMateriais]),
+			    'f_ConsultaPedidos'[MeioCaptacao] <> "Pedido Omnichannel",
+			    REMOVEFILTERS(d_Calendario))
+		formatString: #,0
+		displayFolder: KPIs\Volume
+		lineageTag: 8f92d8e8-434e-4506-8e3e-f6409c229d1b
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure UPA =
+			
+			DIVIDE(
+			    'Medidas'[Volume (sem OMNI)],
+			    'Medidas'[Ativos Totais Ciclo]
+			)
+		formatString: 0.00
+		displayFolder: KPIs\UPA
+		lineageTag: 5cfad3d7-41ff-4118-9b64-1b35681e25fa
+
+	measure 'Reinicio Realizado' =
+			
+			COALESCE(
+			    CALCULATE(
+			        DISTINCTCOUNT(f_ConsultaPedidos[Pessoa]),
+			        f_ConsultaPedidos[SituacaoAtividade] = "Reinicio",
+			        f_ConsultaPedidos[PrimeiroPedido] = "Sim",
+			        REMOVEFILTERS(d_Calendario)
+			        )
+			    ,0
+			)
+		formatString: 0
+		displayFolder: Base Ativa\IR
+		lineageTag: 103bfc74-8d42-4306-89aa-23faca826ef1
+
+	measure '% Atividade Realizada' = ```
+			// Percentual de atividade realizada sem considerar Inicios e Reinicios
+			COALESCE(    
+			    DIVIDE(
+			        [Ativos no Ciclo],
+			        [Base Ativa Inicial Estrutura]
+			    ),
+			    0
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Base Ativa\Atividade
+		lineageTag: 2d36ebb1-6f39-49b7-bf67-dd5f2954ab62
+
+	measure '% RPA estrutura' =
+			
+			COALESCE(
+			    DIVIDE(
+			        [RPA GERA],
+			        [Meta RPA Estrutura]
+			    ),
+			    "sem meta cadastrada"
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\RPA
+		lineageTag: eabb068f-a25e-4369-a50f-b76391ab2f16
+
+	measure 'RPA GERA' =
+			
+			DIVIDE(
+			    'Medidas'[Receita (sem OMNI)],
+			    'Medidas'[Ativos Totais Ciclo]
+			)
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: KPIs\RPA
+		lineageTag: df490041-e43e-424c-8241-a73ed4b9b137
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Meta Receita Estrutura' =
+			
+			CALCULATE(
+			    SUM('d_MetaDiariaEstrutura'[Meta Receita]),
+			    d_MetaDiariaEstrutura[Data] <= MAX('f_ConsultaPedidos'[DataFaturamento]),
+			    REMOVEFILTERS(d_Calendario)
+			)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\Receita
+		lineageTag: 323d2cc8-8cbb-4751-afdb-4514af22fde4
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Receita Estrutura' =
+			
+			COALESCE(
+			    DIVIDE(
+			        [Receita (sem OMNI)],
+			        [Meta Receita Estrutura]
+			    ),
+			    "SEM META"
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Receita
+		lineageTag: f5594f5a-a07f-4eb9-8335-c2f7d853cbf5
+
+	measure 'Meta Diaria Ativos no Ciclo Estrutura' = ```
+			
+			CALCULATE(
+			    SUM('d_MetaDiariaEstrutura'[Meta AtivosNoCiclo]),
+			    REMOVEFILTERS(d_Calendario),
+			    'd_MetaDiariaEstrutura'[Data] <= MAX(f_ConsultaPedidos[DataFaturamento])
+			)
+			
+			```
+		displayFolder: Base Ativa\Ativos no Ciclo
+		lineageTag: 50f8a702-b363-4a5e-89c4-d2c81bb57423
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Meta Volume Diaria Estrutura' =
+			
+			CALCULATE(
+			    SUM('d_MetaDiariaEstrutura'[Meta Volume]),
+			    REMOVEFILTERS(d_Calendario),
+			    'd_MetaDiariaEstrutura'[Data] <= MAX('f_ConsultaPedidos'[DataFaturamento])
+			)
+		formatString: #,0
+		displayFolder: KPIs\Volume
+		lineageTag: 1486c9d3-5dab-4a27-9c14-687d099f0cb3
+
+	measure 'Meta % Atividade Estrutura' =
+			// Calculo de meta atividade por estrutura
+			DIVIDE(
+			    [Meta Diaria Ativos no Ciclo Estrutura],
+			    [Base Ativa Inicial Estrutura],
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Base Ativa\Atividade
+		lineageTag: 303acba4-9332-451e-ba44-d74dfe432a2b
+
+	measure '% Atividade Atingida' =
+			
+			COALESCE(
+			    DIVIDE(
+			        [% Atividade Realizada],
+			        [Meta % Atividade Estrutura]
+			    ),
+			    "sem meta cadastrada"
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Base Ativa\Atividade
+		lineageTag: 790f36ee-ddcd-462b-89e6-af54d3279fad
+
+	measure '% Volume Estrutura' = ```
+			
+			COALESCE(    
+			    DIVIDE(
+			        [Volume (sem OMNI)],
+			        [Meta Volume Diaria Estrutura]
+			    ),
+			    "sem meta cadastrada"
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Volume
+		lineageTag: a51bbe36-b1d6-408a-a68c-0771af952640
+
+	measure 'Meta UPA Estrutura' =
+			
+			[Meta Volume Diaria Estrutura] / [Meta Diaria Ativos Totais Ciclo Estrutura]
+		displayFolder: KPIs\UPA
+		lineageTag: 91c863ff-c793-4f27-aa91-abc8dccdf727
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% UPA Estrutura' = ```
+			
+			COALESCE(   
+			    DIVIDE(
+			        [UPA],
+			        [Meta UPA Estrutura]
+			    ),
+			    "sem meta cadastrada"
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\UPA
+		lineageTag: 7be6ca68-de2e-4145-9d7a-608041764cf9
+
+	measure '% Ativos no Ciclo Estrutura' =
+			
+			COALESCE(
+			    DIVIDE(
+			        [Ativos no Ciclo],
+			        [Meta Diaria Ativos no Ciclo Estrutura]
+			    ),
+			    "sem meta cadastrada"
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Base Ativa\Ativos no Ciclo
+		lineageTag: fbd0f232-c2b5-44a7-ba33-aabd15dff4d8
+
+	measure 'Eixo Y CodigoCD' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED('f_ConsultaPedidos'[CodCD], 'f_ConsultaPedidos'[CodCD])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [Receita (sem OMNI)]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.4
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		displayFolder: Formatação
+		lineageTag: 18e1d320-9743-45fd-a5af-ffa3cdd2480c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Receita CD (Sem OMNI)' =
+			
+			CALCULATE(
+			    SUM('f_ConsultaPedidos'[ValorPedido]),
+			    'f_ConsultaPedidos'[MeioCaptacao] <> "Pedido Omnichannel",
+			    ALL('f_ConsultaPedidos'[CodCD])
+			)
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: KPIs\Receita
+		lineageTag: 0272c54f-7cf2-4244-98e1-b901b68be5df
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Eixo Y PDV' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED('f_ConsultaPedidos'[PDV], 'f_ConsultaPedidos'[PDV])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [Receita (sem OMNI)]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.4
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		displayFolder: Formatação
+		lineageTag: bc6d8d7a-c73e-4553-8600-6f8a3b160cb2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Receita PDV' =
+			
+			CALCULATE(
+			    SUM('f_ConsultaPedidos'[ValorPedido]),
+			    f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel",
+			    ALL('d_Lojas'[PDV])
+			)
+		displayFolder: KPIs\Receita
+		lineageTag: 9d5a6232-3ef7-4e53-966d-22381018e675
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Representatividade PDV' = ```
+			
+			DIVIDE(
+			    'Medidas'[Receita (sem OMNI)],
+			    'Medidas'[Receita PDV]
+			) 
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Formatação
+		lineageTag: 3206064d-2263-423f-9836-28745fcc9dcc
+
+	measure 'Eixo X Atividade' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED('f_BaseAtivaDiaria'[Papel], 'f_BaseAtivaDiaria'[Papel])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [% Atividade Realizada segmentacao]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.5
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		displayFolder: Formatação
+		lineageTag: e91e9ec6-eedc-4d8d-8352-bdc39d79f3f8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Eixo X Ativos Totais Ciclo' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED('d_Papel'[Papel], 'd_Papel'[Papel])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [Ativos Atuais A0]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.7
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		displayFolder: Formatação
+		lineageTag: 3600f25a-8dac-47bc-8348-242335c4a1b8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Eixo X Base Ativa' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED('f_BaseAtivaDiaria'[Papel], 'f_BaseAtivaDiaria'[Papel])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [Base Ativa Atual]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.8
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		displayFolder: Formatação
+		lineageTag: 28d4de41-2cc2-4184-865e-07361b558b30
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Eixo X Volume' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED('f_ConsultaPedidos'[Papel], 'f_ConsultaPedidos'[Papel])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [Volume (sem OMNI)]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.8
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		displayFolder: Formatação
+		lineageTag: daf835c4-84ea-41d3-93d7-5a9591e1df09
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Eixo X Receita' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED('d_Papel'[Papel], 'd_Papel'[Papel])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [Receita (sem OMNI)]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.6
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		displayFolder: Formatação
+		lineageTag: e641460c-1fca-46f9-93cb-06dd75bae676
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Eixo X RPA' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED('f_ConsultaPedidos'[Papel], 'f_ConsultaPedidos'[Papel])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [RPA GERA]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.8
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		displayFolder: Formatação
+		lineageTag: 17347b90-7681-40ea-8571-5f7441ef7c9b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'IR Realizado' =
+			
+			COALESCE(
+			    CALCULATE(
+			        DISTINCTCOUNT( f_ConsultaPedidos[Pessoa] ),
+			        f_ConsultaPedidos[SituacaoAtividade] IN { "Inicio", "Reinicio" },
+			        f_ConsultaPedidos[PrimeiroPedido] = "Sim"
+			    )
+			    ,0
+			)
+		formatString: #,0
+		displayFolder: Base Ativa\IR
+		lineageTag: c7bba196-a78f-4f21-81c8-b64997883337
+
+	measure '% Ativos totais ciclo estrutura' =
+			
+			DIVIDE(
+			    [Ativos Totais Ciclo],
+			    [Meta Diaria Ativos Totais Ciclo Estrutura],
+			    "sem meta cadastrada"
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Base Ativa\Ativos Totais Ciclo
+		lineageTag: 34c3497b-d902-4ad5-88e1-a073576707c1
+
+	measure 'Eixo X UPA' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED('d_Papel'[Papel], 'd_Papel'[Papel])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [UPA]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.7
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		displayFolder: Formatação
+		lineageTag: 6b43c27c-31b2-4205-afd4-6ec6b4e25792
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Ativos no Ciclo' =
+			
+			COALESCE(
+			    CALCULATE(
+			        DISTINCTCOUNT(f_ConsultaPedidos[Pessoa]),
+			        f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel",
+			        f_ConsultaPedidos[SituacaoAtividade] = "Revendedor Ativo",
+			        f_ConsultaPedidos[PrimeiroPedido] = "Sim",
+			        REMOVEFILTERS(d_Calendario)
+			        )
+			    ,0
+			)
+		formatString: #,0
+		displayFolder: Base Ativa\Ativos no Ciclo
+		lineageTag: 529e12fe-dd57-4dc3-ab1a-40c0fb5d8a61
+
+	measure 'Base Ativa Inicial Estrutura' = ```
+			
+			VAR _selecaoPapel = SELECTEDVALUE(f_BaseAtivaDiaria[Papel])
+			VAR _BaseInicial = 
+			    COALESCE(    
+			        CALCULATE(
+			            DISTINCTCOUNT('f_BaseAtivaINICIAL'[CodigoRevendedor])
+			        ),0)
+			RETURN
+			
+			IF(
+			    NOT(ISBLANK(SELECTEDVALUE(f_BaseAtivaDiaria[Papel]))),
+			    COALESCE(    
+			        CALCULATE(
+			            DISTINCTCOUNT('f_BaseAtivaINICIAL'[CodigoRevendedor])
+			        ),0),
+			    _BaseInicial
+			)
+			```
+		formatString: #,0
+		displayFolder: Base Ativa\Base Ativa Inicial
+		lineageTag: c327b2eb-055b-4120-aa9e-48fe1cf50ba0
+
+	measure 'Meta IR Diária' =
+			
+			CALCULATE(
+			    ROUND( SUM( 'd_MetaDiariaEstrutura'[Meta IniciosReinicios] ),0 ),
+			    REMOVEFILTERS(d_Calendario),
+			    'd_MetaDiariaEstrutura'[Data] <= MAX('f_ConsultaPedidos'[DataFaturamento])
+			)
+		formatString: #,0
+		displayFolder: Base Ativa\IR
+		lineageTag: 1a43a6fd-ff18-41d2-9940-ae05e8936cdf
+
+	measure '% IR estrutura' =
+			
+			COALESCE(
+			    DIVIDE(
+			        [IR Realizado],
+			        [Meta IR Diária]
+			    ),
+			    "sem meta cadastrada"
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Base Ativa\IR
+		lineageTag: 01ce720d-0e08-4b52-b9f2-a8f160fd7f4e
+
+	measure 'Meta Diaria Ativos Totais Ciclo Estrutura' = [Meta Diaria Ativos no Ciclo Estrutura] + [Meta IR Diária]
+		formatString: #,0
+		displayFolder: Base Ativa\Ativos Totais Ciclo
+		lineageTag: f62189b0-dc96-4312-9b68-0b4bbe5a307a
+
+	measure '% Atividade Realizada segmentacao' =
+			// Percentual de atividade realizada sem considerar Inicios e Reinicios
+			DIVIDE(
+			    [Ativos Atuais A0],
+			    [Base Ativa Atual]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Base Ativa\Atividade
+		lineageTag: 5696ac25-38bd-412e-ade8-cae90c28307f
+
+	measure '% UPA Comparativo' =
+			
+			DIVIDE(
+			    'Medidas'[UPA],
+			    'Medidas'[Meta UPA Estrutura]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: KPIs\UPA
+		lineageTag: 95ab932a-be32-4451-aba2-bef3db3dac78
+
+	measure '% Receita Comparativo' = ```
+			
+			    DIVIDE(
+			        'Medidas'[Receita (sem OMNI)],
+			        'Medidas'[Meta Receita Estrutura]
+			    )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: KPIs\Receita
+		lineageTag: d1a0ca5f-37d1-4a80-8ff7-25340b5b8370
+
+	measure 'Meta Diaria PDV' =
+			
+			CALCULATE(
+			    SUM( 'd_MetaPDV'[Meta] ),
+			    'd_MetaPDV'[Data] <= MAX( 'f_ConsultaPedidos'[DataFaturamento] )
+			)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\Receita
+		lineageTag: 80f54f26-77f8-45b0-9685-33f09aa3de30
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Receita PDV' =
+			
+			DIVIDE(
+			    [Receita (sem OMNI)],
+			    [Meta Diaria PDV],
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Receita
+		lineageTag: 4f8991ae-d69e-4649-af12-e1c184d6aa46
+
+	measure 'Meta RPA Estrutura' = ```
+			
+			VAR ReceitaTotal = SUM(d_MetaTotalEstrutura[Receita])
+			VAR AtivosTotais = SUM(d_MetaTotalEstrutura[Ativos Totais no Ciclo])
+			RETURN
+			
+			DIVIDE(
+			    ReceitaTotal, 
+			    AtivosTotais
+			)
+			```
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: KPIs\RPA
+		lineageTag: 4546e3e8-cdd5-477f-9b9a-f3b11081c86a
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Meta recuperados estrutura' =
+			
+			CALCULATE(
+			    SUM(d_MetaTotalEstrutura[Recuperados])
+			)
+		formatString: 0
+		displayFolder: Base Ativa\Recuperados
+		lineageTag: 7e440175-14ae-4ad7-8290-0e79e0ac05c2
+
+	measure '% Recuperados sobre meta' = [Recuperados Realizados] / [Meta recuperados estrutura]
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Base Ativa\Recuperados
+		lineageTag: 1ae183b9-1f92-4ccb-bfff-50737a43ec5a
+
+	measure 'Base Ativa Atual' = ```
+			
+			VAR _ativosA0 = 
+			    CALCULATE(
+			    DISTINCTCOUNT(f_BaseAtivaDiaria[CodigoRevendedor]),
+			    f_BaseAtivaDiaria[CiclosInatividade] = 0,
+			    TREATAS(VALUES( -- Verificar se o revendedor é um A0 que passou pedido
+			        f_ConsultaPedidos[Pessoa]),
+			        f_BaseAtivaDiaria[CodigoRevendedor]))
+			VAR _demaisAtivos = 
+			CALCULATE(
+			    DISTINCTCOUNT(f_BaseAtivaDiaria[CodigoRevendedor]),
+			    f_BaseAtivaDiaria[CiclosInatividade] > 0)
+			RETURN
+			
+			_ativosA0 + _demaisAtivos
+			```
+		formatString: #,0
+		displayFolder: Base Ativa\Base Ativa Diaria
+		lineageTag: 820470a1-5f52-4aaa-98aa-6876b498bd34
+
+	measure 'Base Ativa Atual %' =
+			
+			DIVIDE(
+			    [Base Ativa Atual],
+			    CALCULATE(
+			        [Base Ativa Atual],
+			        REMOVEFILTERS('f_BaseAtivaDiaria'[Papel]) -- Remove filtros de categorias (como Bronze ou Prata) para calcular o total no ciclo atual
+			    ),
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Base Ativa\Base Ativa Diaria
+		lineageTag: 05a6e308-09ec-4eea-88d9-27132843c932
+
+	measure 'Ativos totais ciclo %' =
+			
+			DIVIDE(
+			    [Ativos Totais Ciclo],
+			    CALCULATE(
+			        [Ativos Totais Ciclo],
+			        REMOVEFILTERS('d_Papel'[Papel]) -- Remove filtros de categorias (como Bronze ou Prata) para calcular o total no ciclo atual
+			    ),
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Base Ativa\Ativos Totais Ciclo
+		lineageTag: 461923b2-fb82-4088-b8c0-2c0a0b817d54
+
+	measure 'Inicio realizado' = ```
+			
+			COALESCE(
+			    CALCULATE(
+			        DISTINCTCOUNT(f_ConsultaPedidos[Pessoa]),
+			        FILTER(
+			            f_ConsultaPedidos,
+			            f_ConsultaPedidos[SituacaoAtividade] = "Inicio"
+			                && f_ConsultaPedidos[PrimeiroPedido] = "Sim"
+			        )
+			    ),
+			    0
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Base Ativa\IR
+		lineageTag: a962cf3e-9bc5-449a-9c5d-32f0e7945647
+
+	measure 'Ativos Atuais A0' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(f_BaseAtivaDiaria[Key PessoaCiclo]),
+			    FILTER(f_BaseAtivaDiaria, 'f_BaseAtivaDiaria'[CiclosInatividade] = 0),
+			    TREATAS(VALUES( -- Verificar se o revendedor é um A0 que passou pedido
+			        f_ConsultaPedidos[Pessoa]),
+			        f_BaseAtivaDiaria[CodigoRevendedor]
+			    )
+			)
+		formatString: #,0
+		displayFolder: Base Ativa\Ativos
+		lineageTag: be00ca7c-e778-42d5-9e1c-ada8bd35a894
+
+	measure 'Ativos Totais Ciclo' =
+			
+			[Ativos no Ciclo] + [IR Realizado]
+		formatString: #,0
+		displayFolder: Base Ativa\Ativos Totais Ciclo
+		lineageTag: 96d8c5e4-073f-4051-8106-7a1a41265cdc
+
+	measure 'Cor Papel Consulta Pedidos' = ```
+			
+			LOOKUPVALUE (
+			    d_CoresDinamicas[CorHex],
+			    d_CoresDinamicas[Tipo], "Papel",
+			    d_CoresDinamicas[Chave], SELECTEDVALUE(f_ConsultaPedidos[Papel])
+			)
+			
+			```
+		displayFolder: Formatação
+		lineageTag: d19e30d4-b7dd-413c-8669-e046f5ae9cf8
+
+	measure 'Cor Papel Base Diaria' = ```
+			
+			LOOKUPVALUE (
+			    d_CoresDinamicas[CorHex],
+			    d_CoresDinamicas[Tipo], "Papel",
+			    d_CoresDinamicas[Chave], SELECTEDVALUE(f_BaseAtivaDiaria[Papel])
+			)
+			
+			```
+		displayFolder: Formatação
+		lineageTag: 3f412064-16c9-44c3-a2c3-1ecd55ddd815
+
+	measure DadosAte =
+			
+			CALCULATE(
+			    MAX(f_ConsultaPedidos[DataFaturamento]),
+			    ALL(f_ConsultaPedidos)
+			)
+		formatString: Short Date
+		displayFolder: Formatação
+		lineageTag: 5d2d8975-b032-4321-86dd-805228196e32
+
+	measure 'Meta Ciclo Ativos no Ciclo' =
+			
+			SUM(d_MetaTotalEstrutura[Ativos no Ciclo])
+		displayFolder: Base Ativa\Ativos no Ciclo
+		lineageTag: 2ee12c9a-871b-4be7-a4c4-d1b5a9e6b18e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Meta Ciclo % Atividade' =
+			// Calculo de meta atividade por estrutura
+			DIVIDE(
+			    [Meta Ciclo Ativos no Ciclo],
+			    [Base Ativa Inicial Estrutura],
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Base Ativa\Atividade
+		lineageTag: 6a6879af-fbf3-436e-9569-40fc67cc2952
+
+	measure 'Meta Ciclo IR' =
+			
+			CALCULATE(
+			    SUM(d_MetaDiariaEstrutura[Meta IniciosReinicios]),
+			    REMOVEFILTERS(d_Calendario)
+			)
+		formatString: #,0
+		displayFolder: Base Ativa\IR
+		lineageTag: 667f70ee-f2e9-4ca2-a6bd-af024bcfd3cf
+
+	measure 'Meta Ciclo Ativos Totais' =
+			
+			[Meta Ciclo Ativos no Ciclo] + [Meta Ciclo IR]
+		displayFolder: Base Ativa\Ativos Totais Ciclo
+		lineageTag: 921ba94d-ffc3-4032-bb0c-59d53bbc62ca
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Meta Ciclo UPA' = ```
+			
+			VAR _MetaVolume = 
+			CALCULATE(
+			    SUM(d_MetaDiariaEstrutura[Meta Volume]),
+			    REMOVEFILTERS(d_Calendario))
+			RETURN
+			
+			_MetaVolume / [Meta Ciclo Ativos Totais]
+			```
+		displayFolder: KPIs\UPA
+		lineageTag: 443c7346-bef5-4ade-a429-98da4657a832
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Meta Ciclo Volume' =
+			
+			SUM(d_MetaDiariaEstrutura[Meta Volume])
+		displayFolder: KPIs\Volume
+		lineageTag: 92a38a0d-a654-4682-bc6a-1831eeb20068
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Receita Meta Consultor' = ```
+			
+			CALCULATE(
+			    SUM(d_MetaConsultoresDiaria[Meta Receita Diaria]),
+			    FILTER(
+			        d_MetaConsultoresDiaria,
+			        d_MetaConsultoresDiaria[Data] <= MAX('d_DataAtualização'[DataHora_Brasilia]) - 1
+			    )
+			)
+			
+			```
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: KPIs\Consultor
+		lineageTag: ec38765a-6bb3-4e34-929b-18d4f961ebe5
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Receita realizado consultor' =
+			
+			SUM(f_ConsultaPedidos[ValorPedido])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\Consultor
+		lineageTag: 7317d078-31f6-4446-b212-af97c6f4f852
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Receita % Consultor' = ```
+			
+			DIVIDE(
+			    [Receita realizado consultor],
+			    [Receita Meta Consultor],
+			    0
+			)
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Consultor
+		lineageTag: 6b3c9bc2-0fce-4032-b2d0-26303b694697
+
+	measure 'Pedido realizado consultor' = ```
+			
+			VAR SelecaoCanal = SELECTEDVALUE(f_ConsultaPedidos[EstruturaPDV])
+			
+			VAR ResultadoER = 
+			CALCULATE(
+			    COALESCE(COUNT(f_ConsultaPedidos[CodigoPedido]),0),
+			    f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel" &&
+			    f_ConsultaPedidos[EstruturaPDV] = "ER"
+			)
+			VAR ResultadoCaptacao = 
+			CALCULATE(
+			    COALESCE(COUNT(f_ConsultaPedidos[CodigoPedido]),0),
+			    f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel" &&
+			    f_ConsultaPedidos[EstruturaPDV] = "Captação"
+			)
+			VAR ResultadoGeral = 
+			CALCULATE(
+			    COALESCE(COUNT(f_ConsultaPedidos[CodigoPedido]),0),
+			    f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel"
+			)
+			RETURN
+			SWITCH(
+			    TRUE(), 
+			    SelecaoCanal = "ER", ResultadoER,
+			    SelecaoCanal = "Captação", ResultadoCaptacao,
+			    ResultadoGeral
+			)
+			```
+		formatString: #,0
+		displayFolder: KPIs\Consultor
+		lineageTag: 70c189cf-4bdf-4d6e-bedf-d73d739dfd26
+
+	measure 'Pedido meta consultor' = ```
+			
+			VAR DataMaxima = MAX('f_ConsultaPedidos'[DataFaturamento])
+			VAR SelecaoConsultor = SELECTEDVALUE(f_ConsultaPedidos[Usuario de Finalização])
+			VAR SelecaoCanal = SELECTEDVALUE(f_ConsultaPedidos[EstruturaPDV])
+			
+			VAR MetaPDV =
+			    CALCULATE(
+			        COALESCE(SUM(d_MetaConsultoresDiaria[Meta Pedidos Diaria] ), 0),
+			        d_MetaConsultoresDiaria[Data] <= DataMaxima
+			    )
+			
+			VAR MetaConsultor = 
+			    CALCULATE(
+			        COALESCE(SUM(d_MetaConsultoresDiaria[Meta Pedidos Diaria] ), 0),
+			        d_MetaConsultoresDiaria[Data] <= DataMaxima
+			    )
+			RETURN
+			IF( 
+			    SelecaoCanal = "ER",
+			    IF( SelecaoConsultor <> BLANK(), MetaConsultor, MetaPDV ),
+			    0
+			)
+			```
+		displayFolder: KPIs\Consultor
+		lineageTag: e93533bb-20e2-4e2d-be9a-371b2d4e784f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Pedido % consultor' = ```
+			
+			IF(
+			    [Pedido meta consultor] > 0, 
+			    DIVIDE([Pedido realizado consultor], [Pedido meta consultor]),
+			    0
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Consultor
+		lineageTag: af94dec3-519e-46c4-99ce-cde56b809528
+
+	measure 'Pedido medio realizado consultor' = ```
+			
+			VAR SelecaoCanal = SELECTEDVALUE(f_ConsultaPedidos[EstruturaPDV])
+			VAR ResultadoER = 
+			    AVERAGEX(
+			        FILTER('f_ConsultaPedidos',
+			            'f_ConsultaPedidos'[EstruturaPDV] = "ER" &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[ValorPedido])) &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[Unidade]))
+			        ),
+			    'f_ConsultaPedidos'[ValorPedido]
+			    )
+			VAR ResultadoCaptacao = 
+			    AVERAGEX(
+			        FILTER('f_ConsultaPedidos',
+			            'f_ConsultaPedidos'[EstruturaPDV] = "Captação" &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[ValorPedido])) &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[Unidade]))
+			        ),
+			    'f_ConsultaPedidos'[ValorPedido]
+			    )
+			Var ResultadoGeral = 
+			    AVERAGEX(
+			        FILTER('f_ConsultaPedidos',
+			            NOT(ISBLANK('f_ConsultaPedidos'[ValorPedido])) &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[Unidade]))
+			        ),
+			    'f_ConsultaPedidos'[ValorPedido]
+			    )
+			RETURN
+			SWITCH(
+			    TRUE(), 
+			    SelecaoCanal = "ER", ResultadoER,
+			    SelecaoCanal = "Captação", ResultadoCaptacao,
+			    ResultadoGeral
+			)
+			```
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: KPIs\Consultor
+		lineageTag: 6408896e-d26a-444c-acaf-ab55096d5f65
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'pedido medio % consultor' = ```
+			
+			IF(
+			    [Meta Pedido Medio] > 0, 
+			    DIVIDE([Pedido medio realizado consultor], [Meta Pedido Medio]),
+			    0
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Consultor
+		lineageTag: eac95271-3540-4418-b542-0b65821dd4f8
+
+	measure 'Itens por pedido realizado consultor' = ```
+			
+			VAR SelecaoCanal = SELECTEDVALUE(f_ConsultaPedidos[EstruturaPDV])
+			VAR RealER = 
+			    AVERAGEX(
+			        FILTER(
+			            'f_ConsultaPedidos',
+			            'f_ConsultaPedidos'[MeioCaptacao] <> "Pedido Omnichannel" &&
+			            f_ConsultaPedidos[EstruturaPDV] = "ER" &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[QtdeMateriais])) &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[Unidade]))
+			        ),
+			    'f_ConsultaPedidos'[QtdeMateriais]
+			    )
+			VAR RealCaptacao = 
+			    AVERAGEX(
+			        FILTER(
+			            'f_ConsultaPedidos',
+			            f_ConsultaPedidos[EstruturaPDV] = "Captação" &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[QtdeMateriais])) &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[Unidade]))
+			        ),
+			    'f_ConsultaPedidos'[QtdeMateriais]
+			    )
+			VAR ResultadoGeral = 
+			    AVERAGEX(
+			        FILTER(
+			            'f_ConsultaPedidos',
+			            NOT(ISBLANK('f_ConsultaPedidos'[QtdeMateriais])) &&
+			            NOT(ISBLANK('f_ConsultaPedidos'[Unidade]))
+			        ),
+			    'f_ConsultaPedidos'[QtdeMateriais]
+			    )
+			RETURN
+			SWITCH(
+			    TRUE(), 
+			    SelecaoCanal = "ER", RealER,
+			    SelecaoCanal = "Captação", RealCaptacao,
+			    ResultadoGeral
+			)
+			```
+		displayFolder: KPIs\Consultor
+		lineageTag: 653c8e36-c09d-4cae-9d7f-850cb9cbe32d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Itens por pedido % consultor' =
+			
+			IF(
+			    [Meta Itens por Pedido] > 0,
+			    DIVIDE([Itens por pedido realizado consultor], [Meta Itens por Pedido]),
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Consultor
+		lineageTag: 46e7efbd-ac5b-44f9-a888-2011f74c590f
+
+	measure 'Meta Receita Ciclo' = ```
+			
+			VAR SelecaoPDV = SELECTEDVALUE(d_Lojas[PDV])
+			VAR SelecaoUnidade = SELECTEDVALUE(d_Lojas[UNIDADE])
+			VAR SelecaoCanal = SELECTEDVALUE(d_Lojas[ESTRUTURA PDV])
+			VAR SelecaoConsultor = SELECTEDVALUE(d_MetaConsultores[Consultor(a)])
+			
+			VAR MetaConsultor = 
+			    CALCULATE(
+			        SUM(d_MetaConsultores[Receita Líquida (R$)])/*,
+			        CROSSFILTER(d_MetaConsultores[Key ConsultorCiclo], f_ConsultaPedidos[Key ConsultorCiclo], Both)*/
+			    )
+			
+			// Mapeia PDV para nome Power BI
+			VAR MetaReferentePDV =
+			    SWITCH(
+			        SelecaoPDV,
+			        "23275 ER ARI", "TOTAL RICARDO 23275 (Power BI)",
+			        "20844 ER UDI", "TOTAL RICARDO 20844 (Power BI)",
+			        "22372 ER Venda Nova", "TOTAL RICARDO 22372 (Power BI)",
+			        "21433 ER Rib. Neves", "TOTAL RICARDO 21433 (Power BI)",
+			        BLANK()
+			    )
+			
+			// Busca meta por PDV
+			VAR MetaTotalPDV = 
+			    IF( SelecaoPDV IN { "13793 Captação", "20844 Captação" }, 
+			        SUM(d_MetaPDV[Meta]),
+			        CALCULATE(
+			            SELECTEDVALUE(d_MetaConsultores[Receita Líquida (R$)]),
+			            d_MetaConsultores[Consultor(a)] = MetaReferentePDV,
+			            TREATAS(VALUES(d_Ciclos[Ciclo Captação]), d_MetaConsultores[Ciclo])
+			        )
+			    )
+			
+			// Mapeia Unidade para nome Power BI
+			VAR MetaReferenteUnidade = 
+			    SWITCH(
+			        SelecaoUnidade,
+			        "BH", "TOTAL GERAL RICARDO RMBH (Power BI)",
+			        "UDI", "TOTAL GERAL RICARDO UDI (Power BI)",
+			        BLANK()
+			    )
+			
+			// Busca meta por Unidade
+			VAR MetaTotalUnidade = 
+			    SUM( d_MetaPDV[Meta] )
+			
+			// Cálculo da Meta Geral
+			VAR MetaGeral = SUM(d_MetaPDV[Meta])
+			
+			RETURN
+			SWITCH(
+			    TRUE(), 
+			    SelecaoConsultor <> BLANK(), MetaConsultor,
+			    SelecaoPDV <> BLANK(), MetaTotalPDV,
+			    SelecaoUnidade <> BLANK(), MetaTotalUnidade,
+			    MetaGeral
+			)
+			```
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: KPIs\Consultor
+		lineageTag: 47fbbcb6-e394-47f5-a43a-d5387fb2f515
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Meta Receita Total' =
+			
+			SUM(d_MetaDiariaEstrutura[Meta Receita])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\Receita
+		lineageTag: 8c191767-3652-4a33-8501-ba0126d8e4c1
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Meta Pedidos Ciclo' = ```
+			
+			VAR SelecaoConsultor = SELECTEDVALUE( f_ConsultaPedidos[Usuario de Finalização] )
+			VAR SelecaoCanal = SELECTEDVALUE(f_ConsultaPedidos[EstruturaPDV])
+			VAR SelecaoPDV = SELECTEDVALUE(f_ConsultaPedidos[PDV])
+			VAR SelecaoUnidade = SELECTEDVALUE(f_ConsultaPedidos[Unidade])
+			
+			VAR MetaCiclo = 
+			    CALCULATE(
+			        SUM(d_MetaConsultores[Nº Pedidos]),
+			        FILTER(
+			            d_MetaConsultores,
+			            d_MetaConsultores[Cod Consultor] <> BLANK()
+			        ),
+			        TREATAS(
+			            VALUES(
+			                f_ConsultaPedidos[Key UnidadeCiclo]),
+			                d_MetaConsultores[Key UnidadeCiclo]) )
+			                
+			VAR MetaConsultor = 
+			    CALCULATE(
+			        SUM(d_MetaConsultores[Nº Pedidos])/*,
+			        CROSSFILTER(d_MetaConsultores[Key ConsultorCiclo], f_ConsultaPedidos[Key ConsultorCiclo], Both)*/
+			    )
+			
+			VAR MetaPDV = 
+			    CALCULATE(
+			        SUM(d_MetaConsultores[Nº Pedidos]),
+			        FILTER(
+			            d_MetaConsultores,
+			            d_MetaConsultores[Cod Consultor] <> BLANK()
+			        ),
+			        TREATAS(
+			            VALUES(
+			                f_ConsultaPedidos[Key PDVCiclo]),
+			                d_MetaConsultores[Key PDVCiclo]) )
+			RETURN
+			IF(
+			    SelecaoCanal = "ER",
+			    SWITCH(
+			        TRUE(), 
+			        SelecaoConsultor <> BLANK(), MetaConsultor,
+			        SelecaoPDV <> BLANK(), MetaPDV,
+			        SelecaoUnidade <> BLANK(), MetaCiclo,
+			        MetaCiclo
+			    ),
+			    0
+			)
+			```
+		displayFolder: KPIs\Consultor
+		lineageTag: ebfffd1c-fa79-46b2-a13f-7d00e7445730
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Meta MTD PDV e Consultores' = ```
+			
+			VAR SelecaoConsultor = SELECTEDVALUE(d_MetaConsultores[Consultor(a)])
+			
+			VAR MetaConsultor = 
+			    CALCULATE(
+			        COALESCE(SUM(d_MetaConsultoresDiaria[Meta Receita Diaria]),0),
+			        d_MetaConsultoresDiaria[Data] <= MAX('f_ConsultaPedidos'[DataFaturamento])
+			    )
+			VAR MetaPDV = 
+			    CALCULATE(
+			        COALESCE(SUM(d_MetaPDV[Meta]),0),
+			        d_MetaPDV[Data] <=  MAX( f_ConsultaPedidos[DataFaturamento] )
+			    )
+			RETURN
+			
+			SWITCH(
+			    TRUE(),
+			    SelecaoConsultor <> BLANK(), MetaConsultor,
+			    MetaPDV
+			)
+			```
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\Receita
+		lineageTag: a2df3b08-fd32-4a50-be6d-a9453f44970f
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Receita % real' =
+			
+			[Receita (sem OMNI)] / [Meta MTD PDV e Consultores]
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: KPIs\Consultor
+		lineageTag: 6d0399df-8d05-4058-b379-7189457c57a1
+
+	measure 'Meta Pedido Medio' = ```
+			
+			VAR SelecaoPDV = SELECTEDVALUE(f_ConsultaPedidos[PDV])
+			VAR SelecaoUnidade = SELECTEDVALUE(f_ConsultaPedidos[Unidade])
+			VAR SelecaoCanal = SELECTEDVALUE(f_ConsultaPedidos[EstruturaPDV])
+			
+			// Mapeia PDV para nome Power BI
+			VAR MetaReferentePDV =
+			    SWITCH(
+			        SelecaoPDV,
+			        "23275 ER ARI", "TOTAL RICARDO 23275 (Power BI)",
+			        "20844 ER UDI", "TOTAL RICARDO 20844 (Power BI)",
+			        "22372 ER Venda Nova", "TOTAL RICARDO 22372 (Power BI)",
+			        "21433 ER Rib. Neves", "TOTAL RICARDO 21433 (Power BI)",
+			        BLANK()
+			    )
+			
+			// Busca meta por PDV
+			VAR MetaTotalPDV = 
+			    CALCULATE(
+			        SELECTEDVALUE(d_MetaConsultores[Pedido Médio (R$)]),
+			        d_MetaConsultores[Consultor(a)] = MetaReferentePDV,
+			        TREATAS(VALUES(d_Ciclos[Ciclo Captação]), d_MetaConsultores[Ciclo])
+			    )
+			
+			// Mapeia Unidade para nome Power BI
+			VAR MetaReferenteUnidade = 
+			    SWITCH(
+			        SelecaoUnidade,
+			        "RMBH", "TOTAL GERAL RICARDO RMBH (Power BI)",
+			        "UDI", "TOTAL GERAL RICARDO UDI (Power BI)",
+			        BLANK()
+			    )
+			
+			// Busca meta por Unidade
+			VAR MetaTotalUnidade = 
+			    CALCULATE(
+			        SELECTEDVALUE(d_MetaConsultores[Pedido Médio (R$)]),
+			        d_MetaConsultores[PDV] = MetaReferenteUnidade,
+			        TREATAS(VALUES(d_Ciclos[Ciclo Captação]), d_MetaConsultores[Ciclo])
+			    )
+			
+			// Cálculo da Meta Geral
+			VAR MetaGeral = 
+			    CALCULATE(
+			        DIVIDE(
+			            SUM(d_MetaConsultores[Receita Líquida (R$)]),
+			            SUM(d_MetaConsultores[Nº Pedidos]),
+			            0
+			        ),
+			        d_MetaConsultores[Cod Consultor] <> BLANK(),
+			        TREATAS(VALUES(d_Ciclos[Ciclo Captação]), d_MetaConsultores[Ciclo])
+			    )
+			
+			RETURN
+			IF(
+			    SelecaoCanal = "ER",
+			    IF(
+			        NOT ISBLANK(MetaTotalPDV), MetaTotalPDV,
+			        IF(
+			            NOT ISBLANK(MetaTotalUnidade), MetaTotalUnidade,
+			            MetaGeral
+			        )
+			    ),
+			    0
+			)
+			```
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		displayFolder: KPIs\Pedido Médio
+		lineageTag: 04cc8b17-4487-4b6c-ad43-adad726d0c20
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Meta Itens por Pedido' = ```
+			
+			VAR SelecaoPDV = SELECTEDVALUE(f_ConsultaPedidos[PDV])
+			VAR SelecaoUnidade = SELECTEDVALUE(f_ConsultaPedidos[Unidade])
+			VAR SelecaoCanal = SELECTEDVALUE(f_ConsultaPedidos[EstruturaPDV])
+			
+			// Mapeia PDV para nome Power BI
+			VAR MetaReferentePDV =
+			    SWITCH(
+			        SelecaoPDV,
+			        "23275 ER ARI", "TOTAL RICARDO 23275 (Power BI)",
+			        "20844 ER UDI", "TOTAL RICARDO 20844 (Power BI)",
+			        "22372 ER Venda Nova", "TOTAL RICARDO 22372 (Power BI)",
+			        "21433 ER Rib. Neves", "TOTAL RICARDO 21433 (Power BI)",
+			        BLANK() )
+			
+			// Busca meta por PDV
+			VAR MetaTotalPDV = 
+			    CALCULATE(
+			        SELECTEDVALUE(d_MetaConsultores[Itens Pedido]),
+			        d_MetaConsultores[Consultor(a)] = MetaReferentePDV,
+			        TREATAS(VALUES(d_Ciclos[Ciclo Captação]), d_MetaConsultores[Ciclo]) )
+			
+			// Mapeia Unidade para nome Power BI
+			VAR MetaReferenteUnidade = 
+			    SWITCH(
+			        SelecaoUnidade,
+			        "RMBH", "TOTAL GERAL RICARDO RMBH (Power BI)",
+			        "UDI", "TOTAL GERAL RICARDO UDI (Power BI)",
+			        BLANK() )
+			
+			// Busca meta por Unidade
+			VAR MetaTotalUnidade = 
+			    CALCULATE(
+			        SELECTEDVALUE(d_MetaConsultores[Itens Pedido]),
+			        d_MetaConsultores[PDV] = MetaReferenteUnidade,
+			        TREATAS(VALUES(d_Ciclos[Ciclo Captação]), d_MetaConsultores[Ciclo]) )
+			
+			// Cálculo da Meta Geral
+			VAR MetaGeral = 
+			    CALCULATE(
+			        DIVIDE(
+			            SUM(d_MetaConsultores[Qtd. Itens]),
+			            SUM(d_MetaConsultores[Nº Pedidos]),
+			            0 ),
+			        d_MetaConsultores[Cod Consultor] <> BLANK(),
+			        TREATAS(VALUES(d_Ciclos[Ciclo Captação]), d_MetaConsultores[Ciclo]) )
+			
+			RETURN
+			IF(
+			    SelecaoCanal = "ER",
+			    IF(
+			        NOT ISBLANK(MetaTotalPDV), MetaTotalPDV,
+			        IF(
+			            NOT ISBLANK(MetaTotalUnidade), MetaTotalUnidade,
+			            MetaGeral
+			        )
+			    ),
+			    0
+			)
+			```
+		displayFolder: KPIs\Pedido Médio
+		lineageTag: c9910d2b-c68a-4cfc-8890-f5f8cbf54829
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Meta Receita MTD' =
+			
+			CALCULATE(
+			    SUM(d_MetaPDV[Meta]),
+			    d_MetaPDV[Data] <= MAX(f_ConsultaPedidos[DataFaturamento])
+			)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: Visão Mensal
+		lineageTag: feb31833-eb98-415d-b0a6-f0d48b99ccc2
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Diferença Real - Meta' = ```
+			
+			VAR Receita = [Realizado Mensal Receita]
+			
+			VAR Meta = [Meta Receita MTD]
+			
+			RETURN
+			    Receita - Meta
+			
+			```
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: Visão Mensal
+		lineageTag: dcfee96f-23da-4d04-9bfc-e33c82a13d0b
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Meta Mensal Receita Total' =
+			
+			CALCULATE(
+			    SUM(d_MetaPDV[Meta]),
+			    REMOVEFILTERS(d_Calendario),
+			    TREATAS(
+			        VALUES(d_Calendario[AnoMes]),
+			        d_MetaPDV[AnoMes]
+			    )
+			)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: Visão Mensal
+		lineageTag: 380e306a-5eca-414a-8d9f-acbdeca40f71
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Realizado Mensal Receita' =
+			
+			CALCULATE(
+			    SUM(f_ConsultaPedidos[ValorPedido]),
+			    f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel"
+			    )
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: Visão Mensal
+		lineageTag: a402334c-c495-4ce8-8d6b-e777cfe090c8
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Mensal Receita MTD' =
+			
+			DIVIDE(
+			    [Realizado Mensal Receita],
+			    [Meta Receita MTD]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Visão Mensal
+		lineageTag: e48832e6-5840-4564-8c18-94db8d4636e9
+
+	measure 'Representatividade PDV Mensal' =
+			
+			DIVIDE(
+			    [Realizado Mensal Receita],
+			    [Receita All PDV Mensal],
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Formatação
+		lineageTag: 0ed17a25-84ef-48d1-aa8d-ac52c49fdff7
+
+	measure 'Receita All PDV Mensal' =
+			
+			CALCULATE(
+			    SUM('f_ConsultaPedidos'[ValorPedido]),
+			    f_ConsultaPedidos[MeioCaptacao] <> "Pedido Omnichannel",
+			    ALL(d_Lojas[PDV])
+			)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: Visão Mensal
+		lineageTag: a3fe7316-e5a7-43ca-aba0-5d0972d5a0c0
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Eixo Y PDV Mensal' = ```
+			
+			
+			VAR vTabela = 
+			        ALLSELECTED(f_ConsultaPedidos[PDV], f_ConsultaPedidos[PDV])
+			
+			VAR vMaior_valor = 
+			    MAXX(
+			        vTabela,
+			        [Realizado Mensal Receita]
+			    )
+			
+			VAR vDeslocamento = 
+			    1.2
+			
+			RETURN
+			    vMaior_valor * vDeslocamento
+			```
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: Formatação
+		lineageTag: aecc45fb-74e6-4ed2-b407-2f0aca264f91
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Meta NPS CSAT Médio' =
+			
+			AVERAGE(f_NPS[Meta])
+		formatString: 0%;-0%;0%
+		displayFolder: NPS
+		lineageTag: bfcc9078-08f8-47f8-b09d-1213932ab54d
+
+	measure 'Real NPS CSAT Médio' =
+			
+			VAR TabelaAvaliacoes =
+			    ADDCOLUMNS(
+			        VALUES('f_NPS'[Avaliação]),
+			        "PercentualPositivo",
+			            DIVIDE(
+			                CALCULATE(SUM('f_NPS'[Analises Positivas])),
+			                CALCULATE(SUM('f_NPS'[Total Analises]))
+			            )
+			    )
+			
+			RETURN
+			    AVERAGEX(TabelaAvaliacoes, [PercentualPositivo])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: NPS
+		lineageTag: e6681b8e-1908-40e0-8aba-e32d72632862
+
+	measure '% NPS CSAT Médio' =
+			
+			DIVIDE( [Real NPS CSAT Médio], [Meta NPS CSAT Médio], 0 )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: f5c35a50-a0f6-40bc-939c-f36dfffc7591
+
+	measure 'Real OptOut' =
+			
+			AVERAGEX(
+			    VALUES('f_OptOut'[Ciclo]),
+			    CALCULATE( DIVIDE(
+			        SUM('f_OptOut'[QUANTIDADE DE OPT OUT DE CATÁLOGOS]),
+			        SUM('f_OptOut'[QUANTIDADE DE REVENDEDORAS NO PDV])
+			    ))
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: OptOut
+		lineageTag: 4bd2391b-6c42-410a-88bf-fba9340b24a1
+
+	measure 'Meta OptOut' = 0.05
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: OptOut
+		lineageTag: 0b7c36d8-addc-41b2-bc33-1feaa010ba72
+
+	measure 'Real x Meta OptOut' =
+			
+			DIVIDE( [Real OptOut], [Meta OptOut], 0 )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: OptOut
+		lineageTag: 958c9a03-ea58-4009-8406-d55ba8bc1e82
+
+	measure 'Real NPS Satis. ER' =
+			
+			CALCULATE(
+			    DIVIDE(
+			        SUM(f_NPS[Analises Positivas]),
+			        SUM(f_NPS[Total Analises])
+			    ),
+			    f_NPS[Avaliação] = "Satisfação ER"
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: abd701fa-0e85-4ff3-b423-6e7b321a3650
+
+	measure 'Real NPS Satis. Entrega' =
+			
+			CALCULATE(
+			    DIVIDE(
+			        SUM(f_NPS[Analises Positivas]),
+			        SUM(f_NPS[Total Analises])
+			    ),
+			    f_NPS[Avaliação] = "Satisfação Entrega"
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: 96740849-a14b-4925-ace2-e703021d89b0
+
+	measure 'Real NPS Satis. Supervisora' =
+			
+			CALCULATE(
+			    DIVIDE(
+			        SUM(f_NPS[Analises Positivas]),
+			        SUM(f_NPS[Total Analises])
+			    ),
+			    f_NPS[Avaliação] = "Satisfação Supervisora"
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: a5e970de-72d7-4560-8f3e-36e0f794efbf
+
+	measure 'Meta NPS Satis. ER' = ```
+			
+			CALCULATE(
+			    AVERAGE(f_NPS[Meta]), 
+			    f_NPS[Avaliação] = "Satisfação ER"
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: d9b18b39-a4be-470e-8e56-145a7038664f
+
+	measure 'Meta NPS Satis. Entrega' = ```
+			
+			CALCULATE(
+			    AVERAGE(f_NPS[Meta]), 
+			    f_NPS[Avaliação] = "Satisfação Entrega"
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: f96da7d0-da0a-40d8-a011-5cbeea98c3e2
+
+	measure 'Meta NPS Satis. Supervisora' = ```
+			
+			CALCULATE(
+			    AVERAGE(f_NPS[Meta]), 
+			    f_NPS[Avaliação] = "Satisfação Supervisora"
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: d87b0f76-d727-46a3-b7b6-15f2581b80e5
+
+	measure '% NPS Satis. ER' =
+			
+			VAR _Realizado = [Real NPS Satis. ER]
+			VAR _Meta = [Meta NPS Satis. ER]
+			RETURN
+			DIVIDE( _Realizado, _Meta )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: f31f7125-90cd-46a2-bc4d-86bfffd0be85
+
+	measure '% NPS Satis. Entrega' =
+			
+			VAR _Realizado = [Real NPS Satis. Entrega]
+			VAR _Meta = [Meta NPS Satis. Entrega]
+			RETURN
+			DIVIDE( _Realizado, _Meta )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: bef5f0d5-1020-43a6-afa3-a88f556e030d
+
+	measure '% NPS Satis. Supervisora' =
+			
+			VAR _Realizado = [Real NPS Satis. Supervisora]
+			VAR _Meta = [Meta NPS Satis. Supervisora]
+			RETURN
+			DIVIDE( _Realizado, _Meta )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: 8df76afc-15cb-456b-8ce4-fa0b7e26d62d
+
+	measure 'Real Penetracao ER' =
+			
+			DIVIDE(
+			    SUM(f_PenetracaoER[Ativas com pelo menos uma compra no ER]),
+			    SUM(f_PenetracaoER[Base Ativa])
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: PenetracaoER
+		lineageTag: 8406e718-dd96-46b6-b126-102f7b35d41f
+
+	measure 'Meta Penetracao ER' =
+			
+			0.36
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: PenetracaoER
+		lineageTag: 9a3a9c56-c41e-4623-9ece-072a59506cf5
+
+	measure '% Penetracao ER' =
+			
+			VAR _Realizado = [Real Penetracao ER]
+			VAR _Meta = [Meta Penetracao ER]
+			RETURN
+			DIVIDE( _Realizado, _Meta )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: PenetracaoER
+		lineageTag: 1851436a-702b-48b3-80ac-cbd65ea48952
+
+	measure Cor_Atingimento = ```
+			
+			VAR _RealizadoOrder = SELECTEDVALUE('p_Indicadores Realizado'[p_Indicadores Realizado Order])
+			VAR _MetaOrder = SELECTEDVALUE('p_Indicadores Meta'[p_Indicadores Meta Order])
+			
+			VAR _MapMeta = 
+			    SWITCH(
+			        _MetaOrder,
+			        0, [Meta Penetracao ER],
+			        1, [Meta NPS CSAT Médio],
+			        2, [Meta NPS Satis. Entrega],
+			        3, [Meta NPS Satis. ER],
+			        4, [Meta NPS Satis. Supervisora],
+			        5, [Meta NPS ER + SUP],
+			        6, [Meta OptOut],
+			        BLANK()
+			    )
+			VAR _MapReal = 
+			    SWITCH(
+			        _RealizadoOrder,
+			        0, [Real Penetracao ER],
+			        1, [Real NPS CSAT Médio],
+			        2, [Real NPS Satis. Entrega],
+			        3, [Real NPS Satis. ER],
+			        4, [Real NPS Satis. Supervisora],
+			        5, [Real NPS ER + SUP],
+			        6, [Real OptOut],
+			        BLANK()
+			    )
+			VAR _Cores = 
+			    SWITCH(
+			        TRUE(),
+			        _MapReal > _MapMeta, "#00B050", // Verde
+			        _MapReal < _MapMeta, "#FF0000", // Vermelho
+			        "#00000" // Preto
+			    )
+			RETURN
+			_Cores
+			```
+		displayFolder: Formatação
+		lineageTag: d21fd195-77f1-4847-a56e-7b66c6a58e02
+
+	measure 'Real NPS ER + SUP' =
+			
+			CALCULATE(
+			    DIVIDE(
+			        SUM(f_NPS[Analises Positivas]),
+			        SUM(f_NPS[Total Analises])
+			    ),
+			    f_NPS[Avaliação] IN { "Satisfação ER", "Satisfação Supervisora" }
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: 70b7d20b-5b01-47ec-9e0d-09e79d4881f5
+
+	measure 'Meta NPS ER + SUP' =
+			
+			CALCULATE(
+			    AVERAGE(f_NPS[Meta]),
+			    f_NPS[Avaliação] IN { "Satisfação ER", "Satisfação Supervisora" }
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: 61faf32b-4fee-4661-b1e5-b721cc7bc601
+
+	measure '% NPS ER + SUP' =
+			
+			VAR _Realizado = [Real NPS ER + SUP]
+			VAR _Meta = [Meta NPS ER + SUP]
+			RETURN
+			DIVIDE( _Realizado, _Meta )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: NPS
+		lineageTag: c2500720-5a42-433c-bd6c-95ebdb22c31d
+
+	measure 'Meta Receita GMV' =
+			
+			SUM(d_MetaGMV[Meta_Diarizada])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\Receita\GMV
+		lineageTag: e0c7b052-1827-4fea-980e-5a1a307a95ef
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Realizado Receita GMV' =
+			
+			SUM(f_ReceitaGMV[RECEITA CICLO ATUAL])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\Receita\GMV
+		lineageTag: 0541cb05-1954-4999-8308-bbaa2de609eb
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Receita GMV' =
+			
+			DIVIDE(
+			    [Realizado Receita GMV],
+			    [Meta Diarizada GMV]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Receita\GMV
+		lineageTag: d5832e8b-9e67-402e-89cf-c010bf338794
+
+	measure 'Meta Diarizada GMV' =
+			
+			CALCULATE(
+			    SUM(d_MetaGMV[Meta_Diarizada]),
+			    d_MetaGMV[Data] <= MAX(f_ConsultaPedidos[DataFaturamento])
+			)
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: KPIs\Receita\GMV
+		lineageTag: 04ed4504-2d22-484b-9931-b33060c6cac2
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Rep. Receita GMV' =
+			
+			DIVIDE(
+			    [Realizado Receita GMV],
+			    CALCULATE(
+			        [Realizado Receita GMV],
+			        ALL(d_MetaGMV[Value]),
+			        ALL(f_ReceitaGMV[UN])
+			    )
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Receita\GMV
+		lineageTag: 73c39710-251a-4c01-a22f-f5abe10137da
+
+	measure 'Rep. Meta GMV' =
+			
+			DIVIDE(
+			    [Meta Receita GMV],
+			    CALCULATE(
+			        [Meta Receita GMV],
+			        ALL(d_MetaGMV[Value])
+			    )
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Receita\GMV
+		lineageTag: e0b19280-b4a5-4b55-965f-c1b1ea44b9a1
+
+	measure 'Rep. Meta CTD GMV' =
+			
+			DIVIDE(
+			    [Meta Diarizada GMV],
+			    CALCULATE(
+			        [Meta Diarizada GMV],
+			        ALL(d_MetaGMV[Value])
+			    )
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: KPIs\Receita\GMV
+		lineageTag: 1dac1bdc-9128-4c90-aa6a-2355aba75c0b
+
+	measure 'Ativos Iniciais' =
+			
+			COALESCE( DISTINCTCOUNT( f_BaseAtivaINICIAL[CodigoRevendedor] ), 0 )
+		formatString: #,0
+		displayFolder: Base Ativa\Ativos
+		lineageTag: f972c571-6414-4964-921f-d2a2228ebdba
+
+	measure 'Ativos Atuais' =
+			
+			COALESCE( DISTINCTCOUNT( f_BaseAtivaDiaria[CodigoRevendedor] ), 0 )
+		formatString: #,0
+		displayFolder: Base Ativa\Ativos
+		lineageTag: 7b799880-c5a1-4aff-96dc-71f1ecda6868
+
+	measure 'Ativos Recuperado' =
+			
+			[Ativos Iniciais] - [Ativos Atuais]
+		formatString: #,0
+		displayFolder: Base Ativa\Ativos
+		lineageTag: 5edb266a-6c51-481a-875a-7b10c90ce1a0
+
+	measure 'Cor Grafico Pizza' =
+			
+			VAR _PercentualTotal = [Rep. Receita GMV]
+			RETURN
+			
+			IF( _PercentualTotal > 0.01, "#000000", "#ffffff" )
+		displayFolder: Formatação
+		lineageTag: 958662f8-317c-4419-8eca-e01f96382b53
+
+	measure 'RPA (card)' = [Meta RPA Estrutura]
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\RPA
+		lineageTag: 31f89700-b559-4db8-a234-7503fa763f28
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Cor Condicional Geral' = ```
+			
+			VAR _SelecaoIndicador = MAX(d_IndicadorFiltrado[Nome Indicador])
+			VAR _MapIndicador = 
+			    SWITCH(
+			        _SelecaoIndicador,
+			        "Atividade", [% Atividade Atingida],
+			        "Ativos no Ciclo", [% Ativos no Ciclo Estrutura],
+			        "IR", [% IR estrutura],
+			        "Ativos Totais Ciclo", [% Ativos totais ciclo estrutura],
+			        "RPA", [% RPA estrutura],
+			        "Receita", [% Receita Estrutura],
+			        "UPA", [% UPA Estrutura],
+			        "Volume", [% Volume Estrutura],
+			        "PDV", [% Receita PDV],
+			        "GMV", [% Receita GMV],
+			        "CD Receita", [Receita % real],
+			        "CD Pedidos", [Pedido % consultor],
+			        "CD Pedido Medio", [pedido medio % consultor],
+			        "CD Itens por pedido", [Itens por pedido % consultor],
+			        "Receita Mensal", [% Mensal Receita MTD]
+			    )
+			VAR _Percentual = _MapIndicador
+			VAR _Limite =
+			    MAXX (
+			        FILTER ( d_CoresDinamicas, _Percentual >= d_CoresDinamicas[LimiteMin] ),
+			        d_CoresDinamicas[LimiteMin]
+			    )
+			RETURN
+			LOOKUPVALUE (
+			    d_CoresDinamicas[CorHex],
+			    d_CoresDinamicas[LimiteMin], _Limite
+			)
+			```
+		displayFolder: Formatação
+		lineageTag: 816bd58d-b4bd-43e9-bbe9-7aee604597b3
+
+	measure 'Meta Pedido Medio (card)' =
+			
+			[Meta Pedido Medio]
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		displayFolder: KPIs\Pedido Médio
+		lineageTag: c5b291b3-2ae3-4629-b7ab-789a988615eb
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Meta Itens por pedido (card)' =
+			
+			[Meta Itens por Pedido]
+		displayFolder: KPIs\Pedido Médio
+		lineageTag: 0acec4ad-632c-4b96-a221-37273673f491
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: 53921c0c-1806-497c-ab47-f5154c3f2981
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Medidas = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 86c302a75a8c45ee944052cc30ac3a94
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

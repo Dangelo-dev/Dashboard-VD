@@ -1,0 +1,144 @@
+table f_ReceitaGMV
+	lineageTag: c3ad31f5-aaba-4459-b5d1-8461437f50b3
+
+	column UN
+		dataType: string
+		lineageTag: 5d58cc0f-78c1-45a2-9fef-305d99607336
+		summarizeBy: none
+		sourceColumn: UN
+
+		annotation SummarizationSetBy = Automatic
+
+	column PDV
+		dataType: string
+		lineageTag: 493836d9-b356-4283-bcd2-2c86d4a3ce4e
+		summarizeBy: none
+		sourceColumn: PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RECEITA CICLO ATUAL'
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 7a91923e-a604-4dda-91c5-b64ab42e8ad6
+		summarizeBy: sum
+		sourceColumn: RECEITA CICLO ATUAL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'META PEF'
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 8a5da585-9528-4ace-8b53-ff96abd13ce5
+		summarizeBy: sum
+		sourceColumn: META PEF
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column Ciclo
+		dataType: string
+		lineageTag: 1f60ae29-3b6a-4dca-b791-b595cc911353
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key PDVCicloMarca' = f_ReceitaGMV[PDV] & " - " & f_ReceitaGMV[Ciclo] & " - " & f_ReceitaGMV[UN]
+		lineageTag: c252388b-0a2f-4f7c-b051-a49f62b4e7c4
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidade
+		dataType: string
+		lineageTag: 3de7ca30-a6d6-4c4e-9ab2-e7e42e36e939
+		summarizeBy: none
+		sourceColumn: Unidade
+
+		annotation SummarizationSetBy = Automatic
+
+	partition f_ReceitaGMV = m
+		mode: import
+		source = ```
+				let
+				    // Fonte para carregar o Parametro com a pasta raíz e a subpasta contendo os arquivos
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="Receita GMV PEF VD"]}[Content],
+				
+				    // Etapa para evitar carregar arquivos temporarios ou com formatos indesejados
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				    
+				    // Carregar somente as colunas que interessam ao modelo
+				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name]],
+				
+				    // Função para carregar o ETL de cada arquivo presente dentro da pasta
+				    fxReceitaGMV = 
+				        ( arquivo as binary, ciclo as text ) as table =>
+				        let
+				            // parametro 'arquivo' carrega cada binary que será chamado posteriormente dentro da [Content] na etapa ListaTabelas e o 'true' promove os cabecalhos ao abrir o arquivo
+				            excel = Excel.Workbook( arquivo, true ){1}[Data], 
+				
+				            // Etapa para promover cabeçalho 2x, a indentação dessa forma permite agrupar etapas repetidas em uma única etapa, sem necessidade de criar 'PromoverCabecalhos1' e 'PromoverCabecalhos2'.
+				            PromoverCabecalhos = 
+				                Table.PromoteHeaders(
+				                    Table.PromoteHeaders(excel,  
+				                    [PromoteAllScalars=true]),
+				                [PromoteAllScalars=true]),
+				
+				            // Dicionario de colunas a serem carregadas
+				            ColunasNecessarias = { "UN", "PDV", "RECEITA CICLO ATUAL", "META PEF" }, 
+				
+				            // Passando o dicionario para carregar as colunas necessarias apenas
+				            SelecionarColunas = Table.SelectColumns( PromoverCabecalhos, ColunasNecessarias ),
+				
+				            // Definindo o tipo de todas as colunas para evitar exibição de colunas sem tipagem ou tipagem automatica incorreta.
+				            DefinirTipagem = Table.TransformColumnTypes(
+				                SelecionarColunas,
+				                    {
+				                        {"UN", type text}, 
+				                        {"PDV", type text}, 
+				                        {"RECEITA CICLO ATUAL", Currency.Type}, 
+				                        {"META PEF", Currency.Type}
+				                    }
+				                ),
+				
+				                // Criando um mapeamento para a coluna Unidade
+				                UnidadeMap = Record.FromList(
+				                    {"UDI", "UDI", "BH", "BH", "BH"}, 
+				                    {"20844", "23275", "13793", "21433", "22372"}
+				                ),
+				
+				                // Adiciona uma coluna de unidade de acordo com o mapeamento realizado
+				                AddColumnUnidade = Table.AddColumn(DefinirTipagem, "Unidade", each 
+				                    Record.FieldOrDefault(UnidadeMap, Text.From([PDV]), null), type text),
+				
+				            // Adicionando a coluna de ciclo extraindo o nome do arquivo e alterando '202512' para '12/2025'. Coluna necessária para relacionamento com a dCiclos[Ciclo Captação]
+				            AdicionarColunaCiclo = Table.AddColumn( AddColumnUnidade, "Ciclo", each Text.End( ciclo, 2 ) & "/" & Text.Start(ciclo, 4), type text )
+				        in
+				            AdicionarColunaCiclo,
+				
+				    // Função que faz tudo funcionar
+				    ListaTabelas = Table.AddColumn( // Adicionar uma nova coluna
+				        ColunasSelecionadas, // Etapa anterior
+				            "Tabelas", // Nome da coluna
+				                each  // Iteração para percorrer cada arquivo 
+				                fxReceitaGMV( [Content], // [Content] é necessário para carregar cada planilha e executar a função 'fxReceitaGMV' passada anteriormente
+				                Text.BetweenDelimiters( [Name], " ", ".xlsx" ) // O BetweenDelimiters é responsavel por pegar a informação presente entre os dois delimitadores passados. [Name] é necessário para informar que preciso de aplicar esses delimitadores no nome do arquivo.
+				            ), 
+				        type table ) // Tipo tabela para estruturar
+				        [Tabelas], // entre "[ ]" para exapndir os dados
+				    
+				    // Etapa para combinar os arquivos como um unico arquivo só
+				    CombinarTabelas = Table.Combine ( ListaTabelas )
+				in
+				    CombinarTabelas
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

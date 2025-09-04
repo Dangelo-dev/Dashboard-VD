@@ -1,0 +1,158 @@
+table d_MetaDiariaEstrutura
+	lineageTag: 7f900deb-fe2d-4b69-ac31-685e536c3f46
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 5a9a3114-5ea9-4c10-8d20-e43485af4073
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Meta AtivosNoCiclo'
+		dataType: double
+		lineageTag: a206d2a5-ed27-4e1a-8a77-51beb5ca3b85
+		summarizeBy: sum
+		sourceColumn: Meta AtivosNoCiclo
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Meta IniciosReinicios'
+		dataType: double
+		lineageTag: ffe9b842-6aaf-42c0-9cbc-6d4c224697b0
+		summarizeBy: sum
+		sourceColumn: Meta IniciosReinicios
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Meta Receita'
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 2368d080-8356-4e31-a6e8-705c1d1b0a66
+		summarizeBy: sum
+		sourceColumn: Meta Receita
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Meta Volume'
+		dataType: double
+		lineageTag: bf443773-82bb-440b-9cfe-42687e771885
+		summarizeBy: sum
+		sourceColumn: Meta Volume
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Key CodEstruturaCiclo'
+		dataType: string
+		lineageTag: 411ffb73-1b36-45eb-a669-aa04513819c7
+		summarizeBy: none
+		sourceColumn: Key CodEstruturaCiclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciclo
+		dataType: string
+		lineageTag: 8ade06bf-9809-443e-815a-4876942bd0e9
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_MetaDiariaEstrutura = m
+		mode: import
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="Metas"]}[Content]
+				    {[Name="Meta transformada estrutura"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				
+				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name]],
+				    
+				    fxMetaDiariaEstruturas = 
+				    (arquivo as binary, ciclo as text) as table =>
+				    let
+				        Source = Excel.Workbook(arquivo, true){0}[Data],
+				
+				        AddColumnCiclo = 
+				            Table.ReplaceValue(
+				                Table.AddColumn(Source, "Ciclo", each Text.Start(ciclo, 7), type text),
+				            "-","/",Replacer.ReplaceText,{"Ciclo"}),
+				        
+				        DefineTypes = Table.TransformColumnTypes(AddColumnCiclo,
+				        {
+				            {"Estrutura", type text}, 
+				            {"Data", type date}, 
+				            {"Meta AtivosNoCiclo", type number}, 
+				            {"Meta IniciosReinicios", type number}, 
+				            {"Meta Receita", Currency.Type}, 
+				            {"Meta Volume", type number}
+				        }),
+				
+				        SubstituirCodigos = 
+				        Table.ReplaceValue(
+				            Table.ReplaceValue(
+				                Table.ReplaceValue(
+				                    Table.ReplaceValue(
+				                        Table.ReplaceValue(
+				                            Table.ReplaceValue(
+				                                Table.ReplaceValue(
+				                                    Table.ReplaceValue(
+				                                        Table.ReplaceValue(
+				                                            Table.ReplaceValue(
+				                                                Table.ReplaceValue(
+				                                                    Table.ReplaceValue(
+				                                                        Table.ReplaceValue(
+				                                                            Table.ReplaceValue(
+				                                                                Table.ReplaceValue(
+				                                                                    Table.ReplaceValue(DefineTypes,
+				                                                                    "6270", "20507", Replacer.ReplaceText, {"Estrutura"}), //Malbec
+				                                                                "6182", "20498", Replacer.ReplaceText, {"Estrutura"}), //Portinari
+				                                                            "4551", "20495", Replacer.ReplaceText, {"Estrutura"}), //Arbo
+				                                                        "16927", "20514", Replacer.ReplaceText, {"Estrutura"}), //Coffee
+				                                                    "13032", "20511", Replacer.ReplaceText, {"Estrutura"}), //Egeo
+				                                                "18876", "20516", Replacer.ReplaceText, {"Estrutura"}), //Iconique
+				                                            "18676", "20515", Replacer.ReplaceText, {"Estrutura"}), //Madeleine
+				                                        "6271", "20509", Replacer.ReplaceText, {"Estrutura"}), //Quasar
+				                                    "18878", "20518", Replacer.ReplaceText, {"Estrutura"}), //Scapin
+				                                "1602", "20383", Replacer.ReplaceText, {"Estrutura"}), //Zaad
+				                            "6085", "20497", Replacer.ReplaceText, {"Estrutura"}), //Crescimento
+				                        "5468", "20496", Replacer.ReplaceText, {"Estrutura"}), //Acordes
+				                    "6225", "20505", Replacer.ReplaceText, {"Estrutura"}), //Elysée
+				                "10058", "20384", Replacer.ReplaceText, {"Estrutura"}), //Glamour
+				            "1625", "20408", Replacer.ReplaceText, {"Estrutura"}), //Lily
+				        "10362", "20510", Replacer.ReplaceText, {"Estrutura"}), //Liz
+				
+				        AddColumnKey = Table.AddColumn(SubstituirCodigos, "Key CodEstruturaCiclo", each [Estrutura] & " - " & [Ciclo], type text),
+				        
+				        RemoverColunas = Table.RemoveColumns( AddColumnKey,{ "Estrutura" } )
+				    in
+				        RemoverColunas,
+				
+				    ListaTabelas = Table.AddColumn(ColunasSelecionadas, 
+				    "Tabelas", each fxMetaDiariaEstruturas([Content], 
+				    Text.BeforeDelimiter ( [Name], " ")), type table)[Tabelas],
+				    
+				    CombinarTabelas = Table.Combine ( ListaTabelas ),
+				
+				    FiltrarNulos = Table.SelectRows(CombinarTabelas, each ([Estrutura] <> null))
+				in
+				    CombinarTabelas
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

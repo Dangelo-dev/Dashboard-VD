@@ -1,0 +1,152 @@
+table f_NPS
+	lineageTag: 8f2dca1a-6dbc-47fa-8bc7-b85dbbb76ec9
+
+	column 'Codigo ER Alocacao'
+		dataType: string
+		lineageTag: 32cc5f90-7334-4545-8f23-4a94bda5ee45
+		summarizeBy: none
+		sourceColumn: Codigo ER Alocacao
+
+		annotation SummarizationSetBy = Automatic
+
+	column Avaliação
+		dataType: string
+		lineageTag: 8d88c674-ec80-4e63-aeea-d3bcb52d68c5
+		summarizeBy: none
+		sourceColumn: Avaliação
+
+		annotation SummarizationSetBy = Automatic
+
+	column Resultado
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 079f3232-dd51-4335-b252-4f7fefdb4fb3
+		summarizeBy: none
+		sourceColumn: Resultado
+
+		annotation SummarizationSetBy = User
+
+	column Meta
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0cee7643-2975-4b57-b179-3345d35b131e
+		summarizeBy: none
+		sourceColumn: Meta
+
+		annotation SummarizationSetBy = User
+
+	column Ciclo
+		dataType: string
+		lineageTag: dca30f58-4e8e-45ed-8438-b0dd729b65e7
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Analises Positivas'
+		dataType: int64
+		formatString: 0
+		lineageTag: b96688dc-8e99-4112-ac1b-e5b54cd587ee
+		summarizeBy: sum
+		sourceColumn: Analises Positivas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Analises Neutras'
+		dataType: int64
+		formatString: 0
+		lineageTag: 05e92ebb-e8ab-4278-af02-ad8f18a4ccb0
+		summarizeBy: sum
+		sourceColumn: Analises Neutras
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Analises Negativas'
+		dataType: int64
+		formatString: 0
+		lineageTag: fd0538bf-8a0c-4152-bbef-8e3c8042cc95
+		summarizeBy: sum
+		sourceColumn: Analises Negativas
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Analises'
+		dataType: int64
+		formatString: 0
+		lineageTag: 91211339-9232-4eb8-a891-1294b1031def
+		summarizeBy: sum
+		sourceColumn: Total Analises
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidade = ```
+			
+			VAR Codigo = f_NPS[Codigo ER Alocacao]
+			RETURN
+			
+			CALCULATE(
+			    MAX(f_ConsultaPedidos[Unidade]),
+			    FILTER(
+			        f_ConsultaPedidos,
+			        LEFT(f_ConsultaPedidos[PDV], LEN(Codigo)) = Codigo
+			    )
+			)
+			
+			```
+		lineageTag: becbabf7-426e-4907-b75f-db515c04e4f0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column9
+		dataType: string
+		lineageTag: 7d2ca74a-c634-4ba9-bb11-8070f99acb2e
+		summarizeBy: none
+		sourceColumn: Column9
+
+		annotation SummarizationSetBy = Automatic
+
+	partition f_NPS = m
+		mode: import
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="NPS"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				
+				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name]],
+				    
+				    fxNPS = 
+				        ( arquivo as binary, ciclo as text ) as table =>
+				        let
+				            excel = Excel.Workbook( arquivo, true ){0}[Data],
+				            
+				            DefinirTipagem = Table.TransformColumnTypes( excel,{
+				                {"Codigo ER Alocacao", type text}, 
+				                {"Avaliação", type text}, 
+				                {"Resultado", Percentage.Type}, 
+				                {"Meta", Percentage.Type},
+				                {"Analises Positivas", Int64.Type}, 
+				                {"Analises Neutras", Int64.Type}, 
+				                {"Analises Negativas", Int64.Type}, 
+				                {"Total Analises", Int64.Type}
+				            }),
+				        
+				            AdicionarColunaCiclo = Table.AddColumn( DefinirTipagem, "Ciclo", each Text.End( ciclo, 2 ) & "/" & Text.Start(ciclo, 4), type text )
+				        in
+				            AdicionarColunaCiclo,
+				
+				    ListaTabelas = Table.AddColumn(ColunasSelecionadas, 
+				    "Tabelas", each fxNPS([Content], 
+				    Text.BetweenDelimiters([Name], " ", ".xlsx" )), type table)[Tabelas],
+				    
+				    CombinarTabelas = Table.Combine ( ListaTabelas )
+				in
+				    CombinarTabelas
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

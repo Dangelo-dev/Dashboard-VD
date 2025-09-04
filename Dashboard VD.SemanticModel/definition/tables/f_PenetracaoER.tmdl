@@ -1,0 +1,87 @@
+table f_PenetracaoER
+	lineageTag: b94bedd2-d632-4db0-b8ec-a6c50b0b5042
+
+	column PDV
+		dataType: string
+		lineageTag: 48de0214-f956-4ad6-91e1-5ddb92dc3581
+		summarizeBy: none
+		sourceColumn: PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Base Ativa'
+		dataType: int64
+		formatString: 0
+		lineageTag: 89744e7c-8164-4a40-9a75-bda5541bfcaa
+		summarizeBy: sum
+		sourceColumn: Base Ativa
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ativas com pelo menos uma compra no ER'
+		dataType: int64
+		formatString: 0
+		lineageTag: 59eeffb1-22a3-453c-82f0-e0ba30e22b34
+		summarizeBy: sum
+		sourceColumn: Ativas com pelo menos uma compra no ER
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ativas com pelo menos uma compra via Canais Digitais'
+		dataType: int64
+		formatString: 0
+		lineageTag: 746d42c3-4f1d-4b4f-98de-291aa599daf7
+		summarizeBy: sum
+		sourceColumn: Ativas com pelo menos uma compra via Canais Digitais
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciclo
+		dataType: string
+		lineageTag: dab22fcc-4e92-493b-b26a-fc145b7a4461
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition f_PenetracaoER = m
+		mode: import
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="PenetracaoVD"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				
+				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name]],
+				
+				    fxPenetracaoER = 
+				        ( arquivo as binary, ciclo as text ) as table =>
+				        let
+				            excel = Excel.Workbook( arquivo, true ){1}[Data], 
+				            
+				            FiltrarTotal = Table.SelectRows(excel, each ([PDV] <> "TOTAL")),
+				
+				            DefinirTipagem = Table.TransformColumnTypes(FiltrarTotal,{
+				                {"Base Ativa", Int64.Type}, 
+				                {"Ativas com pelo menos uma compra no ER", Int64.Type}, 
+				                {"Ativas com pelo menos uma compra via Canais Digitais", Int64.Type}
+				            }),
+				
+				            AdicionarColunaCiclo = Table.AddColumn( DefinirTipagem, "Ciclo", each Text.End( ciclo, 2 ) & "/" & Text.Start(ciclo, 4), type text )
+				        in
+				            AdicionarColunaCiclo,
+				
+				    ListaTabelas = Table.AddColumn(ColunasSelecionadas, 
+				    "Tabelas", each fxPenetracaoER([Content], 
+				    Text.BetweenDelimiters([Name], " ", ".xlsx" )), type table)[Tabelas],
+				    
+				    CombinarTabelas = Table.Combine ( ListaTabelas )
+				in
+				    CombinarTabelas
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

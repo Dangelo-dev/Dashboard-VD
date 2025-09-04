@@ -1,0 +1,127 @@
+table d_MetaConsultoresDiaria
+	lineageTag: 5c292093-7a64-43cc-8c23-1b2c94c54954
+
+	column 'Cod Consultor'
+		dataType: string
+		lineageTag: 31975183-65c0-4d0c-8150-576bc150bb60
+		summarizeBy: none
+		sourceColumn: Cod Consultor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 3dac4f05-6d70-4552-bbe8-c48f014e9935
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Meta Receita Diaria'
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 912c1cb3-4d72-4d7b-8520-91777311f85b
+		summarizeBy: sum
+		sourceColumn: Meta Receita Diaria
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Meta Pedidos Diaria'
+		dataType: double
+		lineageTag: 64cbe93a-11c7-4f79-a2e5-5fc0b0337ada
+		summarizeBy: sum
+		sourceColumn: Meta Pedidos Diaria
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Key ConsultorCiclo' =
+			
+			d_MetaConsultoresDiaria[Cod Consultor] &
+			" - " &
+			d_MetaConsultoresDiaria[Ciclo]
+		lineageTag: 83b3cf72-aa19-49b6-b7b0-00524a4c2fd8
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciclo
+		dataType: string
+		lineageTag: 9d7cedc1-29df-4eda-ae26-4a3e9ee7b769
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key PDVCiclo' =
+			
+			d_MetaConsultoresDiaria[PDV] & " - " &d_MetaConsultoresDiaria[Ciclo]
+		lineageTag: 6fd6feac-c234-49ba-832d-68728ab7715b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column PDV
+		dataType: string
+		lineageTag: fb7b267b-4e16-4437-8d32-f237dc3497f6
+		summarizeBy: none
+		sourceColumn: PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_MetaConsultoresDiaria = m
+		mode: import
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="Metas"]}[Content]
+				    {[Name="Meta consultores transformada"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				
+				    SelectColumns = FiltrarArquivos[[Content], [Name]],
+				
+				    fxMetaDiariaConsultores = 
+				        (arquivo as binary, ciclo as text) as table =>
+				    let
+				        Source = Excel.Workbook(arquivo, true){0}[Data],
+				
+				        AddColumnCiclo = 
+				            Table.ReplaceValue(
+				                Table.AddColumn(Source, "Ciclo", each Text.Start(ciclo, 7), type text),
+				            "-","/",Replacer.ReplaceText,{"Ciclo"}),
+				        
+				        DefinirTipagem = 
+				        Table.TransformColumnTypes(
+				            AddColumnCiclo,
+				            {
+				                {"Cod Consultor", type text}, 
+				                {"Data", type date}, 
+				                {"Meta Receita Diaria", Currency.Type}, 
+				                {"Meta Pedidos Diaria", type number}
+				            }
+				        )
+				    in
+				        DefinirTipagem,
+				    
+				    ListTables = Table.AddColumn(SelectColumns, 
+				    "Tabelas", 
+				    each fxMetaDiariaConsultores([Content], 
+				    Text.BeforeDelimiter ( [Name], " ") ), type table )[Tabelas],
+				    
+				    CombineTables = Table.Combine ( ListTables ),
+				    #"Filtered Rows" = Table.SelectRows(CombineTables, each ([Cod Consultor] <> null))
+				in
+				    #"Filtered Rows"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

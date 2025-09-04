@@ -1,0 +1,50 @@
+table 'p_Consultor Realizado'
+	lineageTag: 7d694e2c-75fc-47ac-8810-e97995a623c6
+
+	column 'p_Consultor Realizado'
+		lineageTag: 61f1a1d8-534f-4292-990f-13d20557fafe
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'p_Consultor Realizado Order'
+
+		relatedColumnDetails
+			groupByColumn: 'p_Consultor Realizado Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Consultor Realizado Fields'
+		isHidden
+		lineageTag: 59904d67-3f8b-429b-89ad-fd70a2185cea
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'p_Consultor Realizado Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Consultor Realizado Order'
+		isHidden
+		formatString: 0
+		lineageTag: ac9570fa-9dbd-48b9-9240-01eceea72c9d
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'p_Consultor Realizado' = calculated
+		mode: import
+		source =
+				{
+				    ("Receita Líquida", NAMEOF('Medidas'[Receita realizado consultor]), 0),
+				    ("Pedidos", NAMEOF('Medidas'[Pedido realizado consultor]), 1),
+				    ("Pedido Médio", NAMEOF('Medidas'[Pedido medio realizado consultor]), 2),
+				    ("Itens por Pedido", NAMEOF('Medidas'[Itens por pedido realizado consultor]), 3)
+				}
+
+	annotation PBI_Id = a70056dd5a9c4ca6b343c062fa86650e
+

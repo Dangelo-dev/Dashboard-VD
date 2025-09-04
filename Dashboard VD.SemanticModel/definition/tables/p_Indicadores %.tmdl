@@ -1,0 +1,53 @@
+table 'p_Indicadores %'
+	lineageTag: e5d29502-f20f-42ae-8d4f-bc2df75977d5
+
+	column 'p_Indicadores %'
+		lineageTag: ebc5b8ba-fe4e-4622-a562-eb5e8d57d77b
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'p_Indicadores % Order'
+
+		relatedColumnDetails
+			groupByColumn: 'p_Indicadores % Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Indicadores % Fields'
+		isHidden
+		lineageTag: 9f9a6387-1fe0-4213-b366-19d5d1c0c213
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'p_Indicadores % Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Indicadores % Order'
+		isHidden
+		formatString: 0
+		lineageTag: cfc9047f-f065-4e8b-993f-31f2c7b5c594
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'p_Indicadores %' = calculated
+		mode: import
+		source =
+				{
+				    ("% Real x Meta", NAMEOF('Medidas'[% Penetracao ER]), 0),
+				    ("% Real x Meta", NAMEOF('Medidas'[% NPS CSAT Médio]), 1),
+				    ("% Real x Meta", NAMEOF('Medidas'[% NPS Satis. Entrega]), 2),
+				    ("% Real x Meta", NAMEOF('Medidas'[% NPS Satis. ER]), 3),
+				    ("% Real x Meta", NAMEOF('Medidas'[% NPS Satis. Supervisora]), 4),
+				    ("% Real x Meta", NAMEOF('Medidas'[% NPS ER + SUP]), 5),
+				    ("% Real x Meta", NAMEOF('Medidas'[Real x Meta OptOut]), 6)
+				}
+
+	annotation PBI_Id = bf3d403452054a5399f7344bf81576c2
+

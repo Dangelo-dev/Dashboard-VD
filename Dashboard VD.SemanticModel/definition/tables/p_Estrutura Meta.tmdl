@@ -1,0 +1,53 @@
+table 'p_Estrutura Meta'
+	lineageTag: 02755696-8552-4963-8217-83eb21fc4a30
+
+	column Meta
+		lineageTag: 1d11779e-4200-405e-b51e-a473634d0281
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Parâmetro Pedido'
+
+		relatedColumnDetails
+			groupByColumn: 'Parâmetro Campos'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parâmetro Campos'
+		lineageTag: 97ba3799-931c-4c7a-89ad-6bf40e8321a6
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Parâmetro Pedido'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parâmetro Pedido'
+		formatString: 0
+		lineageTag: 5aa21840-2b5d-49d4-a811-73600fb38f4f
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'p_Estrutura Meta' = calculated
+		mode: import
+		source =
+				{
+				    ("Meta Receita", NAMEOF('Medidas'[Meta Receita Estrutura]), 0),
+				    ("Meta RPA", NAMEOF('Medidas'[Meta RPA Estrutura]), 1),
+				    ("Meta UPA", NAMEOF('Medidas'[Meta UPA Estrutura]), 2),
+				    ("Meta % Atividade", NAMEOF('Medidas'[Meta % Atividade Estrutura]), 3),
+				    ("Meta Recuperados", NAMEOF('Medidas'[Meta recuperados estrutura]), 4),
+				    ("Meta Ativos no Ciclo", NAMEOF('Medidas'[Meta Diaria Ativos no Ciclo Estrutura]), 5),
+				    ("Meta IR", NAMEOF('Medidas'[Meta IR Diária]), 6),
+				    ("Meta Ativos totais ciclo", NAMEOF('Medidas'[Meta Diaria Ativos Totais Ciclo Estrutura]), 7),
+				    ("Meta Volume", NAMEOF('Medidas'[Meta Volume Diaria Estrutura]), 8)
+				}
+
+	annotation PBI_Id = 8e0baa0574ae44748afbce652ca88822
+

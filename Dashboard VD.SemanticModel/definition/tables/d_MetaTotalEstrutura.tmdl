@@ -1,0 +1,247 @@
+table d_MetaTotalEstrutura
+	lineageTag: 91211634-ec48-4b6d-bc41-abc473c84952
+
+	column 'Cód. Estrutura'
+		dataType: string
+		lineageTag: da732341-98bb-4280-a1c8-12439b80629d
+		summarizeBy: none
+		sourceColumn: Cód. Estrutura
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estrutura
+		dataType: string
+		lineageTag: 51bd333b-c259-4251-96c0-f6c3ddb2784d
+		summarizeBy: none
+		sourceColumn: Estrutura
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hierarquia
+		dataType: string
+		lineageTag: d68fd83d-bd30-4669-8dc9-86b7931ac63b
+		summarizeBy: none
+		sourceColumn: Hierarquia
+
+		annotation SummarizationSetBy = Automatic
+
+	column Apelido
+		dataType: string
+		lineageTag: 1f39e3e5-6a01-45d2-843e-966d7548080b
+		summarizeBy: none
+		sourceColumn: Apelido
+
+		annotation SummarizationSetBy = Automatic
+
+	column '% Atividade'
+		dataType: double
+		lineageTag: 53075599-9d98-4a94-894b-d92c9d7d582e
+		summarizeBy: sum
+		sourceColumn: % Atividade
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Ativos no Ciclo'
+		dataType: double
+		lineageTag: 804a4f90-b809-42f4-b2a4-f214cae3b92f
+		summarizeBy: sum
+		sourceColumn: Ativos no Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Inicios
+		dataType: int64
+		formatString: 0
+		lineageTag: 84c8fa76-db58-4c2e-885d-2588c0c46595
+		summarizeBy: sum
+		sourceColumn: Inicios
+
+		annotation SummarizationSetBy = Automatic
+
+	column Reinicios
+		dataType: int64
+		formatString: 0
+		lineageTag: 5dd63fd1-07ce-40bf-92cb-331bf3dfccf9
+		summarizeBy: sum
+		sourceColumn: Reinicios
+
+		annotation SummarizationSetBy = Automatic
+
+	column Recuperados
+		dataType: int64
+		formatString: 0
+		lineageTag: a05d59ac-6661-485b-8437-5c9f037a5a2b
+		summarizeBy: sum
+		sourceColumn: Recuperados
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ativos Totais no Ciclo'
+		dataType: double
+		lineageTag: 95c65c8e-e329-4909-a8f0-c0f9f8401d06
+		summarizeBy: sum
+		sourceColumn: Ativos Totais no Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RPA
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 1e016b5f-aff1-4371-a04c-401bbe82d944
+		summarizeBy: sum
+		sourceColumn: RPA
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column Receita
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 6ba0c0f5-95fc-418b-86cf-ec8688687fb3
+		summarizeBy: sum
+		sourceColumn: Receita
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column Ciclo
+		dataType: string
+		lineageTag: b338cae3-9df5-42a0-bf21-3f2655513e7f
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key CodEstruturaCiclo'
+		dataType: string
+		lineageTag: d9f08531-6d61-4cf5-a907-9a8b21b66423
+		summarizeBy: none
+		sourceColumn: Key CodEstruturaCiclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidade
+		dataType: string
+		lineageTag: 8df9063c-cfa2-403c-b7cd-ee50c3e0cd46
+		summarizeBy: none
+		sourceColumn: Unidade
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_MetaTotalEstrutura = m
+		mode: import
+		source = ```
+				let
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="Metas"]}[Content]
+				    {[Name="Meta total estrutura"]}[Content],
+				
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				    
+				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name]],
+				
+				    SplitColumn = Table.SplitColumn(ColunasSelecionadas, "Name", Splitter.SplitTextByDelimiter(" ", QuoteStyle.Csv), {"Ciclo", "unidade"}),
+				    
+				    ReplacedValue = Table.ReplaceValue(SplitColumn,".xlsx","",Replacer.ReplaceText,{"unidade"}),
+				
+				    fxMetaTotal = 
+				        ( arquivo as binary, ciclo as text, unidade as text) as table =>
+				    let
+				        Source = Excel.Workbook(arquivo, true){0}[Data],
+				
+				        PromoteHeaders = 
+				            Table.PromoteHeaders(
+				                Table.PromoteHeaders(Source, 
+				                [PromoteAllScalars=true]),
+				            [PromoteAllScalars=true]),
+				
+				        FilterNulls = Table.SelectRows(PromoteHeaders, each ([Cód. Estrutura] <> null)),
+				        
+				        AlterType = Table.TransformColumnTypes(FilterNulls,
+				            {
+				                {"Base Ativa", Int64.Type}, 
+				                {"% Atividade", Percentage.Type}, 
+				                {"Ativos no Ciclo", type number}, 
+				                {"Inicios", Int64.Type}, 
+				                {"Reinicios", Int64.Type}, 
+				                {"Recuperados", Int64.Type}, 
+				                {"Ativos Totais no Ciclo", type number}, 
+				                {"RPA", Currency.Type}, 
+				                {"Receita", Currency.Type}, 
+				                {"UPA", type number}, 
+				                {"Volume", type number}, 
+				                {"Cód. Estrutura", type text}
+				            }),
+				
+				        AddColumns =  
+				            Table.AddColumn(
+				                Table.AddColumn(AlterType, 
+				                "Ciclo", each ciclo, type text),
+				            "Unidade", each unidade, type text),
+				
+				        ReplaceSymbol =
+				            Table.ReplaceValue(AddColumns,
+				            "-", "/", Replacer.ReplaceText, {"Ciclo"}),
+				
+				        SubstituirCodigos = 
+				            Table.ReplaceValue(
+				                Table.ReplaceValue(
+				                    Table.ReplaceValue(
+				                        Table.ReplaceValue(
+				                            Table.ReplaceValue(
+				                                Table.ReplaceValue(
+				                                    Table.ReplaceValue(
+				                                        Table.ReplaceValue(
+				                                            Table.ReplaceValue(
+				                                                Table.ReplaceValue(
+				                                                    Table.ReplaceValue(
+				                                                        Table.ReplaceValue(
+				                                                            Table.ReplaceValue(
+				                                                                Table.ReplaceValue(
+				                                                                    Table.ReplaceValue(
+				                                                                        Table.ReplaceValue(ReplaceSymbol,
+				                                                                        "6270", "20507", Replacer.ReplaceText, {"Cód. Estrutura"}), //Malbec
+				                                                                    "6182", "20498", Replacer.ReplaceText, {"Cód. Estrutura"}), //Portinari
+				                                                                "4551", "20495", Replacer.ReplaceText, {"Cód. Estrutura"}), //Arbo
+				                                                            "16927", "20514", Replacer.ReplaceText, {"Cód. Estrutura"}), //Coffee
+				                                                        "13032", "20511", Replacer.ReplaceText, {"Cód. Estrutura"}), //Egeo
+				                                                    "18876", "20516", Replacer.ReplaceText, {"Cód. Estrutura"}), //Iconique
+				                                                "18676", "20515", Replacer.ReplaceText, {"Cód. Estrutura"}), //Madeleine
+				                                            "6271", "20509", Replacer.ReplaceText, {"Cód. Estrutura"}), //Quasar
+				                                        "18878", "20518", Replacer.ReplaceText, {"Cód. Estrutura"}), //Scapin
+				                                    "1602", "20383", Replacer.ReplaceText, {"Cód. Estrutura"}), //Zaad
+				                                "6085", "20497", Replacer.ReplaceText, {"Cód. Estrutura"}), //Crescimento
+				                            "5468", "20496", Replacer.ReplaceText, {"Cód. Estrutura"}), //Acordes
+				                        "6225", "20505", Replacer.ReplaceText, {"Cód. Estrutura"}), //Elysée
+				                    "10058", "20384", Replacer.ReplaceText, {"Cód. Estrutura"}), //Glamour
+				                "1625", "20408", Replacer.ReplaceText, {"Cód. Estrutura"}), //Lily
+				            "10362", "20510", Replacer.ReplaceText, {"Cód. Estrutura"}), //Liz
+				        
+				        AddColumnKey = 
+				            Table.AddColumn(SubstituirCodigos,
+				                "Key CodEstruturaCiclo", each [Cód. Estrutura] & " - " & [Ciclo], type text)
+				    in
+				        AddColumnKey,
+				    
+				    ListaTabelas = Table.AddColumn(ReplacedValue, 
+				    "Tabelas", each fxMetaTotal([Content], [Ciclo], [unidade]), type table)[Tabelas],
+				    
+				    CombinarTabelas = Table.Combine ( ListaTabelas ),
+				    
+				    RemoveColumnsExtras = Table.RemoveColumns(CombinarTabelas,{"Column16", "Column17", "Column18", "Column19", "Volume", "Column20", "Column21", "Column22", "Column23", "Column24", "Column25", "Column26", "Column27", "Column28", "UPA", "Base Ativa"})
+				in
+				    RemoveColumnsExtras
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

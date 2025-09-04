@@ -1,0 +1,69 @@
+table d_CoresDinamicas
+	lineageTag: 5007bb68-3be3-49ff-bcb9-b26e6b402532
+
+	column LimiteMin
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 2a69bf5e-bb19-4df1-ad0b-fb5c4e6f3993
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [LimiteMin]
+
+		annotation SummarizationSetBy = Automatic
+
+	column CorHex
+		lineageTag: 987619b1-55b2-46ef-8045-746b0fb267a0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [CorHex]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tipo
+		lineageTag: 411e0b69-f9bc-4439-8858-4a95d60667a7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Tipo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Chave
+		lineageTag: ddfc7e60-adc9-433a-8d5d-416b1cb71900
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Chave]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_CoresDinamicas = calculated
+		mode: import
+		source = ```
+				
+				DATATABLE(
+				    "Tipo", STRING,         // "Threshold" ou "Papel"
+				    "Chave", STRING,        // Nome do papel ou valor do threshold (guardado como texto)
+				    "LimiteMin", DOUBLE,    // Só usado para thresholds
+				    "CorHex", STRING,
+				    {
+				        // Thresholds
+				        {"Threshold", ">=1.05", 1.05, "#0070C0"},   // Azul escuro
+				        {"Threshold", ">=1.025", 1.025, "#00B0F0"}, // Azul claro
+				        {"Threshold", ">=1.00", 1.00, "#00B050"},   // Verde
+				        {"Threshold", ">=0.90", 0.90, "#FF8C42"},   // Laranja
+				        {"Threshold", ">=0.00", 0.00, "#FF0000"},   // Vermelho
+				
+				        // Papéis
+				        {"Papel", "Revendedor", BLANK(), "#C79845"},
+				        {"Papel", "Bronze",     BLANK(), "#CD7F32"},
+				        {"Papel", "Prata",      BLANK(), "#808080"},
+				        {"Papel", "Ouro",       BLANK(), "#C79845"},
+				        {"Papel", "Platina",    BLANK(), "#A0B2C6"},
+				        {"Papel", "Rubi",       BLANK(), "#861A22"},
+				        {"Papel", "Esmeralda",  BLANK(), "#398351"},
+				        {"Papel", "Diamante",   BLANK(), "#0ABAB5"}
+				    }
+				)
+				
+				```
+
+	annotation PBI_Id = ce1215ce301e46cbb08fb9c4d6e359e3
+

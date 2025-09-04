@@ -1,0 +1,53 @@
+table 'p_Indicadores Meta'
+	lineageTag: 853c4ef5-2d17-4c2e-b4ba-e672ea2428c9
+
+	column 'p_Indicadores Meta'
+		lineageTag: 8a70e254-c8bf-4911-bd52-ba0c042e5d88
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'p_Indicadores Meta Order'
+
+		relatedColumnDetails
+			groupByColumn: 'p_Indicadores Meta Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Indicadores Meta Fields'
+		isHidden
+		lineageTag: e72d8a49-44c5-4786-bc39-36b510a6f146
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'p_Indicadores Meta Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'p_Indicadores Meta Order'
+		isHidden
+		formatString: 0
+		lineageTag: 9b58741d-a32a-4168-84a8-5f058714c8f8
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'p_Indicadores Meta' = calculated
+		mode: import
+		source =
+				{
+				    ("Meta", NAMEOF('Medidas'[Meta Penetracao ER]), 0),
+				    ("Meta", NAMEOF('Medidas'[Meta NPS CSAT Médio]), 1),
+				    ("Meta", NAMEOF('Medidas'[Meta NPS Satis. Entrega]), 2),
+				    ("Meta", NAMEOF('Medidas'[Meta NPS Satis. ER]), 3),
+				    ("Meta", NAMEOF('Medidas'[Meta NPS Satis. Supervisora]), 4),
+				    ("Meta", NAMEOF('Medidas'[Meta NPS ER + SUP]), 5),
+				    ("Meta", NAMEOF('Medidas'[Meta OptOut]), 6)
+				}
+
+	annotation PBI_Id = bb6d1167536f474184b1d2af5ae00480
+

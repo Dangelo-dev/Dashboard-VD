@@ -1,0 +1,28 @@
+table d_Calendario
+	lineageTag: cd4fa130-d1da-448c-8ca8-31b13b7d982d
+	dataCategory: Time
+
+	column Data
+		isKey
+		formatString: Short Date
+		lineageTag: f27088a6-2ee4-461f-8f8a-ea92044c6788
+		summarizeBy: none
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column AnoMes =
+			
+			YEAR(d_Calendario[Data]) * 100 + MONTH(d_Calendario[Data])
+		formatString: 0
+		lineageTag: 3072f2ea-a5e0-45bb-a083-7722f2aada56
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_Calendario = calculated
+		mode: import
+		source = CALENDAR(DATE(2024,01,01), DATE(2026,12,31))
+
+	annotation PBI_Id = 133c28fb113a416c8a3d12e9c5834cd2
+

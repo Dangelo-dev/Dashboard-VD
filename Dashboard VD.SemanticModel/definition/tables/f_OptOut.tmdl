@@ -1,0 +1,93 @@
+table f_OptOut
+	lineageTag: e403befa-9957-43b7-8894-bf2e008a2208
+
+	column PDV
+		dataType: string
+		lineageTag: f766fcb9-6293-4719-959c-d1c9b0faf9ef
+		summarizeBy: none
+		sourceColumn: PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'QUANTIDADE DE REVENDEDORAS NO PDV'
+		dataType: int64
+		formatString: 0
+		lineageTag: 2084b29f-aecf-46c2-bcb2-39b7341e355f
+		summarizeBy: sum
+		sourceColumn: QUANTIDADE DE REVENDEDORAS NO PDV
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'QUANTIDADE DE OPT OUT DE CATÁLOGOS'
+		dataType: int64
+		formatString: 0
+		lineageTag: fe054dd3-6e4e-43e9-862f-466dfc3e8904
+		summarizeBy: sum
+		sourceColumn: QUANTIDADE DE OPT OUT DE CATÁLOGOS
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciclo
+		dataType: string
+		lineageTag: ca085ae9-0fbe-4dae-bbd8-6c48e8de9156
+		summarizeBy: none
+		sourceColumn: Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition f_OptOut = m
+		mode: import
+		source = ```
+				let
+				    // Fonte para percorrer o parametro local e a pasta do indicador
+				    Source = Folder.Contents(PastaLocal)
+				    {[Name="OptOut"]}[Content],
+				
+				    // buscar somentes arquivos .xlsx para evitar arquivos temporarios e/ou incorretos
+				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
+				
+				    // Selecionar somente as colunas necessárias
+				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name]],
+				
+				    // Função de tratamento do relatório
+				    fxOptOut = 
+				        ( arquivo as binary, ciclo as text ) as table =>
+				        let
+				            // Selecionar cada arquivo como sendo binário, 'true' para promover cabeçalhos, {1} para selecionar a segunda aba, [Data] para abrir o arquivo
+				            excel = Excel.Workbook( arquivo, true ){1}[Data], 
+				            
+				            // Selecionar somente as colunas necessárias e ordenar elas
+				            SelecionarColunas = Table.SelectColumns(excel,
+				            { "PDV", "QUANTIDADE DE REVENDEDORAS NO PDV", "QUANTIDADE DE OPT OUT DE CATÁLOGOS" }), 
+				            
+				            // Definir o tipo correto de cada coluna
+				            DefinirTipagem = Table.TransformColumnTypes( SelecionarColunas,{
+				                {"PDV", type text}, 
+				                {"QUANTIDADE DE REVENDEDORAS NO PDV", Int64.Type}, 
+				                {"QUANTIDADE DE OPT OUT DE CATÁLOGOS", Int64.Type}
+				            }),
+				
+				            // Adicionar a coluna de ciclo extraindo o texto contido no nome do arquivo e modificar por exemplo '202501' em '01/2025'
+				            AdicionarColunaCiclo = Table.AddColumn( DefinirTipagem, "Ciclo", each Text.End( ciclo, 2 ) & "/" & Text.Start(ciclo, 4), type text ),
+				
+				            // Alteração de código em BH, o código 13793 foi migrado para 22372 no ciclo 04/2025
+				            SubstituirCodigoBH = Table.ReplaceValue(AdicionarColunaCiclo,"13793","22372",Replacer.ReplaceText,{"PDV"})
+				        in
+				            SubstituirCodigoBH,
+				
+				    // Etapa para listrar todos os arquivos modificados dentro da função 'fxOptOut' como uma tabela e buscar a informação entre " " e ".xlsx" no nome do arquivo para carregar o ciclo
+				    ListaTabelas = Table.AddColumn(ColunasSelecionadas, 
+				    "Tabelas", each fxOptOut([Content], 
+				    Text.BetweenDelimiters([Name], " ", ".xlsx" )), 
+				    type table)[Tabelas], // Define tudo como tabela e carrega as informações como uma tabela que pode ser expandida
+				    
+				    // Combina todas as tabelas contidas na etapa anterior como uma única e expande esse arquivo realizando a mesclagem das informações
+				    CombinarTabelas = Table.Combine ( ListaTabelas )
+				in
+				    CombinarTabelas
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

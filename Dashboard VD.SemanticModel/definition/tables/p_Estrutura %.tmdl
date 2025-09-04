@@ -1,0 +1,53 @@
+table 'p_Estrutura %'
+	lineageTag: 8e849f3e-8795-4503-ac9d-156fdff138e0
+
+	column Atingimento
+		lineageTag: 2ec9918d-1ec2-43b8-a8b0-e8003072c802
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Parâmetro Pedido'
+
+		relatedColumnDetails
+			groupByColumn: 'Parâmetro Campos'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parâmetro Campos'
+		lineageTag: c7104d0b-e34a-4545-b222-1944554c2dc7
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Parâmetro Pedido'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parâmetro Pedido'
+		formatString: 0
+		lineageTag: 1d397c2e-c763-4243-acd2-cb414ca2755c
+		summarizeBy: none
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'p_Estrutura %' = calculated
+		mode: import
+		source =
+				{
+				    ("% Receita", NAMEOF([% Receita Comparativo]), 0),
+				    ("% RPA", NAMEOF([% RPA estrutura]), 1),
+				    ("% UPA", NAMEOF([% UPA Comparativo]), 2),
+				    ("% Atingimento Atividade", NAMEOF([% Atividade Atingida]), 3),
+				    ("% Recuperados", NAMEOF([% Recuperados sobre meta]), 4),
+				    ("% Ativos no Ciclo", NAMEOF([% Ativos no Ciclo Estrutura]), 5),
+				    ("% IR", NAMEOF([% IR estrutura]), 6),
+				    ("% Ativos totais ciclo", NAMEOF([% Ativos totais ciclo estrutura]), 7),
+				    ("% Volume", NAMEOF([% Volume Estrutura]), 8)
+				}
+
+	annotation PBI_Id = 18519ae7a89847b79e69ef2d7de2aa3b
+

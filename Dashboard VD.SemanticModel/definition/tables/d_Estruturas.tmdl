@@ -1,0 +1,77 @@
+table d_Estruturas
+	lineageTag: c50c32ae-e301-4241-a5a2-85cb803ac3a0
+
+	column Apelido
+		lineageTag: 20394e11-3437-4626-b3e6-8589d6e29450
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaTotalEstrutura[Apelido]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cód. Estrutura'
+		lineageTag: 5d12ee9a-30cd-4b0c-828a-d9e243302816
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaTotalEstrutura[Cód. Estrutura]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estrutura
+		lineageTag: acddab39-8ce4-4c80-91e7-2f337b24a7a0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaTotalEstrutura[Estrutura]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Key CodEstruturaCiclo'
+		lineageTag: 3a4b35b8-2a21-4796-883c-48a11bd71c71
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaTotalEstrutura[Key CodEstruturaCiclo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciclo
+		lineageTag: 26e260ad-55c5-4006-b2fb-70f9eb1c887e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaTotalEstrutura[Ciclo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hierarquia
+		lineageTag: bd7d880c-9d41-4122-8922-154f526318dd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaTotalEstrutura[Hierarquia]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidade
+		lineageTag: e8b71ea3-8fad-451e-8b22-3e7fb33d2eb4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: d_MetaTotalEstrutura[Unidade]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_Estruturas = calculated
+		mode: import
+		source = ```
+				
+				SUMMARIZE(
+				    d_MetaTotalEstrutura,
+				    d_MetaTotalEstrutura[Apelido], 
+				    d_MetaTotalEstrutura[Cód. Estrutura],
+				    d_MetaTotalEstrutura[Estrutura], 
+				    d_MetaTotalEstrutura[Hierarquia],
+				    d_MetaTotalEstrutura[Key CodEstruturaCiclo], 
+				    d_MetaTotalEstrutura[Ciclo],
+				    d_MetaTotalEstrutura[Unidade]
+				)
+				```
+
+	annotation PBI_Id = f385aafc64b74676838a893df0ee468e
+

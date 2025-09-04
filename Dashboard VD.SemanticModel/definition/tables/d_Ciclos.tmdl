@@ -1,0 +1,38 @@
+table d_Ciclos
+	lineageTag: e97f393e-f090-40f1-8cad-9809f9727583
+
+	column 'Order Ciclo'
+		dataType: int64
+		formatString: 0
+		lineageTag: ca6697dd-eff8-401b-b6a9-5caf1d7c5aef
+		summarizeBy: sum
+		sourceColumn: Order Ciclo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ciclo Captação'
+		dataType: string
+		lineageTag: a6e8d103-de1b-4d58-97d4-7e16ef778dc6
+		summarizeBy: none
+		sourceColumn: Ciclo Captação
+		sortByColumn: 'Order Ciclo'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_Ciclos = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("T:\12-TI\DASHBOARD\DASHBOARD VD\dCiclos.xlsx"), null, true),
+				    CicloCaptacao_Table = Source{[Item="CicloCaptacao",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(CicloCaptacao_Table,{{"Ciclo Captação", type text}, {"Order Ciclo", Int64.Type}}),
+				    #"Sorted Rows" = Table.Sort(#"Changed Type",{{"Order Ciclo", Order.Descending}})
+				in
+				    #"Sorted Rows"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

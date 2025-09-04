@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/1.4.0/schema.json",
+  "displayName": "NPS",
+  "name": "8099bb776b261cebdb17",
+  "options": {
+    "applyOnlyToTargetVisuals": true,
+    "targetVisualNames": [
+      "b819cf4d9e2321588981",
+      "dd4b879f60099ef15bed"
+    ]
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "ede44e1f759a0ac3706b",
+    "sections": {
+      "ede44e1f759a0ac3706b": {
+        "visualContainers": {}
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
