@@ -2011,13 +2011,6 @@ cultureInfo pt-BR
 			          "cor papel consulta pedidos": {
 			            "State": "Generated"
 			          }
-			        },
-			        {
-			          "CorPapelConsultaPedidos": {
-			            "Type": "Noun",
-			            "State": "Generated",
-			            "Weight": 0.99
-			          }
 			        }
 			      ]
 			    },
@@ -2033,13 +2026,6 @@ cultureInfo pt-BR
 			        {
 			          "cor papel base diaria": {
 			            "State": "Generated"
-			          }
-			        },
-			        {
-			          "CorPapelBaseDiaria": {
-			            "Type": "Noun",
-			            "State": "Generated",
-			            "Weight": 0.99
 			          }
 			        }
 			      ]
@@ -2205,6 +2191,9 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "papel": {
@@ -2833,6 +2822,9 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "papel": {
@@ -3051,6 +3043,9 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "papel": {
@@ -3957,9 +3952,6 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
-			      "Visibility": {
-			        "Value": "Hidden"
-			      },
 			      "Terms": [
 			        {
 			          "ciclo": {
@@ -3976,6 +3968,9 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "key CodEstruturaCiclo": {
@@ -4158,7 +4153,7 @@ cultureInfo pt-BR
 			          }
 			        },
 			        {
-			          "CodEstrutura": {
+			          "Cod": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -4268,6 +4263,16 @@ cultureInfo pt-BR
 			            },
 			            "Weight": 0.451
 			          }
+			        },
+			        {
+			          "Estrutura": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
 			        }
 			      ]
 			    },
@@ -4372,6 +4377,9 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "pdv": {
@@ -4388,9 +4396,6 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
-			      "Visibility": {
-			        "Value": "Hidden"
-			      },
 			      "Terms": [
 			        {
 			          "key PapelCiclo": {
@@ -4407,9 +4412,6 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
-			      "Visibility": {
-			        "Value": "Hidden"
-			      },
 			      "Terms": [
 			        {
 			          "key PapelCiclo": {
@@ -4426,9 +4428,6 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
-			      "Visibility": {
-			        "Value": "Hidden"
-			      },
 			      "Terms": [
 			        {
 			          "key PapelCiclo": {
@@ -5145,6 +5144,9 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "ciclo": {
@@ -5370,6 +5372,9 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "key ConsultorCiclo": {
@@ -6574,6 +6579,16 @@ cultureInfo pt-BR
 			          "real NPS satis. entrega": {
 			            "State": "Generated"
 			          }
+			        },
+			        {
+			          "+ Satisfação Entrega": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
 			        }
 			      ]
 			    },
@@ -6621,6 +6636,16 @@ cultureInfo pt-BR
 			        {
 			          "meta NPS satis. entrega": {
 			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Meta": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -6710,6 +6735,16 @@ cultureInfo pt-BR
 			            },
 			            "Weight": 0.605
 			          }
+			        },
+			        {
+			          "% Real x Meta": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
 			        }
 			      ]
 			    },
@@ -6762,16 +6797,6 @@ cultureInfo pt-BR
 			          "real penetracao ER": {
 			            "State": "Generated"
 			          }
-			        },
-			        {
-			          "Penetração no ER": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -6787,16 +6812,6 @@ cultureInfo pt-BR
 			        {
 			          "meta penetracao ER": {
 			            "State": "Generated"
-			          }
-			        },
-			        {
-			          "Meta": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -6834,20 +6849,10 @@ cultureInfo pt-BR
 			            },
 			            "Weight": 0.591
 			          }
-			        },
-			        {
-			          "% Real x Meta": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
-			    "medida.cor_atingimento": {
+			    "medida.Cor_Atingimento_": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "Medidas",
@@ -6857,15 +6862,28 @@ cultureInfo pt-BR
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "cor atingimento": {
+			          "Cor_Atingimento %": {
 			            "State": "Generated"
 			          }
 			        },
 			        {
-			          "Cor_Atingimento": {
+			          "cor_atingimento percentage": {
 			            "Type": "Noun",
-			            "State": "Generated",
-			            "Weight": 0.99
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "cor_atingimento pct": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
 			          }
 			        }
 			      ]
@@ -9232,6 +9250,9 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "ciclo": {
@@ -9264,6 +9285,9 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "unidade": {
@@ -9314,9 +9338,6 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
-			      "Visibility": {
-			        "Value": "Hidden"
-			      },
 			      "Terms": [
 			        {
 			          "cod PDV": {
@@ -9340,9 +9361,6 @@ cultureInfo pt-BR
 			        }
 			      },
 			      "State": "Generated",
-			      "Visibility": {
-			        "Value": "Hidden"
-			      },
 			      "Terms": [
 			        {
 			          "ciclo": {
@@ -9709,9 +9727,1760 @@ cultureInfo pt-BR
 			          }
 			        }
 			      ]
+			    },
+			    "medida.cor_grafico_pizza": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Cor Grafico Pizza"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cor grafico pizza": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.RPA_card": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "RPA (card)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "RPA (card)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "RPA": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
+			    },
+			    "medida.cor_condicional_geral": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Cor Condicional Geral"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cor condicional geral": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.meta_pedido_medio_card": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Meta Pedido Medio (card)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "meta pedido medio (card)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "meta pedido medio": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
+			    },
+			    "medida.meta_itens_por_pedido_card": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Meta Itens por pedido (card)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "meta itens por pedido (card)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "meta itens por pedido": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
+			    },
+			    "medida.cor_atingimento": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Cor_Atingimento"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cor atingimento": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Cor_Atingimento": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "d_ciclo.ciclo_captação": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_Ciclos",
+			          "ConceptualProperty": "Ciclo Captação"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "ciclo captação": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_meta_consultores_diaria.pdv": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_MetaConsultoresDiaria",
+			          "ConceptualProperty": "PDV"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "pdv": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_CoresDinamicas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "d cores dinamica": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "d core dinamica": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.78
+			          }
+			        },
+			        {
+			          "d_CoresDinamicas": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica.limite_min": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_CoresDinamicas",
+			          "ConceptualProperty": "LimiteMin"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "limite min": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "LimiteMin": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "limite minimum": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica.cor_hex": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_CoresDinamicas",
+			          "ConceptualProperty": "CorHex"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cor hex": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "CorHex": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "cor curse": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "cor spell": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "cor jinx": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "cor voodoo": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "cor enchantment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.475
+			          }
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica.tipo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_CoresDinamicas",
+			          "ConceptualProperty": "Tipo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "tipo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica.chave": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_CoresDinamicas",
+			          "ConceptualProperty": "Chave"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "chave": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_indicador_filtrado": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_IndicadorFiltrado"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "d indicador filtrado": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "d_IndicadorFiltrado": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "d_indicador_filtrado.nome_indicador": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_IndicadorFiltrado",
+			          "ConceptualProperty": "Nome Indicador"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nome indicador": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_estrutura": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_Estruturas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "d estrutura": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "d_Estruturas": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "d_estrutura.apelido": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_Estruturas",
+			          "ConceptualProperty": "Apelido"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "apelido": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_estrutura.cód__estrutura": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_Estruturas",
+			          "ConceptualProperty": "Cód. Estrutura"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cód. estrutura": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_estrutura.estrutura": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_Estruturas",
+			          "ConceptualProperty": "Estrutura"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "estrutura": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_estrutura.key_CodEstruturaCiclo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_Estruturas",
+			          "ConceptualProperty": "Key CodEstruturaCiclo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "key CodEstruturaCiclo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_estrutura.ciclo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_Estruturas",
+			          "ConceptualProperty": "Ciclo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "ciclo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_estrutura.hierarquia": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_Estruturas",
+			          "ConceptualProperty": "Hierarquia"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "hierarquia": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_estrutura.unidade": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_Estruturas",
+			          "ConceptualProperty": "Unidade"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "unidade": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_MetaIndicadores"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "d meta indicadore": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "d_MetaIndicadores": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore.pdv": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_MetaIndicadores",
+			          "ConceptualProperty": "PDV"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "pdv": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore.indicador": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_MetaIndicadores",
+			          "ConceptualProperty": "Indicador"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "indicador": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore.meta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_MetaIndicadores",
+			          "ConceptualProperty": "Meta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "meta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore.ciclo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "d_MetaIndicadores",
+			          "ConceptualProperty": "Ciclo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "ciclo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
 			    }
 			  },
 			  "Relationships": {
+			    "f_base_ativa_diaria_has_d_papel": {
+			      "Binding": {
+			        "ConceptualEntity": "f_BaseAtivaDiaria"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_base_ativa_diaria": {
+			          "Target": {
+			            "Entity": "f_base_ativa_diaria"
+			          }
+			        },
+			        "d_papel": {
+			          "Target": {
+			            "Entity": "d_papel"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_base_ativa_diaria"
+			            },
+			            "Object": {
+			              "Role": "d_papel"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_base_ativa_diarias_have_d_papels"
+			        }
+			      ]
+			    },
+			    "f_base_ativa_INICIAL_has_d_estrutura": {
+			      "Binding": {
+			        "ConceptualEntity": "f_BaseAtivaINICIAL"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_base_ativa_INICIAL": {
+			          "Target": {
+			            "Entity": "f_base_ativa_INICIAL"
+			          }
+			        },
+			        "d_estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_base_ativa_INICIAL"
+			            },
+			            "Object": {
+			              "Role": "d_estrutura"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_base_ativa_INICIALs_have_d_estruturas"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_estrutura"
+			            },
+			            "Object": {
+			              "Role": "f_base_ativa_INICIAL"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_estruturas_have_f_base_ativa_INICIALs"
+			        }
+			      ]
+			    },
+			    "f_base_ativa_INICIAL_has_d_papel": {
+			      "Binding": {
+			        "ConceptualEntity": "f_BaseAtivaINICIAL"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_base_ativa_INICIAL": {
+			          "Target": {
+			            "Entity": "f_base_ativa_INICIAL"
+			          }
+			        },
+			        "d_papel": {
+			          "Target": {
+			            "Entity": "d_papel"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_base_ativa_INICIAL"
+			            },
+			            "Object": {
+			              "Role": "d_papel"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_base_ativa_INICIALs_have_d_papels"
+			        }
+			      ]
+			    },
+			    "f_consulta_pedido_has_d_meta_consultore": {
+			      "Binding": {
+			        "ConceptualEntity": "f_ConsultaPedidos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_consulta_pedido": {
+			          "Target": {
+			            "Entity": "f_consulta_pedido"
+			          }
+			        },
+			        "d_meta_consultore": {
+			          "Target": {
+			            "Entity": "d_meta_consultore"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_consulta_pedido"
+			            },
+			            "Object": {
+			              "Role": "d_meta_consultore"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_consulta_pedidos_have_d_meta_consultores"
+			        }
+			      ]
+			    },
+			    "f_consulta_pedido_has_d_estrutura": {
+			      "Binding": {
+			        "ConceptualEntity": "f_ConsultaPedidos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_consulta_pedido": {
+			          "Target": {
+			            "Entity": "f_consulta_pedido"
+			          }
+			        },
+			        "d_estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_consulta_pedido"
+			            },
+			            "Object": {
+			              "Role": "d_estrutura"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_consulta_pedidos_have_d_estruturas"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_estrutura"
+			            },
+			            "Object": {
+			              "Role": "f_consulta_pedido"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_estruturas_have_f_consulta_pedidos"
+			        }
+			      ]
+			    },
+			    "f_consulta_pedido_has_d_calendario": {
+			      "Binding": {
+			        "ConceptualEntity": "f_ConsultaPedidos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_consulta_pedido": {
+			          "Target": {
+			            "Entity": "f_consulta_pedido"
+			          }
+			        },
+			        "d_calendario": {
+			          "Target": {
+			            "Entity": "d_calendario"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_consulta_pedido"
+			            },
+			            "Object": {
+			              "Role": "d_calendario"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_consulta_pedidos_have_d_calendarios"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_calendario"
+			            },
+			            "Object": {
+			              "Role": "f_consulta_pedido"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_calendarios_have_f_consulta_pedidos"
+			        }
+			      ]
+			    },
+			    "f_consulta_pedido_has_d_papel": {
+			      "Binding": {
+			        "ConceptualEntity": "f_ConsultaPedidos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_consulta_pedido": {
+			          "Target": {
+			            "Entity": "f_consulta_pedido"
+			          }
+			        },
+			        "d_papel": {
+			          "Target": {
+			            "Entity": "d_papel"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_consulta_pedido"
+			            },
+			            "Object": {
+			              "Role": "d_papel"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_consulta_pedidos_have_d_papels"
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore_has_meta": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaIndicadores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_indicadore": {
+			          "Target": {
+			            "Entity": "d_meta_indicadore"
+			          }
+			        },
+			        "d_meta_indicadore.meta": {
+			          "Target": {
+			            "Entity": "d_meta_indicadore.meta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_indicadore"
+			            },
+			            "Object": {
+			              "Role": "d_meta_indicadore.meta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_indicadores_have_meta"
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore_has_indicador": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaIndicadores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_indicadore": {
+			          "Target": {
+			            "Entity": "d_meta_indicadore"
+			          }
+			        },
+			        "d_meta_indicadore.indicador": {
+			          "Target": {
+			            "Entity": "d_meta_indicadore.indicador"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_indicadore"
+			            },
+			            "Object": {
+			              "Role": "d_meta_indicadore.indicador"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_indicadores_have_indicadors"
+			        }
+			      ]
+			    },
+			    "d_estrutura_has_hierarquia": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Estruturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura"
+			          }
+			        },
+			        "d_estrutura.hierarquia": {
+			          "Target": {
+			            "Entity": "d_estrutura.hierarquia"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_estrutura"
+			            },
+			            "Object": {
+			              "Role": "d_estrutura.hierarquia"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_estruturas_have_hierarquias"
+			        }
+			      ]
+			    },
+			    "d_estrutura_has_key_CodEstruturaCiclo": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Estruturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura"
+			          }
+			        },
+			        "d_estrutura.key_CodEstruturaCiclo": {
+			          "Target": {
+			            "Entity": "d_estrutura.key_CodEstruturaCiclo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_estrutura"
+			            },
+			            "Object": {
+			              "Role": "d_estrutura.key_CodEstruturaCiclo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_estruturas_have_key_CodEstruturaCiclos"
+			        }
+			      ]
+			    },
+			    "d_estrutura_has_estrutura": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Estruturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura"
+			          }
+			        },
+			        "d_estrutura.estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura.estrutura"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_estrutura"
+			            },
+			            "Object": {
+			              "Role": "d_estrutura.estrutura"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_estruturas_have_estruturas"
+			        }
+			      ]
+			    },
+			    "d_estrutura_has_cód__estrutura": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Estruturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura"
+			          }
+			        },
+			        "d_estrutura.cód__estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura.cód__estrutura"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_estrutura"
+			            },
+			            "Object": {
+			              "Role": "d_estrutura.cód__estrutura"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_estruturas_have_cód__estruturas"
+			        }
+			      ]
+			    },
+			    "d_estrutura_has_apelido": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Estruturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura"
+			          }
+			        },
+			        "d_estrutura.apelido": {
+			          "Target": {
+			            "Entity": "d_estrutura.apelido"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_estrutura"
+			            },
+			            "Object": {
+			              "Role": "d_estrutura.apelido"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_estruturas_have_apelidos"
+			        }
+			      ]
+			    },
+			    "d_indicador_filtrado_has_nome_indicador": {
+			      "Binding": {
+			        "ConceptualEntity": "d_IndicadorFiltrado"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_indicador_filtrado": {
+			          "Target": {
+			            "Entity": "d_indicador_filtrado"
+			          }
+			        },
+			        "d_indicador_filtrado.nome_indicador": {
+			          "Target": {
+			            "Entity": "d_indicador_filtrado.nome_indicador"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_indicador_filtrado"
+			            },
+			            "Object": {
+			              "Role": "d_indicador_filtrado.nome_indicador"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_indicador_filtrados_have_nome_indicadors"
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica_has_chave": {
+			      "Binding": {
+			        "ConceptualEntity": "d_CoresDinamicas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_cores_dinamica": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica"
+			          }
+			        },
+			        "d_cores_dinamica.chave": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica.chave"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_cores_dinamica"
+			            },
+			            "Object": {
+			              "Role": "d_cores_dinamica.chave"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_cores_dinamicas_have_chaves"
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica_has_tipo": {
+			      "Binding": {
+			        "ConceptualEntity": "d_CoresDinamicas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_cores_dinamica": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica"
+			          }
+			        },
+			        "d_cores_dinamica.tipo": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica.tipo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_cores_dinamica"
+			            },
+			            "Object": {
+			              "Role": "d_cores_dinamica.tipo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_cores_dinamicas_have_tipos"
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica_has_cor_hex": {
+			      "Binding": {
+			        "ConceptualEntity": "d_CoresDinamicas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_cores_dinamica": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica"
+			          }
+			        },
+			        "d_cores_dinamica.cor_hex": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica.cor_hex"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_cores_dinamica"
+			            },
+			            "Object": {
+			              "Role": "d_cores_dinamica.cor_hex"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_cores_dinamicas_have_cor_hexes"
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica_has_limite_min": {
+			      "Binding": {
+			        "ConceptualEntity": "d_CoresDinamicas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_cores_dinamica": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica"
+			          }
+			        },
+			        "d_cores_dinamica.limite_min": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica.limite_min"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_cores_dinamica"
+			            },
+			            "Object": {
+			              "Role": "d_cores_dinamica.limite_min"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_cores_dinamicas_have_limite_mins"
+			        }
+			      ]
+			    },
+			    "d_meta_consultores_diaria_has_pdv": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaConsultoresDiaria"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_consultores_diaria": {
+			          "Target": {
+			            "Entity": "d_meta_consultores_diaria"
+			          }
+			        },
+			        "d_meta_consultores_diaria.pdv": {
+			          "Target": {
+			            "Entity": "d_meta_consultores_diaria.pdv"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_consultores_diaria"
+			            },
+			            "Object": {
+			              "Role": "d_meta_consultores_diaria.pdv"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_consultores_diarias_have_pdv"
+			        }
+			      ]
+			    },
+			    "d_ciclo_has_ciclo_captação": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Ciclos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_ciclo": {
+			          "Target": {
+			            "Entity": "d_ciclo"
+			          }
+			        },
+			        "d_ciclo.ciclo_captação": {
+			          "Target": {
+			            "Entity": "d_ciclo.ciclo_captação"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_ciclo"
+			            },
+			            "Object": {
+			              "Role": "d_ciclo.ciclo_captação"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_ciclos_have_ciclo_captaçãos"
+			        }
+			      ]
+			    },
+			    "medida_has_cor_atingimento": {
+			      "Binding": {
+			        "ConceptualEntity": "Medidas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "medida": {
+			          "Target": {
+			            "Entity": "medida"
+			          }
+			        },
+			        "medida.cor_atingimento": {
+			          "Target": {
+			            "Entity": "medida.cor_atingimento"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "medida"
+			            },
+			            "Object": {
+			              "Role": "medida.cor_atingimento"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "medidas_have_cor_atingimento"
+			        }
+			      ]
+			    },
+			    "f_consulta_pedido_has_medida_meta_itens_por_pedido_card": {
+			      "Binding": {
+			        "ConceptualEntity": "f_ConsultaPedidos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_consulta_pedido": {
+			          "Target": {
+			            "Entity": "f_consulta_pedido"
+			          }
+			        },
+			        "medida.meta_itens_por_pedido_card": {
+			          "Target": {
+			            "Entity": "medida.meta_itens_por_pedido_card"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_consulta_pedido"
+			            },
+			            "Object": {
+			              "Role": "medida.meta_itens_por_pedido_card"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_consulta_pedidos_have_meta_itens_por_pedido_card"
+			        }
+			      ]
+			    },
+			    "d_meta_consultore_has_medida_meta_itens_por_pedido_card": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaConsultores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_consultore": {
+			          "Target": {
+			            "Entity": "d_meta_consultore"
+			          }
+			        },
+			        "medida.meta_itens_por_pedido_card": {
+			          "Target": {
+			            "Entity": "medida.meta_itens_por_pedido_card"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_consultore"
+			            },
+			            "Object": {
+			              "Role": "medida.meta_itens_por_pedido_card"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_consultores_have_meta_itens_por_pedido_card"
+			        }
+			      ]
+			    },
+			    "f_consulta_pedido_has_medida_meta_pedido_medio_card": {
+			      "Binding": {
+			        "ConceptualEntity": "f_ConsultaPedidos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_consulta_pedido": {
+			          "Target": {
+			            "Entity": "f_consulta_pedido"
+			          }
+			        },
+			        "medida.meta_pedido_medio_card": {
+			          "Target": {
+			            "Entity": "medida.meta_pedido_medio_card"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_consulta_pedido"
+			            },
+			            "Object": {
+			              "Role": "medida.meta_pedido_medio_card"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_consulta_pedidos_have_meta_pedido_medio_card"
+			        }
+			      ]
+			    },
+			    "d_meta_consultore_has_medida_meta_pedido_medio_card": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaConsultores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_consultore": {
+			          "Target": {
+			            "Entity": "d_meta_consultore"
+			          }
+			        },
+			        "medida.meta_pedido_medio_card": {
+			          "Target": {
+			            "Entity": "medida.meta_pedido_medio_card"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_consultore"
+			            },
+			            "Object": {
+			              "Role": "medida.meta_pedido_medio_card"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_consultores_have_meta_pedido_medio_card"
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica_has_medida_cor_condicional_geral": {
+			      "Binding": {
+			        "ConceptualEntity": "d_CoresDinamicas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_cores_dinamica": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica"
+			          }
+			        },
+			        "medida.cor_condicional_geral": {
+			          "Target": {
+			            "Entity": "medida.cor_condicional_geral"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_cores_dinamica"
+			            },
+			            "Object": {
+			              "Role": "medida.cor_condicional_geral"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_cores_dinamicas_have_cor_condicional_geral"
+			        }
+			      ]
+			    },
+			    "d_meta_total_estrutura_has_medida_RPA_card": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaTotalEstrutura"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_total_estrutura": {
+			          "Target": {
+			            "Entity": "d_meta_total_estrutura"
+			          }
+			        },
+			        "medida.RPA_card": {
+			          "Target": {
+			            "Entity": "medida.RPA_card"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_total_estrutura"
+			            },
+			            "Object": {
+			              "Role": "medida.RPA_card"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_total_estruturas_have_RPA_card"
+			        }
+			      ]
+			    },
+			    "f_receita_GMV_has_medida_cor_grafico_pizza": {
+			      "Binding": {
+			        "ConceptualEntity": "f_ReceitaGMV"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_receita_GMV": {
+			          "Target": {
+			            "Entity": "f_receita_GMV"
+			          }
+			        },
+			        "medida.cor_grafico_pizza": {
+			          "Target": {
+			            "Entity": "medida.cor_grafico_pizza"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_receita_GMV"
+			            },
+			            "Object": {
+			              "Role": "medida.cor_grafico_pizza"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_receita_GMVs_have_cor_grafico_pizza"
+			        }
+			      ]
+			    },
+			    "d_loja_has_unidade": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Lojas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_loja": {
+			          "Target": {
+			            "Entity": "d_loja"
+			          }
+			        },
+			        "d_loja.unidade": {
+			          "Target": {
+			            "Entity": "d_loja.unidade"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_loja"
+			            },
+			            "Object": {
+			              "Role": "d_loja.unidade"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_loja_have_unidades"
+			        }
+			      ]
+			    },
+			    "d_loja_has_estrutura_pdv": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Lojas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_loja": {
+			          "Target": {
+			            "Entity": "d_loja"
+			          }
+			        },
+			        "d_loja.estrutura_pdv": {
+			          "Target": {
+			            "Entity": "d_loja.estrutura_pdv"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_loja"
+			            },
+			            "Object": {
+			              "Role": "d_loja.estrutura_pdv"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_loja_have_estrutura_pdv"
+			        }
+			      ]
+			    },
+			    "d_loja_has_nome_pdv": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Lojas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_loja": {
+			          "Target": {
+			            "Entity": "d_loja"
+			          }
+			        },
+			        "d_loja.nome_pdv": {
+			          "Target": {
+			            "Entity": "d_loja.nome_pdv"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_loja"
+			            },
+			            "Object": {
+			              "Role": "d_loja.nome_pdv"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_loja_have_nome_pdv"
+			        }
+			      ]
+			    },
+			    "d_loja_has_pdv": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Lojas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_loja": {
+			          "Target": {
+			            "Entity": "d_loja"
+			          }
+			        },
+			        "d_loja.pdv": {
+			          "Target": {
+			            "Entity": "d_loja.pdv"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_loja"
+			            },
+			            "Object": {
+			              "Role": "d_loja.pdv"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_loja_have_pdv"
+			        }
+			      ]
+			    },
+			    "d_loja_has_cod_pdv": {
+			      "Binding": {
+			        "ConceptualEntity": "d_Lojas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_loja": {
+			          "Target": {
+			            "Entity": "d_loja"
+			          }
+			        },
+			        "d_loja.cod_pdv": {
+			          "Target": {
+			            "Entity": "d_loja.cod_pdv"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_loja"
+			            },
+			            "Object": {
+			              "Role": "d_loja.cod_pdv"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_loja_have_cod_pdv"
+			        }
+			      ]
+			    },
 			    "d_meta_GMV_has_meta_diarizada": {
 			      "Binding": {
 			        "ConceptualEntity": "d_MetaGMV"
@@ -9838,20 +11607,20 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "f_receita_GMV_has_unidade": {
+			    "d_meta_GMV_has_ciclo": {
 			      "Binding": {
-			        "ConceptualEntity": "f_ReceitaGMV"
+			        "ConceptualEntity": "d_MetaGMV"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "f_receita_GMV": {
+			        "d_meta_GMV": {
 			          "Target": {
-			            "Entity": "f_receita_GMV"
+			            "Entity": "d_meta_GMV"
 			          }
 			        },
-			        "f_receita_GMV.unidade": {
+			        "d_meta_GMV.ciclo": {
 			          "Target": {
-			            "Entity": "f_receita_GMV.unidade"
+			            "Entity": "d_meta_GMV.ciclo"
 			          }
 			        }
 			      },
@@ -9859,15 +11628,48 @@ cultureInfo pt-BR
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "f_receita_GMV"
+			              "Role": "d_meta_GMV"
 			            },
 			            "Object": {
-			              "Role": "f_receita_GMV.unidade"
+			              "Role": "d_meta_GMV.ciclo"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "f_receita_GMVs_have_unidades"
+			          "ID": "d_meta_GMVs_have_ciclos"
+			        }
+			      ]
+			    },
+			    "d_meta_GMV_has_cod_PDV": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaGMV"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_GMV": {
+			          "Target": {
+			            "Entity": "d_meta_GMV"
+			          }
+			        },
+			        "d_meta_GMV.cod_PDV": {
+			          "Target": {
+			            "Entity": "d_meta_GMV.cod_PDV"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_GMV"
+			            },
+			            "Object": {
+			              "Role": "d_meta_GMV.cod_PDV"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_GMVs_have_cod_pdv"
 			        }
 			      ]
 			    },
@@ -9901,39 +11703,6 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "f_receita_GMVs_have_key_PDVCicloMarcas"
-			        }
-			      ]
-			    },
-			    "f_receita_GMV_has_ciclo": {
-			      "Binding": {
-			        "ConceptualEntity": "f_ReceitaGMV"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_receita_GMV": {
-			          "Target": {
-			            "Entity": "f_receita_GMV"
-			          }
-			        },
-			        "f_receita_GMV.ciclo": {
-			          "Target": {
-			            "Entity": "f_receita_GMV.ciclo"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_receita_GMV"
-			            },
-			            "Object": {
-			              "Role": "f_receita_GMV.ciclo"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_receita_GMVs_have_ciclos"
 			        }
 			      ]
 			    },
@@ -10730,39 +12499,6 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "d_meta_consultores_diaria_has_pdv": {
-			      "Binding": {
-			        "ConceptualEntity": "d_MetaConsultoresDiaria"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_meta_consultores_diaria": {
-			          "Target": {
-			            "Entity": "d_meta_consultores_diaria"
-			          }
-			        },
-			        "d_meta_consultores_diaria.pdv": {
-			          "Target": {
-			            "Entity": "d_meta_consultores_diaria.pdv"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_consultores_diaria"
-			            },
-			            "Object": {
-			              "Role": "d_meta_consultores_diaria.pdv"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_consultores_diarias_have_pdv"
-			        }
-			      ]
-			    },
 			    "d_meta_consultore_has_key_UnidadeCiclo": {
 			      "Binding": {
 			        "ConceptualEntity": "d_MetaConsultores"
@@ -10924,100 +12660,7 @@ cultureInfo pt-BR
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "d_meta_PDV_have_cod_PDV"
-			        }
-			      ]
-			    },
-			    "d_meta_PDV_has_meta_eudora": {
-			      "Binding": {
-			        "ConceptualEntity": "d_MetaPDV"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_meta_PDV": {
-			          "Target": {
-			            "Entity": "d_meta_PDV"
-			          }
-			        },
-			        "d_meta_PDV.meta_eudora": {
-			          "Target": {
-			            "Entity": "d_meta_PDV.meta_eudora"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_PDV"
-			            },
-			            "Object": {
-			              "Role": "d_meta_PDV.meta_eudora"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_PDV_have_meta_eudora"
-			        },
-			        {
-			          "Adjective": {
-			            "Subject": {
-			              "Role": "d_meta_PDV"
-			            },
-			            "Adjectives": [
-			              {
-			                "expensive": {
-			                  "State": "Generated"
-			                }
-			              }
-			            ],
-			            "Antonyms": [
-			              {
-			                "cheap": {
-			                  "State": "Generated"
-			                }
-			              }
-			            ],
-			            "Measurement": {
-			              "Role": "d_meta_PDV.meta_eudora"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "meta_eudora_indicates_how_expensive_d_meta_PDV_are"
-			        }
-			      ]
-			    },
-			    "d_meta_PDV_has_key_CodPDVCiclo": {
-			      "Binding": {
-			        "ConceptualEntity": "d_MetaPDV"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_meta_PDV": {
-			          "Target": {
-			            "Entity": "d_meta_PDV"
-			          }
-			        },
-			        "d_meta_PDV.key_CodPDVCiclo": {
-			          "Target": {
-			            "Entity": "d_meta_PDV.key_CodPDVCiclo"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_PDV"
-			            },
-			            "Object": {
-			              "Role": "d_meta_PDV.key_CodPDVCiclo"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_PDV_have_key_CodPDVCiclos"
+			          "ID": "d_meta_PDV_have_cod_pdv"
 			        }
 			      ]
 			    },
@@ -11149,7 +12792,7 @@ cultureInfo pt-BR
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "f_consulta_pedidos_have_cod_PDV"
+			          "ID": "f_consulta_pedidos_have_cod_pdv"
 			        }
 			      ]
 			    },
@@ -11483,72 +13126,6 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "f_receita_GMV_has_medida_cor_condicional_GMV": {
-			      "Binding": {
-			        "ConceptualEntity": "f_ReceitaGMV"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_receita_GMV": {
-			          "Target": {
-			            "Entity": "f_receita_GMV"
-			          }
-			        },
-			        "medida.cor_condicional_GMV": {
-			          "Target": {
-			            "Entity": "medida.cor_condicional_GMV"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_receita_GMV"
-			            },
-			            "Object": {
-			              "Role": "medida.cor_condicional_GMV"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_receita_GMVs_have_cor_condicional_GMV"
-			        }
-			      ]
-			    },
-			    "d_meta_GMV_has_medida_cor_condicional_GMV": {
-			      "Binding": {
-			        "ConceptualEntity": "d_MetaGMV"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_meta_GMV": {
-			          "Target": {
-			            "Entity": "d_meta_GMV"
-			          }
-			        },
-			        "medida.cor_condicional_GMV": {
-			          "Target": {
-			            "Entity": "medida.cor_condicional_GMV"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_GMV"
-			            },
-			            "Object": {
-			              "Role": "medida.cor_condicional_GMV"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_GMVs_have_cor_condicional_GMV"
-			        }
-			      ]
-			    },
 			    "d_meta_GMV_has_medida_meta_diarizada_GMV": {
 			      "Binding": {
 			        "ConceptualEntity": "d_MetaGMV"
@@ -11813,20 +13390,20 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "medida_has_cor_atingimento": {
+			    "d_cores_dinamica_has_medida_Cor_Atingimento_": {
 			      "Binding": {
-			        "ConceptualEntity": "Medidas"
+			        "ConceptualEntity": "d_CoresDinamicas"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "medida": {
+			        "d_cores_dinamica": {
 			          "Target": {
-			            "Entity": "medida"
+			            "Entity": "d_cores_dinamica"
 			          }
 			        },
-			        "medida.cor_atingimento": {
+			        "medida.Cor_Atingimento_": {
 			          "Target": {
-			            "Entity": "medida.cor_atingimento"
+			            "Entity": "medida.Cor_Atingimento_"
 			          }
 			        }
 			      },
@@ -11834,15 +13411,15 @@ cultureInfo pt-BR
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "medida"
+			              "Role": "d_cores_dinamica"
 			            },
 			            "Object": {
-			              "Role": "medida.cor_atingimento"
+			              "Role": "medida.Cor_Atingimento_"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "medidas_have_cor_atingimento"
+			          "ID": "d_cores_dinamicas_have_Cor_Atingimento_"
 			        }
 			      ]
 			    },
@@ -11879,15 +13456,48 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "medida_has_meta_penetracao_ER": {
+			    "d_meta_indicadore_has_medida_penetracao_ER": {
 			      "Binding": {
-			        "ConceptualEntity": "Medidas"
+			        "ConceptualEntity": "d_MetaIndicadores"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "medida": {
+			        "d_meta_indicadore": {
 			          "Target": {
-			            "Entity": "medida"
+			            "Entity": "d_meta_indicadore"
+			          }
+			        },
+			        "medida.penetracao_ER": {
+			          "Target": {
+			            "Entity": "medida.penetracao_ER"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_indicadore"
+			            },
+			            "Object": {
+			              "Role": "medida.penetracao_ER"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_indicadores_have__penetracao_ER"
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore_has_medida_meta_penetracao_ER": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaIndicadores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_indicadore": {
+			          "Target": {
+			            "Entity": "d_meta_indicadore"
 			          }
 			        },
 			        "medida.meta_penetracao_ER": {
@@ -11900,7 +13510,7 @@ cultureInfo pt-BR
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "medida"
+			              "Role": "d_meta_indicadore"
 			            },
 			            "Object": {
 			              "Role": "medida.meta_penetracao_ER"
@@ -11908,7 +13518,7 @@ cultureInfo pt-BR
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "medidas_have_meta_penetracao_ER"
+			          "ID": "d_meta_indicadores_have_meta_penetracao_ER"
 			        }
 			      ]
 			    },
@@ -12275,15 +13885,48 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "medida_has_meta_OptOut": {
+			    "d_meta_indicadore_has_medida_real_x_meta_OptOut": {
 			      "Binding": {
-			        "ConceptualEntity": "Medidas"
+			        "ConceptualEntity": "d_MetaIndicadores"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "medida": {
+			        "d_meta_indicadore": {
 			          "Target": {
-			            "Entity": "medida"
+			            "Entity": "d_meta_indicadore"
+			          }
+			        },
+			        "medida.real_x_meta_OptOut": {
+			          "Target": {
+			            "Entity": "medida.real_x_meta_OptOut"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_indicadore"
+			            },
+			            "Object": {
+			              "Role": "medida.real_x_meta_OptOut"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_indicadores_have_real_x_meta_OptOut"
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore_has_medida_meta_OptOut": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaIndicadores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_indicadore": {
+			          "Target": {
+			            "Entity": "d_meta_indicadore"
 			          }
 			        },
 			        "medida.meta_OptOut": {
@@ -12296,7 +13939,7 @@ cultureInfo pt-BR
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "medida"
+			              "Role": "d_meta_indicadore"
 			            },
 			            "Object": {
 			              "Role": "medida.meta_OptOut"
@@ -12304,7 +13947,7 @@ cultureInfo pt-BR
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "medidas_have_meta_OptOut"
+			          "ID": "d_meta_indicadores_have_meta_OptOut"
 			        }
 			      ]
 			    },
@@ -13040,39 +14683,6 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "d_meta_consultores_diaria_has_key_ConsultorCiclo": {
-			      "Binding": {
-			        "ConceptualEntity": "d_MetaConsultoresDiaria"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_meta_consultores_diaria": {
-			          "Target": {
-			            "Entity": "d_meta_consultores_diaria"
-			          }
-			        },
-			        "d_meta_consultores_diaria.key_ConsultorCiclo": {
-			          "Target": {
-			            "Entity": "d_meta_consultores_diaria.key_ConsultorCiclo"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_consultores_diaria"
-			            },
-			            "Object": {
-			              "Role": "d_meta_consultores_diaria.key_ConsultorCiclo"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_consultores_diarias_have_key_ConsultorCiclos"
-			        }
-			      ]
-			    },
 			    "d_meta_consultores_diaria_has_meta_pedidos_diaria": {
 			      "Binding": {
 			        "ConceptualEntity": "d_MetaConsultoresDiaria"
@@ -13295,39 +14905,6 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "d_meta_consultores_have_key_ConsultorCiclos"
-			        }
-			      ]
-			    },
-			    "d_meta_consultore_has_ciclo": {
-			      "Binding": {
-			        "ConceptualEntity": "d_MetaConsultores"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_meta_consultore": {
-			          "Target": {
-			            "Entity": "d_meta_consultore"
-			          }
-			        },
-			        "d_meta_consultore.ciclo": {
-			          "Target": {
-			            "Entity": "d_meta_consultore.ciclo"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_consultore"
-			            },
-			            "Object": {
-			              "Role": "d_meta_consultore.ciclo"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_consultores_have_ciclos"
 			        }
 			      ]
 			    },
@@ -13583,39 +15160,6 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "d_ciclo_has_ciclo_captação": {
-			      "Binding": {
-			        "ConceptualEntity": "d_Ciclos"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_ciclo": {
-			          "Target": {
-			            "Entity": "d_ciclo"
-			          }
-			        },
-			        "d_ciclo.ciclo_captação": {
-			          "Target": {
-			            "Entity": "d_ciclo.ciclo_captação"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_ciclo"
-			            },
-			            "Object": {
-			              "Role": "d_ciclo.ciclo_captação"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_ciclos_have_ciclo_captaçãos"
-			        }
-			      ]
-			    },
 			    "f_consulta_pedido_has_medida_receita__real": {
 			      "Binding": {
 			        "ConceptualEntity": "f_ConsultaPedidos"
@@ -13715,20 +15259,20 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "f_consulta_pedido_has_medida_meta_MTD_PDV_e_consultores": {
+			    "d_meta_consultore_has_medida_receita__real": {
 			      "Binding": {
-			        "ConceptualEntity": "f_ConsultaPedidos"
+			        "ConceptualEntity": "d_MetaConsultores"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "f_consulta_pedido": {
+			        "d_meta_consultore": {
 			          "Target": {
-			            "Entity": "f_consulta_pedido"
+			            "Entity": "d_meta_consultore"
 			          }
 			        },
-			        "medida.meta_MTD_PDV_e_consultores": {
+			        "medida.receita__real": {
 			          "Target": {
-			            "Entity": "medida.meta_MTD_PDV_e_consultores"
+			            "Entity": "medida.receita__real"
 			          }
 			        }
 			      },
@@ -13736,15 +15280,15 @@ cultureInfo pt-BR
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "f_consulta_pedido"
+			              "Role": "d_meta_consultore"
 			            },
 			            "Object": {
-			              "Role": "medida.meta_MTD_PDV_e_consultores"
+			              "Role": "medida.receita__real"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "f_consulta_pedidos_have_meta_MTD_PDV_e_consultores"
+			          "ID": "d_meta_consultores_have_receita__real"
 			        }
 			      ]
 			    },
@@ -13811,6 +15355,39 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "d_meta_consultores_diarias_have_meta_MTD_PDV_e_consultores"
+			        }
+			      ]
+			    },
+			    "d_meta_consultore_has_medida_meta_MTD_PDV_e_consultores": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaConsultores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_consultore": {
+			          "Target": {
+			            "Entity": "d_meta_consultore"
+			          }
+			        },
+			        "medida.meta_MTD_PDV_e_consultores": {
+			          "Target": {
+			            "Entity": "medida.meta_MTD_PDV_e_consultores"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_consultore"
+			            },
+			            "Object": {
+			              "Role": "medida.meta_MTD_PDV_e_consultores"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_consultores_have_meta_MTD_PDV_e_consultores"
 			        }
 			      ]
 			    },
@@ -13913,15 +15490,15 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "f_consulta_pedido_has_medida_meta_receita_ciclo": {
+			    "medida_has_meta_receita_ciclo": {
 			      "Binding": {
-			        "ConceptualEntity": "f_ConsultaPedidos"
+			        "ConceptualEntity": "Medidas"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "f_consulta_pedido": {
+			        "medida": {
 			          "Target": {
-			            "Entity": "f_consulta_pedido"
+			            "Entity": "medida"
 			          }
 			        },
 			        "medida.meta_receita_ciclo": {
@@ -13934,7 +15511,7 @@ cultureInfo pt-BR
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "f_consulta_pedido"
+			              "Role": "medida"
 			            },
 			            "Object": {
 			              "Role": "medida.meta_receita_ciclo"
@@ -13942,106 +15519,7 @@ cultureInfo pt-BR
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "f_consulta_pedidos_have_meta_receita_ciclo"
-			        }
-			      ]
-			    },
-			    "d_meta_total_estrutura_has_medida_meta_receita_ciclo": {
-			      "Binding": {
-			        "ConceptualEntity": "d_MetaTotalEstrutura"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_meta_total_estrutura": {
-			          "Target": {
-			            "Entity": "d_meta_total_estrutura"
-			          }
-			        },
-			        "medida.meta_receita_ciclo": {
-			          "Target": {
-			            "Entity": "medida.meta_receita_ciclo"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_total_estrutura"
-			            },
-			            "Object": {
-			              "Role": "medida.meta_receita_ciclo"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_total_estruturas_have_meta_receita_ciclo"
-			        }
-			      ]
-			    },
-			    "d_meta_PDV_has_medida_meta_receita_ciclo": {
-			      "Binding": {
-			        "ConceptualEntity": "d_MetaPDV"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_meta_PDV": {
-			          "Target": {
-			            "Entity": "d_meta_PDV"
-			          }
-			        },
-			        "medida.meta_receita_ciclo": {
-			          "Target": {
-			            "Entity": "medida.meta_receita_ciclo"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_PDV"
-			            },
-			            "Object": {
-			              "Role": "medida.meta_receita_ciclo"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_PDV_have_meta_receita_ciclo"
-			        }
-			      ]
-			    },
-			    "d_meta_consultore_has_medida_meta_receita_ciclo": {
-			      "Binding": {
-			        "ConceptualEntity": "d_MetaConsultores"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_meta_consultore": {
-			          "Target": {
-			            "Entity": "d_meta_consultore"
-			          }
-			        },
-			        "medida.meta_receita_ciclo": {
-			          "Target": {
-			            "Entity": "medida.meta_receita_ciclo"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_consultore"
-			            },
-			            "Object": {
-			              "Role": "medida.meta_receita_ciclo"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_consultores_have_meta_receita_ciclo"
+			          "ID": "medidas_have_meta_receita_ciclo"
 			        }
 			      ]
 			    },
@@ -14639,20 +16117,20 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "d_meta_consultore_has_pdv": {
+			    "f_consulta_pedido_has_key_PapelCiclo": {
 			      "Binding": {
-			        "ConceptualEntity": "d_MetaConsultores"
+			        "ConceptualEntity": "f_ConsultaPedidos"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "d_meta_consultore": {
+			        "f_consulta_pedido": {
 			          "Target": {
-			            "Entity": "d_meta_consultore"
+			            "Entity": "f_consulta_pedido"
 			          }
 			        },
-			        "d_meta_consultore.pdv": {
+			        "f_consulta_pedido.key_PapelCiclo": {
 			          "Target": {
-			            "Entity": "d_meta_consultore.pdv"
+			            "Entity": "f_consulta_pedido.key_PapelCiclo"
 			          }
 			        }
 			      },
@@ -14660,15 +16138,81 @@ cultureInfo pt-BR
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "d_meta_consultore"
+			              "Role": "f_consulta_pedido"
 			            },
 			            "Object": {
-			              "Role": "d_meta_consultore.pdv"
+			              "Role": "f_consulta_pedido.key_PapelCiclo"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "d_meta_consultores_have_pdv"
+			          "ID": "f_consulta_pedidos_have_key_PapelCiclos"
+			        }
+			      ]
+			    },
+			    "f_base_ativa_INICIAL_has_key_PapelCiclo": {
+			      "Binding": {
+			        "ConceptualEntity": "f_BaseAtivaINICIAL"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_base_ativa_INICIAL": {
+			          "Target": {
+			            "Entity": "f_base_ativa_INICIAL"
+			          }
+			        },
+			        "f_base_ativa_INICIAL.key_PapelCiclo": {
+			          "Target": {
+			            "Entity": "f_base_ativa_INICIAL.key_PapelCiclo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_base_ativa_INICIAL"
+			            },
+			            "Object": {
+			              "Role": "f_base_ativa_INICIAL.key_PapelCiclo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_base_ativa_INICIALs_have_key_PapelCiclos"
+			        }
+			      ]
+			    },
+			    "f_base_ativa_diaria_has_key_PapelCiclo": {
+			      "Binding": {
+			        "ConceptualEntity": "f_BaseAtivaDiaria"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_base_ativa_diaria": {
+			          "Target": {
+			            "Entity": "f_base_ativa_diaria"
+			          }
+			        },
+			        "f_base_ativa_diaria.key_PapelCiclo": {
+			          "Target": {
+			            "Entity": "f_base_ativa_diaria.key_PapelCiclo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_base_ativa_diaria"
+			            },
+			            "Object": {
+			              "Role": "f_base_ativa_diaria.key_PapelCiclo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_base_ativa_diarias_have_key_PapelCiclos"
 			        }
 			      ]
 			    },
@@ -15035,7 +16579,7 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "d_meta_total_estrutura_has_key_CodEstruturaCiclo": {
+			    "d_meta_total_estrutura_has_ciclo": {
 			      "Binding": {
 			        "ConceptualEntity": "d_MetaTotalEstrutura"
 			      },
@@ -15046,9 +16590,9 @@ cultureInfo pt-BR
 			            "Entity": "d_meta_total_estrutura"
 			          }
 			        },
-			        "d_meta_total_estrutura.key_CodEstruturaCiclo": {
+			        "d_meta_total_estrutura.ciclo": {
 			          "Target": {
-			            "Entity": "d_meta_total_estrutura.key_CodEstruturaCiclo"
+			            "Entity": "d_meta_total_estrutura.ciclo"
 			          }
 			        }
 			      },
@@ -15059,12 +16603,12 @@ cultureInfo pt-BR
 			              "Role": "d_meta_total_estrutura"
 			            },
 			            "Object": {
-			              "Role": "d_meta_total_estrutura.key_CodEstruturaCiclo"
+			              "Role": "d_meta_total_estrutura.ciclo"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "d_meta_total_estruturas_have_key_CodEstruturaCiclos"
+			          "ID": "d_meta_total_estruturas_have_ciclos"
 			        }
 			      ]
 			    },
@@ -15773,6 +17317,33 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "d_meta_PDV_have_meta"
+			        },
+			        {
+			          "Adjective": {
+			            "Subject": {
+			              "Role": "d_meta_PDV"
+			            },
+			            "Adjectives": [
+			              {
+			                "expensive": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Antonyms": [
+			              {
+			                "cheap": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Measurement": {
+			              "Role": "d_meta_PDV.meta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "meta_indicates_how_expensive_d_meta_PDV_are"
 			        }
 			      ]
 			    },
@@ -16139,39 +17710,6 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "f_base_ativa_diaria_has_papel": {
-			      "Binding": {
-			        "ConceptualEntity": "f_BaseAtivaDiaria"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_base_ativa_diaria": {
-			          "Target": {
-			            "Entity": "f_base_ativa_diaria"
-			          }
-			        },
-			        "f_base_ativa_diaria.papel": {
-			          "Target": {
-			            "Entity": "f_base_ativa_diaria.papel"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_base_ativa_diaria"
-			            },
-			            "Object": {
-			              "Role": "f_base_ativa_diaria.papel"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_base_ativa_diarias_have_papels"
-			        }
-			      ]
-			    },
 			    "f_base_ativa_diaria_has_ciclos_inatividade": {
 			      "Binding": {
 			        "ConceptualEntity": "f_BaseAtivaDiaria"
@@ -16400,39 +17938,6 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "f_base_ativa_INICIALs_have_codigo_estrutura_comercials"
-			        }
-			      ]
-			    },
-			    "f_base_ativa_INICIAL_has_papel": {
-			      "Binding": {
-			        "ConceptualEntity": "f_BaseAtivaINICIAL"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_base_ativa_INICIAL": {
-			          "Target": {
-			            "Entity": "f_base_ativa_INICIAL"
-			          }
-			        },
-			        "f_base_ativa_INICIAL.papel": {
-			          "Target": {
-			            "Entity": "f_base_ativa_INICIAL.papel"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_base_ativa_INICIAL"
-			            },
-			            "Object": {
-			              "Role": "f_base_ativa_INICIAL.papel"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_base_ativa_INICIALs_have_papels"
 			        }
 			      ]
 			    },
@@ -16696,7 +18201,7 @@ cultureInfo pt-BR
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "f_consulta_pedidos_have_estrutura_PDV"
+			          "ID": "f_consulta_pedidos_have_estrutura_pdv"
 			        }
 			      ]
 			    },
@@ -17057,39 +18562,6 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "f_consulta_pedido_has_papel": {
-			      "Binding": {
-			        "ConceptualEntity": "f_ConsultaPedidos"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_consulta_pedido": {
-			          "Target": {
-			            "Entity": "f_consulta_pedido"
-			          }
-			        },
-			        "f_consulta_pedido.papel": {
-			          "Target": {
-			            "Entity": "f_consulta_pedido.papel"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_consulta_pedido"
-			            },
-			            "Object": {
-			              "Role": "f_consulta_pedido.papel"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_consulta_pedidos_have_papels"
-			        }
-			      ]
-			    },
 			    "f_consulta_pedido_has_pessoa": {
 			      "Binding": {
 			        "ConceptualEntity": "f_ConsultaPedidos"
@@ -17189,6 +18661,39 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
+			    "d_cores_dinamica_has_medida_cor_papel_base_diaria": {
+			      "Binding": {
+			        "ConceptualEntity": "d_CoresDinamicas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_cores_dinamica": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica"
+			          }
+			        },
+			        "medida.cor_papel_base_diaria": {
+			          "Target": {
+			            "Entity": "medida.cor_papel_base_diaria"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_cores_dinamica"
+			            },
+			            "Object": {
+			              "Role": "medida.cor_papel_base_diaria"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_cores_dinamicas_have_cor_papel_base_diaria"
+			        }
+			      ]
+			    },
 			    "f_consulta_pedido_has_medida_cor_papel_consulta_pedidos": {
 			      "Binding": {
 			        "ConceptualEntity": "f_ConsultaPedidos"
@@ -17219,6 +18724,39 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "f_consulta_pedidos_have_cor_papel_consulta_pedidos"
+			        }
+			      ]
+			    },
+			    "d_cores_dinamica_has_medida_cor_papel_consulta_pedidos": {
+			      "Binding": {
+			        "ConceptualEntity": "d_CoresDinamicas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_cores_dinamica": {
+			          "Target": {
+			            "Entity": "d_cores_dinamica"
+			          }
+			        },
+			        "medida.cor_papel_consulta_pedidos": {
+			          "Target": {
+			            "Entity": "medida.cor_papel_consulta_pedidos"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_cores_dinamica"
+			            },
+			            "Object": {
+			              "Role": "medida.cor_papel_consulta_pedidos"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_cores_dinamicas_have_cor_papel_consulta_pedidos"
 			        }
 			      ]
 			    },
@@ -19946,376 +21484,7 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "d_loja_has_cod_pdv": {
-			      "Binding": {
-			        "ConceptualEntity": "d_Lojas"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_loja": {
-			          "Target": {
-			            "Entity": "d_loja"
-			          }
-			        },
-			        "d_loja.cod_pdv": {
-			          "Target": {
-			            "Entity": "d_loja.cod_pdv"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_loja"
-			            },
-			            "Object": {
-			              "Role": "d_loja.cod_pdv"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_loja_have_cod_PDV"
-			        }
-			      ]
-			    },
-			    "d_loja_has_pdv": {
-			      "Binding": {
-			        "ConceptualEntity": "d_Lojas"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_loja": {
-			          "Target": {
-			            "Entity": "d_loja"
-			          }
-			        },
-			        "d_loja.pdv": {
-			          "Target": {
-			            "Entity": "d_loja.pdv"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_loja"
-			            },
-			            "Object": {
-			              "Role": "d_loja.pdv"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_loja_have_pdv"
-			        }
-			      ]
-			    },
-			    "d_loja_has_nome_pdv": {
-			      "Binding": {
-			        "ConceptualEntity": "d_Lojas"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_loja": {
-			          "Target": {
-			            "Entity": "d_loja"
-			          }
-			        },
-			        "d_loja.nome_pdv": {
-			          "Target": {
-			            "Entity": "d_loja.nome_pdv"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_loja"
-			            },
-			            "Object": {
-			              "Role": "d_loja.nome_pdv"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_loja_have_nome_pdv"
-			        }
-			      ]
-			    },
-			    "d_loja_has_estrutura_pdv": {
-			      "Binding": {
-			        "ConceptualEntity": "d_Lojas"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_loja": {
-			          "Target": {
-			            "Entity": "d_loja"
-			          }
-			        },
-			        "d_loja.estrutura_pdv": {
-			          "Target": {
-			            "Entity": "d_loja.estrutura_pdv"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_loja"
-			            },
-			            "Object": {
-			              "Role": "d_loja.estrutura_pdv"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_loja_have_estrutura_PDV"
-			        }
-			      ]
-			    },
-			    "d_loja_has_unidade": {
-			      "Binding": {
-			        "ConceptualEntity": "d_Lojas"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "d_loja": {
-			          "Target": {
-			            "Entity": "d_loja"
-			          }
-			        },
-			        "d_loja.unidade": {
-			          "Target": {
-			            "Entity": "d_loja.unidade"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_loja"
-			            },
-			            "Object": {
-			              "Role": "d_loja.unidade"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_loja_have_unidades"
-			        }
-			      ]
-			    },
-			    "f_consulta_pedido_has_d_papel": {
-			      "Binding": {
-			        "ConceptualEntity": "f_ConsultaPedidos"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_consulta_pedido": {
-			          "Target": {
-			            "Entity": "f_consulta_pedido"
-			          }
-			        },
-			        "d_papel": {
-			          "Target": {
-			            "Entity": "d_papel"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_consulta_pedido"
-			            },
-			            "Object": {
-			              "Role": "d_papel"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_consulta_pedidos_have_d_papels"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_papel"
-			            },
-			            "Object": {
-			              "Role": "f_consulta_pedido"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_papels_have_f_consulta_pedidos"
-			        }
-			      ]
-			    },
-			    "f_consulta_pedido_has_d_meta_consultore": {
-			      "Binding": {
-			        "ConceptualEntity": "f_ConsultaPedidos"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_consulta_pedido": {
-			          "Target": {
-			            "Entity": "f_consulta_pedido"
-			          }
-			        },
-			        "d_meta_consultore": {
-			          "Target": {
-			            "Entity": "d_meta_consultore"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_consulta_pedido"
-			            },
-			            "Object": {
-			              "Role": "d_meta_consultore"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_consulta_pedidos_have_d_meta_consultores"
-			        }
-			      ]
-			    },
-			    "f_consulta_pedido_has_d_meta_GMV": {
-			      "Binding": {
-			        "ConceptualEntity": "f_ConsultaPedidos"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_consulta_pedido": {
-			          "Target": {
-			            "Entity": "f_consulta_pedido"
-			          }
-			        },
-			        "d_meta_GMV": {
-			          "Target": {
-			            "Entity": "d_meta_GMV"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_consulta_pedido"
-			            },
-			            "Object": {
-			              "Role": "d_meta_GMV"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_consulta_pedidos_have_d_meta_GMVs"
-			        }
-			      ]
-			    },
-			    "f_base_ativa_INICIAL_has_d_papel": {
-			      "Binding": {
-			        "ConceptualEntity": "f_BaseAtivaINICIAL"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_base_ativa_INICIAL": {
-			          "Target": {
-			            "Entity": "f_base_ativa_INICIAL"
-			          }
-			        },
-			        "d_papel": {
-			          "Target": {
-			            "Entity": "d_papel"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_base_ativa_INICIAL"
-			            },
-			            "Object": {
-			              "Role": "d_papel"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_base_ativa_INICIALs_have_d_papels"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_papel"
-			            },
-			            "Object": {
-			              "Role": "f_base_ativa_INICIAL"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_papels_have_f_base_ativa_INICIALs"
-			        }
-			      ]
-			    },
-			    "f_base_ativa_INICIAL_has_d_meta_total_estrutura": {
-			      "Binding": {
-			        "ConceptualEntity": "f_BaseAtivaINICIAL"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_base_ativa_INICIAL": {
-			          "Target": {
-			            "Entity": "f_base_ativa_INICIAL"
-			          }
-			        },
-			        "d_meta_total_estrutura": {
-			          "Target": {
-			            "Entity": "d_meta_total_estrutura"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_base_ativa_INICIAL"
-			            },
-			            "Object": {
-			              "Role": "d_meta_total_estrutura"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_base_ativa_INICIALs_have_d_meta_total_estruturas"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_total_estrutura"
-			            },
-			            "Object": {
-			              "Role": "f_base_ativa_INICIAL"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_total_estruturas_have_f_base_ativa_INICIALs"
-			        }
-			      ]
-			    },
-			    "f_base_ativa_diaria_has_d_papel": {
+			    "f_base_ativa_diaria_has_d_estrutura": {
 			      "Binding": {
 			        "ConceptualEntity": "f_BaseAtivaDiaria"
 			      },
@@ -20326,9 +21495,9 @@ cultureInfo pt-BR
 			            "Entity": "f_base_ativa_diaria"
 			          }
 			        },
-			        "d_papel": {
+			        "d_estrutura": {
 			          "Target": {
-			            "Entity": "d_papel"
+			            "Entity": "d_estrutura"
 			          }
 			        }
 			      },
@@ -20339,17 +21508,17 @@ cultureInfo pt-BR
 			              "Role": "f_base_ativa_diaria"
 			            },
 			            "Object": {
-			              "Role": "d_papel"
+			              "Role": "d_estrutura"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "f_base_ativa_diarias_have_d_papels"
+			          "ID": "f_base_ativa_diarias_have_d_estruturas"
 			        },
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "d_papel"
+			              "Role": "d_estrutura"
 			            },
 			            "Object": {
 			              "Role": "f_base_ativa_diaria"
@@ -20357,57 +21526,11 @@ cultureInfo pt-BR
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "d_papels_have_f_base_ativa_diarias"
+			          "ID": "d_estruturas_have_f_base_ativa_diarias"
 			        }
 			      ]
 			    },
-			    "f_base_ativa_diaria_has_d_meta_total_estrutura": {
-			      "Binding": {
-			        "ConceptualEntity": "f_BaseAtivaDiaria"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_base_ativa_diaria": {
-			          "Target": {
-			            "Entity": "f_base_ativa_diaria"
-			          }
-			        },
-			        "d_meta_total_estrutura": {
-			          "Target": {
-			            "Entity": "d_meta_total_estrutura"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_base_ativa_diaria"
-			            },
-			            "Object": {
-			              "Role": "d_meta_total_estrutura"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_base_ativa_diarias_have_d_meta_total_estruturas"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_meta_total_estrutura"
-			            },
-			            "Object": {
-			              "Role": "f_base_ativa_diaria"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_meta_total_estruturas_have_f_base_ativa_diarias"
-			        }
-			      ]
-			    },
-			    "d_meta_PDV_has_f_consulta_pedido": {
+			    "d_meta_PDV_has_d_ciclo": {
 			      "Binding": {
 			        "ConceptualEntity": "d_MetaPDV"
 			      },
@@ -20418,13 +21541,105 @@ cultureInfo pt-BR
 			            "Entity": "d_meta_PDV"
 			          }
 			        },
-			        "f_consulta_pedido": {
+			        "d_ciclo": {
 			          "Target": {
-			            "Entity": "f_consulta_pedido"
+			            "Entity": "d_ciclo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_PDV"
+			            },
+			            "Object": {
+			              "Role": "d_ciclo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_PDV_have_d_ciclos"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_ciclo"
+			            },
+			            "Object": {
+			              "Role": "d_meta_PDV"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_ciclos_have_d_meta_PDV"
+			        }
+			      ]
+			    },
+			    "d_meta_PDV_has_d_calendario": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaPDV"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_PDV": {
+			          "Target": {
+			            "Entity": "d_meta_PDV"
+			          }
+			        },
+			        "d_calendario": {
+			          "Target": {
+			            "Entity": "d_calendario"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_PDV"
+			            },
+			            "Object": {
+			              "Role": "d_calendario"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_PDV_have_d_calendarios"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_calendario"
+			            },
+			            "Object": {
+			              "Role": "d_meta_PDV"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_calendarios_have_d_meta_PDV"
+			        }
+			      ]
+			    },
+			    "d_meta_PDV_has_d_loja": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaPDV"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_PDV": {
+			          "Target": {
+			            "Entity": "d_meta_PDV"
+			          }
+			        },
+			        "d_loja": {
+			          "Target": {
+			            "Entity": "d_loja"
 			          },
 			          "Nouns": [
 			            {
-			              "data": {
+			              "pdv": {
 			                "State": "Generated"
 			              }
 			            }
@@ -20438,16 +21653,29 @@ cultureInfo pt-BR
 			              "Role": "d_meta_PDV"
 			            },
 			            "Object": {
-			              "Role": "f_consulta_pedido"
+			              "Role": "d_loja"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "d_meta_PDV_have_f_consulta_pedidos"
+			          "ID": "d_meta_PDV_have_d_loja"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_loja"
+			            },
+			            "Object": {
+			              "Role": "d_meta_PDV"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_loja_have_d_meta_PDV"
 			        }
 			      ]
 			    },
-			    "d_meta_diaria_estrutura_has_f_consulta_pedido": {
+			    "d_meta_diaria_estrutura_has_d_meta_total_estrutura": {
 			      "Binding": {
 			        "ConceptualEntity": "d_MetaDiariaEstrutura"
 			      },
@@ -20458,9 +21686,9 @@ cultureInfo pt-BR
 			            "Entity": "d_meta_diaria_estrutura"
 			          }
 			        },
-			        "f_consulta_pedido": {
+			        "d_meta_total_estrutura": {
 			          "Target": {
-			            "Entity": "f_consulta_pedido"
+			            "Entity": "d_meta_total_estrutura"
 			          }
 			        }
 			      },
@@ -20471,12 +21699,104 @@ cultureInfo pt-BR
 			              "Role": "d_meta_diaria_estrutura"
 			            },
 			            "Object": {
-			              "Role": "f_consulta_pedido"
+			              "Role": "d_meta_total_estrutura"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "d_meta_diaria_estruturas_have_f_consulta_pedidos"
+			          "ID": "d_meta_diaria_estruturas_have_d_meta_total_estruturas"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_total_estrutura"
+			            },
+			            "Object": {
+			              "Role": "d_meta_diaria_estrutura"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_total_estruturas_have_d_meta_diaria_estruturas"
+			        }
+			      ]
+			    },
+			    "d_meta_total_estrutura_has_d_estrutura": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaTotalEstrutura"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_total_estrutura": {
+			          "Target": {
+			            "Entity": "d_meta_total_estrutura"
+			          }
+			        },
+			        "d_estrutura": {
+			          "Target": {
+			            "Entity": "d_estrutura"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_total_estrutura"
+			            },
+			            "Object": {
+			              "Role": "d_estrutura"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_total_estruturas_have_d_estruturas"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_estrutura"
+			            },
+			            "Object": {
+			              "Role": "d_meta_total_estrutura"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_estruturas_have_d_meta_total_estruturas"
+			        }
+			      ]
+			    },
+			    "d_meta_consultores_diaria_has_d_meta_consultore": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaConsultoresDiaria"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_consultores_diaria": {
+			          "Target": {
+			            "Entity": "d_meta_consultores_diaria"
+			          }
+			        },
+			        "d_meta_consultore": {
+			          "Target": {
+			            "Entity": "d_meta_consultore"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_consultores_diaria"
+			            },
+			            "Object": {
+			              "Role": "d_meta_consultore"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_consultores_diarias_have_d_meta_consultores"
 			        }
 			      ]
 			    },
@@ -20559,6 +21879,46 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
+			    "f_opt_out_has_d_loja": {
+			      "Binding": {
+			        "ConceptualEntity": "f_OptOut"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_opt_out": {
+			          "Target": {
+			            "Entity": "f_opt_out"
+			          }
+			        },
+			        "d_loja": {
+			          "Target": {
+			            "Entity": "d_loja"
+			          },
+			          "Nouns": [
+			            {
+			              "pdv": {
+			                "State": "Generated"
+			              }
+			            }
+			          ]
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_opt_out"
+			            },
+			            "Object": {
+			              "Role": "d_loja"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_opt_out_have_d_loja"
+			        }
+			      ]
+			    },
 			    "f_opt_out_has_d_ciclo": {
 			      "Binding": {
 			        "ConceptualEntity": "f_OptOut"
@@ -20602,59 +21962,6 @@ cultureInfo pt-BR
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "d_ciclos_have_f_opt_out"
-			        }
-			      ]
-			    },
-			    "f_opt_out_has_d_loja": {
-			      "Binding": {
-			        "ConceptualEntity": "f_OptOut"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "f_opt_out": {
-			          "Target": {
-			            "Entity": "f_opt_out"
-			          }
-			        },
-			        "d_loja": {
-			          "Target": {
-			            "Entity": "d_loja"
-			          },
-			          "Nouns": [
-			            {
-			              "pdv": {
-			                "State": "Generated"
-			              }
-			            }
-			          ]
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "f_opt_out"
-			            },
-			            "Object": {
-			              "Role": "d_loja"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "f_opt_out_have_d_loja"
-			        },
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "d_loja"
-			            },
-			            "Object": {
-			              "Role": "f_opt_out"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "d_loja_have_f_opt_out"
 			        }
 			      ]
 			    },
@@ -20744,6 +22051,85 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
+			    "f_receita_GMV_has_d_ciclo": {
+			      "Binding": {
+			        "ConceptualEntity": "f_ReceitaGMV"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_receita_GMV": {
+			          "Target": {
+			            "Entity": "f_receita_GMV"
+			          }
+			        },
+			        "d_ciclo": {
+			          "Target": {
+			            "Entity": "d_ciclo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_receita_GMV"
+			            },
+			            "Object": {
+			              "Role": "d_ciclo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_receita_GMVs_have_d_ciclos"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_ciclo"
+			            },
+			            "Object": {
+			              "Role": "f_receita_GMV"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_ciclos_have_f_receita_GMVs"
+			        }
+			      ]
+			    },
+			    "f_receita_GMV_has_d_loja": {
+			      "Binding": {
+			        "ConceptualEntity": "f_ReceitaGMV"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "f_receita_GMV": {
+			          "Target": {
+			            "Entity": "f_receita_GMV"
+			          }
+			        },
+			        "d_loja": {
+			          "Target": {
+			            "Entity": "d_loja"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "f_receita_GMV"
+			            },
+			            "Object": {
+			              "Role": "d_loja"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "f_receita_GMVs_have_d_loja"
+			        }
+			      ]
+			    },
 			    "d_meta_GMV_has_f_receita_GMV": {
 			      "Binding": {
 			        "ConceptualEntity": "d_MetaGMV"
@@ -20790,15 +22176,15 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "d_meta_GMV_has_d_loja": {
+			    "d_estrutura_has_d_loja": {
 			      "Binding": {
-			        "ConceptualEntity": "d_MetaGMV"
+			        "ConceptualEntity": "d_Estruturas"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "d_meta_GMV": {
+			        "d_estrutura": {
 			          "Target": {
-			            "Entity": "d_meta_GMV"
+			            "Entity": "d_estrutura"
 			          }
 			        },
 			        "d_loja": {
@@ -20811,7 +22197,7 @@ cultureInfo pt-BR
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "d_meta_GMV"
+			              "Role": "d_estrutura"
 			            },
 			            "Object": {
 			              "Role": "d_loja"
@@ -20819,7 +22205,93 @@ cultureInfo pt-BR
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "d_meta_GMVs_have_d_loja"
+			          "ID": "d_estruturas_have_d_loja"
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore_has_d_loja": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaIndicadores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_indicadore": {
+			          "Target": {
+			            "Entity": "d_meta_indicadore"
+			          }
+			        },
+			        "d_loja": {
+			          "Target": {
+			            "Entity": "d_loja"
+			          },
+			          "Nouns": [
+			            {
+			              "pdv": {
+			                "State": "Generated"
+			              }
+			            }
+			          ]
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_indicadore"
+			            },
+			            "Object": {
+			              "Role": "d_loja"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_indicadores_have_d_loja"
+			        }
+			      ]
+			    },
+			    "d_meta_indicadore_has_d_ciclo": {
+			      "Binding": {
+			        "ConceptualEntity": "d_MetaIndicadores"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "d_meta_indicadore": {
+			          "Target": {
+			            "Entity": "d_meta_indicadore"
+			          }
+			        },
+			        "d_ciclo": {
+			          "Target": {
+			            "Entity": "d_ciclo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_meta_indicadore"
+			            },
+			            "Object": {
+			              "Role": "d_ciclo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_meta_indicadores_have_d_ciclos"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "d_ciclo"
+			            },
+			            "Object": {
+			              "Role": "d_meta_indicadore"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "d_ciclos_have_d_meta_indicadores"
 			        }
 			      ]
 			    }

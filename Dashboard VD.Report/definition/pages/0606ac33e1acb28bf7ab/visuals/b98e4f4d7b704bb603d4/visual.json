@@ -214,6 +214,13 @@
             "strictSingleSelect": {
               "expr": {
                 "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "singleSelect": {
+              "expr": {
+                "Literal": {
                   "Value": "true"
                 }
               }

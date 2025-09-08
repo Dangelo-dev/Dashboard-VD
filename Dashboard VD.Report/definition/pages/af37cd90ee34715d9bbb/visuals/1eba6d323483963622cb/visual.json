@@ -97,7 +97,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'12/2025'"
+                                "Value": "'13/2025'"
                               }
                             }
                           ]
@@ -169,7 +169,7 @@
             "strictSingleSelect": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }
@@ -212,12 +212,17 @@
         }
       ]
     },
+    "syncGroup": {
+      "groupName": "Ciclo Captação1",
+      "fieldChanges": true,
+      "filterChanges": true
+    },
     "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [
       {
-        "name": "edd04f7c7006c1d25baa",
+        "name": "5451e691dd6f6d38a9d8",
         "field": {
           "Column": {
             "Expression": {

@@ -122,21 +122,6 @@
                       "Entity": "f_ConsultaPedidos"
                     }
                   },
-                  "Property": "CodFinal"
-                }
-              },
-              "queryRef": "f_ConsultaPedidos.CodFinal",
-              "nativeQueryRef": "CodEstrutura",
-              "displayName": "CodEstrutura"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "f_ConsultaPedidos"
-                    }
-                  },
                   "Property": "PrimeiroPedido"
                 }
               },
@@ -283,11 +268,27 @@
                       "Entity": "f_ConsultaPedidos"
                     }
                   },
+                  "Property": "CodFinal"
+                }
+              },
+              "queryRef": "f_ConsultaPedidos.CodFinal",
+              "nativeQueryRef": "Cod",
+              "displayName": "Cod"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "f_ConsultaPedidos"
+                    }
+                  },
                   "Property": "EstruturaFinal"
                 }
               },
               "queryRef": "f_ConsultaPedidos.EstruturaFinal",
-              "nativeQueryRef": "EstruturaFinal"
+              "nativeQueryRef": "Estrutura",
+              "displayName": "Estrutura"
             }
           ]
         }
