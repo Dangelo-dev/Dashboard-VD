@@ -7435,49 +7435,6 @@ cultureInfo pt-BR
 			        }
 			      ]
 			    },
-			    "f_consulta_pedido.date_modified": {
-			      "Definition": {
-			        "Binding": {
-			          "ConceptualEntity": "f_ConsultaPedidos",
-			          "ConceptualProperty": "Date modified"
-			        }
-			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "date modified": {
-			            "State": "Generated"
-			          }
-			        },
-			        {
-			          "date": {
-			            "State": "Generated",
-			            "Weight": 0.7
-			          }
-			        },
-			        {
-			          "moment modified": {
-			            "Type": "Noun",
-			            "State": "Suggested",
-			            "Source": {
-			              "Agent": "Thesaurus"
-			            },
-			            "Weight": 0.75
-			          }
-			        },
-			        {
-			          "period modified": {
-			            "Type": "Noun",
-			            "State": "Suggested",
-			            "Source": {
-			              "Agent": "Thesaurus"
-			            },
-			            "Weight": 0.727
-			          }
-			        }
-			      ],
-			      "SemanticType": "Time"
-			    },
 			    "f_consulta_pedido.cod_PDV": {
 			      "Definition": {
 			        "Binding": {

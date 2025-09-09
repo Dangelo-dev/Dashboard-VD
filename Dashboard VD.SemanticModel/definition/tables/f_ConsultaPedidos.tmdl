@@ -1,236 +1,6 @@
 table f_ConsultaPedidos
 	lineageTag: 5a111894-5a5b-42f6-9248-e7ee46092de3
 
-	refreshPolicy
-		policyType: basic
-		rollingWindowGranularity: year
-		rollingWindowPeriods: 1
-		incrementalGranularity: month
-		incrementalPeriods: 3
-		pollingExpression = let #"MaxDate modified" = List.Max(f_ConsultaPedidos[Date modified]), accountForNull = if #"MaxDate modified" = null then #datetime(1901, 01, 01, 00, 00, 00) else #"MaxDate modified" in accountForNull
-		sourceExpression = ```
-			let
-			    Source = Folder.Contents(PastaLocal) 
-			    {[Name="Consulta Pedidos"]}[Content],
-			
-			    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
-			
-			    ColunasSelecionadas = FiltrarArquivos[[Content], [Name], [Date modified]],
-			
-			    InvocarFuncaoPersonalizada = Table.AddColumn(ColunasSelecionadas, "Transform File", each #"Transform File"([Content])),
-			
-			    SelecionarColunasExpansao = Table.SelectColumns(InvocarFuncaoPersonalizada,{"Date modified", "Transform File"}),
-			
-			    ExpandirTabela = Table.ExpandTableColumn(SelecionarColunasExpansao, "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
-			    // Selecionar somente as colunas necessárioas no primeiro momento
-			    SelectColumns = Table.SelectColumns(ExpandirTabela, 
-			        { 
-			            "Date modified", 
-			            "CodigoPedido",
-			            "Pessoa", 
-			            "Papel", 
-			            "QtdeMateriais", 
-			            "ValorPedido", 
-			            "MeioCaptacao", 
-			            "ModeloComercial",
-			            "Tipo de Entrega", 
-			            "SituaçãoComercial", 
-			            "DataFaturamento", 
-			            "Ciclo Captação",
-			            "CicloIndicador", 
-			            "Cód Estrutura Pai", 
-			            "EstruturaPai", 
-			            "Cód Estrutura", 
-			            "Estrutura", 
-			            "Cód Usuário Finalização", 
-			            "Usuario de Finalização", 
-			            "CodCD", 
-			            "CanalDistribuicao"
-			        }),
-			    
-			    // Definindo os paramentros do Incremental Refresh na Data de Modificação dos arquivos
-			    FiltroIncrementalRefresh = Table.SelectRows(
-			        SelectColumns,
-			        each [Date modified] >= RangeStart and [Date modified] < RangeEnd
-			    ),
-			
-			    // Alteração de valores no papel para simplificar 
-			    ReplaceValueColumPapel = 
-			    Table.ReplaceValue(
-			        Table.ReplaceValue(FiltroIncrementalRefresh,
-			        "Diamante GB", "Diamante", Replacer.ReplaceText, {"Papel"}),
-			    "Esmeralda GB", "Esmeralda", Replacer.ReplaceText, {"Papel"}
-			    ),
-			
-			    // Retirar os pedidos cancelados
-			    FilterCanceled = Table.SelectRows(ReplaceValueColumPapel, each ([SituaçãoComercial] <> "Cancelado")), 
-			    
-			    // Criando um mapeamento para a coluna Unidade
-			    UnidadeMap = Record.FromList(
-			        {"UDI", "UDI", "BH", "BH", "BH"}, 
-			        {"1226", "1534", "699", "1405", "1324"}
-			    ),
-			
-			    // Adiciona uma coluna de unidade de acordo com o mapeamento realizado
-			    AddColumnUnidade = Table.AddColumn(FilterCanceled, "Unidade", each 
-			        Record.FieldOrDefault( UnidadeMap, Text.From([CodCD]), null), type text),
-			
-			    // Remoção de ponto no código da estrutura para poder relacionar com outras tabelas
-			    RemoveDot = 
-			        Table.ReplaceValue(AddColumnUnidade,".","",Replacer.ReplaceText,{"Cód Estrutura"}),
-			
-			    SusbtituirCodigos = // Alteração de codigos devido ao tombamento de bases no Ciclo 04/2025
-			    Table.ReplaceValue(
-			        Table.ReplaceValue(
-			            Table.ReplaceValue(
-			                Table.ReplaceValue(
-			                    Table.ReplaceValue(
-			                        Table.ReplaceValue(
-			                            Table.ReplaceValue(
-			                                Table.ReplaceValue(
-			                                    Table.ReplaceValue(
-			                                        Table.ReplaceValue(
-			                                            Table.ReplaceValue(
-			                                                Table.ReplaceValue(
-			                                                    Table.ReplaceValue(
-			                                                        Table.ReplaceValue(
-			                                                            Table.ReplaceValue(
-			                                                                Table.ReplaceValue(RemoveDot,
-			                                                                "6270", "20507", Replacer.ReplaceText, {"Cód Estrutura"}), //Malbec
-			                                                            "6182", "20498", Replacer.ReplaceText, {"Cód Estrutura"}), //Portinari
-			                                                        "4551", "20495", Replacer.ReplaceText, {"Cód Estrutura"}), //Arbo
-			                                                    "16927", "20514", Replacer.ReplaceText, {"Cód Estrutura"}), //Coffee
-			                                                "13032", "20511", Replacer.ReplaceText, {"Cód Estrutura"}), //Egeo
-			                                            "18876", "20516", Replacer.ReplaceText, {"Cód Estrutura"}), //Iconique
-			                                        "18676", "20515", Replacer.ReplaceText, {"Cód Estrutura"}), //Madeleine
-			                                    "6271", "20509", Replacer.ReplaceText, {"Cód Estrutura"}), //Quasar
-			                                "18878", "20518", Replacer.ReplaceText, {"Cód Estrutura"}), //Scapin
-			                            "1602", "20383", Replacer.ReplaceText, {"Cód Estrutura"}), //Zaad
-			                        "6085", "20497", Replacer.ReplaceText, {"Cód Estrutura"}), //Crescimento
-			                    "5468", "20496", Replacer.ReplaceText, {"Cód Estrutura"}), //Acordes
-			                "6225", "20505", Replacer.ReplaceText, {"Cód Estrutura"}), //Elysée
-			            "10058", "20384", Replacer.ReplaceText, {"Cód Estrutura"}), //Glamour
-			        "1625", "20408", Replacer.ReplaceText, {"Cód Estrutura"}), //Lily
-			    "10362", "20510", Replacer.ReplaceText, {"Cód Estrutura"}), //Liz
-			
-			    // Adiciona uma coluna que separa Captação de ER
-			    AddColumnPDV = 
-			        Table.AddColumn(SusbtituirCodigos, "PDV", each
-			            if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] <> "Modelo - Autosserviço" then "20844 Captação"
-			            else if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] = "Modelo - Autosserviço" then "20844 ER UDI"
-			            else if [CanalDistribuicao] = "23275 - ATT PERFUMARIA E COSMETICOS LTDA" then "23275 ER ARI"
-			            else if [CanalDistribuicao] = "13793 - COMERCIAL ATT LTDA" then "13793 Captação"
-			            else if [CanalDistribuicao] = "21433 - COMERCIAL ATT LTDA" then "21433 ER Rib. Neves"
-			            else if [CanalDistribuicao] = "22372 - COMERCIAL ATT LTDA" then "22372 ER Venda Nova"
-			            else "Unidade não cadastrada", type text
-			        ),
-			    
-			    AddColumnCodPDV = 
-			        Table.AddColumn( AddColumnPDV, "CodPDV", each Text.BeforeDelimiter([CanalDistribuicao], " -"), type text ),
-			
-			    // Criando um mapeamento para a coluna EstruturaPDV
-			    EstruturaPDVMap = Record.FromList(
-			        {"Captação", "Captação", "ER", "ER", "ER", "ER"}, 
-			        {
-			            "20844 Captação", 
-			            "13793 Captação", 
-			            "20844 ER UDI", 
-			            "23275 ER ARI", 
-			            "21433 ER Rib. Neves", 
-			            "22372 ER Venda Nova"
-			        }
-			    ),
-			
-			    // Adicionar uma coluna pai para separar Captação de ER de acordo com o mapeamento realizado
-			    AddColumnEstruturaPDV = Table.AddColumn(AddColumnCodPDV, "EstruturaPDV", each 
-			        Record.FieldOrDefault(EstruturaPDVMap, [PDV], "Unidade não cadastrada"), type text),
-			
-			    // Adiciona algumas colunas chave para identificação de relacionamentos 
-			    AddColumnsKey = 
-			        Table.AddColumn(
-			            Table.AddColumn(AddColumnEstruturaPDV,
-			            "Key PDVCiclo", each Text.From([PDV]) & " - " & Text.From([Ciclo Captação]), type text), //Necessário para relacionar com a tabela de MetaPDV
-			        "Key CicloData", each [Ciclo Captação] & " - " & Text.From([DataFaturamento]), type text), //Necessário para separar os Inicios Safra e Backlog
-			
-			    KeyPessoaCiclo = 
-			        Table.AddColumn(AddColumnsKey, 
-			        "Key PessoaCiclo", each Text.From(Number.ToText([Pessoa])) & " - " & Text.From([Ciclo Captação]), type text),
-			
-			    // União com a tabela Base Inicial
-			    MergeBase = Table.NestedJoin(
-			        KeyPessoaCiclo, {"Key PessoaCiclo"}, 
-			        f_BaseAtivaINICIAL, {"Key PessoaCiclo"}, 
-			        "f_BaseAtivaINICIAL", JoinKind.LeftOuter),
-			    
-			    // Expandir a coluna de Codigo Estrutura para identificar os revendedores presentes na base congelada
-			    ExpandBase = Table.ExpandTableColumn(
-			        MergeBase, "f_BaseAtivaINICIAL", {"CodigoEstruturaComercial"}, {"CodBaseInicial"}
-			    ),
-			
-			    // Alteração do tipo da coluna expandida para corresponder a texto
-			    ChangeTypeBase = Table.TransformColumnTypes(ExpandBase, {{"CodBaseInicial", type text}}),
-			
-			    // Substituição de retorno dos revendedores que não estão na base congelada, para trazer a informação que se trata de um IR
-			    ReplaceNull = Table.ReplaceValue(
-			        ChangeTypeBase, null, "Revendedor IR", Replacer.ReplaceValue, {"CodBaseInicial"}
-			    ),
-			
-			    // Adiciona uma coluna para definir a estruta dele de acordo com a informação da base congelada ou se tratando de um IR
-			    AddColumnCodFinal = Table.AddColumn(
-			        ReplaceNull, "CodFinal", each
-			            if [CodBaseInicial] = "Revendedor IR"
-			            then Text.From([Cód Estrutura])
-			            else Text.From([CodBaseInicial]),
-			        type text
-			    ),
-			
-			    // Adiciona a coluna de chave de estrutura
-			    AddColumnKeysStructure = 
-			        Table.AddColumn(
-			            Table.AddColumn(AddColumnCodFinal, 
-			            "Key CodEstruturaCiclo", each Text.From([CodFinal]) & " - " & Text.From([Ciclo Captação]), type text), //Necessário para relacionar as metas de cada estrutura no ciclo devido)
-			        "Key PapelCodEstruturaCiclo", each Text.From([Papel]) & " - " & Text.From([Key CodEstruturaCiclo]), type text), //Necessario para identificar os papeis que cada estrutura possui
-			
-			    // Seleção das colunas definitivas e ordenação das informações
-			    SelectColumnsFinal = Table.SelectColumns(AddColumnKeysStructure,
-			        {
-			            "Date modified", // Necessaria para o Incremental Refresh
-			            "CodigoPedido", //determinar o ID do pedido, desempate para o primeiro pedido
-			            "Pessoa", //ID do revendedor
-			            "Papel", //necessário para segmentação de base
-			            "QtdeMateriais", //volume de itens
-			            "ValorPedido", //valor em R$
-			            "Tipo de Entrega", //Necessário para DAX "pedido medio"
-			            "MeioCaptacao", //separação de pedido omnichannel
-			            "DataFaturamento", //ordenação do primeiro pedido pela data minima de faturamento no ciclo
-			            "Ciclo Captação", //ciclo atual
-			            "CodFinal", //estrutura a ser considerada para os calculos
-			            "Cód Usuário Finalização", //uso para a tabela "Vendas por assistente"
-			            "Usuario de Finalização", //Nome do vendedor
-			            "CodCD", //Separação do codigo de cada PDV -- Codigo interno Boticario. Qual a necessidade ?
-			            "Unidade", //RMBH ou UDI
-			            "CodPDV", // Codigo de cada PDV sem o nome, somente o numero
-			            "PDV", //codigo Captação ou ER
-			            "EstruturaPDV", //Nome Captação ou ER
-			            "Key CodEstruturaCiclo", //Capturar os resultados da estrutura no ciclo
-			            "Key PDVCiclo" //usado no relacionamento com a tabela de MetaPDV
-			        }),
-			    // Definir tipagem das colunas
-			    ChangedType = Table.TransformColumnTypes(
-			        SelectColumnsFinal,{
-			            {"QtdeMateriais", Int64.Type}, 
-			            {"ValorPedido", Currency.Type}, 
-			            {"DataFaturamento", type date}, 
-			            {"Pessoa", Int64.Type}, 
-			            {"Ciclo Captação", type text}, 
-			            {"CodigoPedido", type text}, 
-			            {"MeioCaptacao", type text}, 
-			            {"Tipo de Entrega", type text}
-			        })
-			in
-			    ChangedType
-			```
-
 	column Pessoa
 		dataType: string
 		lineageTag: 388b527c-64e6-4e16-ab77-f4e174b342f4
@@ -536,15 +306,6 @@ table f_ConsultaPedidos
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Date modified'
-		dataType: dateTime
-		formatString: General Date
-		lineageTag: 46a79a14-75af-41c8-bcdc-8afc839bb0a7
-		summarizeBy: none
-		sourceColumn: Date modified
-
-		annotation SummarizationSetBy = Automatic
-
 	column CodPDV
 		dataType: string
 		lineageTag: cb011ab9-460a-46f8-8919-bd2e57f130f1
@@ -555,7 +316,6 @@ table f_ConsultaPedidos
 
 	partition f_ConsultaPedidos = m
 		mode: import
-		queryGroup: ConsultaPedidos
 		source = ```
 				let
 				    Source = Folder.Contents(PastaLocal) 
@@ -563,73 +323,45 @@ table f_ConsultaPedidos
 				
 				    FiltrarArquivos = Table.SelectRows(Source, each Text.EndsWith([Name], ".xlsx")),
 				
-				    ColunasSelecionadas = FiltrarArquivos[[Content], [Name], [Date modified]],
-				
-				    InvocarFuncaoPersonalizada = Table.AddColumn(ColunasSelecionadas, "Transform File", each #"Transform File"([Content])),
-				
-				    SelecionarColunasExpansao = Table.SelectColumns(InvocarFuncaoPersonalizada,{"Date modified", "Transform File"}),
-				
-				    ExpandirTabela = Table.ExpandTableColumn(SelecionarColunasExpansao, "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
-				    // Selecionar somente as colunas necessárioas no primeiro momento
-				    SelectColumns = Table.SelectColumns(ExpandirTabela, 
-				        { 
-				            "Date modified", 
-				            "CodigoPedido",
-				            "Pessoa", 
-				            "Papel", 
-				            "QtdeMateriais", 
-				            "ValorPedido", 
-				            "MeioCaptacao", 
-				            "ModeloComercial",
-				            "Tipo de Entrega", 
-				            "SituaçãoComercial", 
-				            "DataFaturamento", 
-				            "Ciclo Captação",
-				            "CicloIndicador", 
-				            "Cód Estrutura Pai", 
-				            "EstruturaPai", 
-				            "Cód Estrutura", 
-				            "Estrutura", 
-				            "Cód Usuário Finalização", 
-				            "Usuario de Finalização", 
-				            "CodCD", 
-				            "CanalDistribuicao"
-				        }),
+				    ColunasSelecionadas = FiltrarArquivos[ [Content], [Name] ],
 				    
-				    // Definindo os paramentros do Incremental Refresh na Data de Modificação dos arquivos
-				    FiltroIncrementalRefresh = Table.SelectRows(
-				        SelectColumns,
-				        each [Date modified] >= RangeStart and [Date modified] < RangeEnd
-				    ),
+				    fxConsultaPedidos = 
+				        ( arquivo as binary ) as table =>
+				        let
+				            excel = Excel.Workbook ( arquivo, true ){0}[Data],
 				
-				    // Alteração de valores no papel para simplificar 
-				    ReplaceValueColumPapel = 
-				    Table.ReplaceValue(
-				        Table.ReplaceValue(FiltroIncrementalRefresh,
-				        "Diamante GB", "Diamante", Replacer.ReplaceText, {"Papel"}),
-				    "Esmeralda GB", "Esmeralda", Replacer.ReplaceText, {"Papel"}
-				    ),
+				            ColunasNecessarias = 
+				            { "CodigoPedido", "Pessoa", "Papel", "QtdeMateriais", "ValorPedido", "MeioCaptacao", "ModeloComercial", 
+				            "Tipo de Entrega", "SituaçãoComercial", "DataFaturamento", "Ciclo Captação", "CicloIndicador", "Cód Estrutura Pai",
+				            "EstruturaPai", "Cód Estrutura", "Estrutura", "Cód Usuário Finalização", "Usuario de Finalização", "CodCD", "CanalDistribuicao" },
 				
-				    // Retirar os pedidos cancelados
-				    FilterCanceled = Table.SelectRows(ReplaceValueColumPapel, each ([SituaçãoComercial] <> "Cancelado")), 
-				    
-				    // Criando um mapeamento para a coluna Unidade
-				    UnidadeMap = Record.FromList(
-				        {"UDI", "UDI", "BH", "BH", "BH"}, 
-				        {"1226", "1534", "699", "1405", "1324"}
-				    ),
+				            // Selecionar somente as colunas necessárioas no primeiro momento
+				            SelectColumns = Table.SelectColumns( excel, ColunasNecessarias ),
 				
-				    // Adiciona uma coluna de unidade de acordo com o mapeamento realizado
-				    AddColumnUnidade = Table.AddColumn(FilterCanceled, "Unidade", each 
-				        Record.FieldOrDefault( UnidadeMap, Text.From([CodCD]), null), type text),
+				            // Alteração de valores no papel para simplificar 
+				            ReplaceValueColumPapel = 
+				            Table.ReplaceValue(
+				                Table.ReplaceValue(SelectColumns,
+				                "Diamante GB", "Diamante", Replacer.ReplaceText, {"Papel"}),
+				            "Esmeralda GB", "Esmeralda", Replacer.ReplaceText, {"Papel"}
+				            ),
 				
-				    // Remoção de ponto no código da estrutura para poder relacionar com outras tabelas
-				    RemoveDot = 
-				        Table.ReplaceValue(AddColumnUnidade,".","",Replacer.ReplaceText,{"Cód Estrutura"}),
+				            // Retirar os pedidos cancelados
+				            FilterCanceled = Table.SelectRows(ReplaceValueColumPapel, each ( [SituaçãoComercial] <> "Cancelado" ) ), 
+				            
+				            // Criando um mapeamento para a coluna Unidade
+				            UnidadeMap = Record.FromList(
+				                {"UDI", "UDI", "BH", "BH", "BH"}, 
+				                {"1226", "1534", "699", "1405", "1324"} ),
 				
-				    SusbtituirCodigos = // Alteração de codigos devido ao tombamento de bases no Ciclo 04/2025
-				    Table.ReplaceValue(
-				        Table.ReplaceValue(
+				            // Adiciona uma coluna de unidade de acordo com o mapeamento realizado
+				            AddColumnUnidade = Table.AddColumn( FilterCanceled, "Unidade", each 
+				                Record.FieldOrDefault( UnidadeMap, Text.From( [CodCD] ), null ), type text ),
+				
+				            // Remoção de ponto no código da estrutura para poder relacionar com outras tabelas
+				            RemoveDot = Table.ReplaceValue( AddColumnUnidade, ".", "", Replacer.ReplaceText, { "Cód Estrutura" } ),
+				
+				            SusbtituirCodigos = // Alteração de codigos devido ao tombamento de bases no Ciclo 04/2025
 				            Table.ReplaceValue(
 				                Table.ReplaceValue(
 				                    Table.ReplaceValue(
@@ -643,140 +375,141 @@ table f_ConsultaPedidos
 				                                                    Table.ReplaceValue(
 				                                                        Table.ReplaceValue(
 				                                                            Table.ReplaceValue(
-				                                                                Table.ReplaceValue(RemoveDot,
-				                                                                "6270", "20507", Replacer.ReplaceText, {"Cód Estrutura"}), //Malbec
-				                                                            "6182", "20498", Replacer.ReplaceText, {"Cód Estrutura"}), //Portinari
-				                                                        "4551", "20495", Replacer.ReplaceText, {"Cód Estrutura"}), //Arbo
-				                                                    "16927", "20514", Replacer.ReplaceText, {"Cód Estrutura"}), //Coffee
-				                                                "13032", "20511", Replacer.ReplaceText, {"Cód Estrutura"}), //Egeo
-				                                            "18876", "20516", Replacer.ReplaceText, {"Cód Estrutura"}), //Iconique
-				                                        "18676", "20515", Replacer.ReplaceText, {"Cód Estrutura"}), //Madeleine
-				                                    "6271", "20509", Replacer.ReplaceText, {"Cód Estrutura"}), //Quasar
-				                                "18878", "20518", Replacer.ReplaceText, {"Cód Estrutura"}), //Scapin
-				                            "1602", "20383", Replacer.ReplaceText, {"Cód Estrutura"}), //Zaad
-				                        "6085", "20497", Replacer.ReplaceText, {"Cód Estrutura"}), //Crescimento
-				                    "5468", "20496", Replacer.ReplaceText, {"Cód Estrutura"}), //Acordes
-				                "6225", "20505", Replacer.ReplaceText, {"Cód Estrutura"}), //Elysée
-				            "10058", "20384", Replacer.ReplaceText, {"Cód Estrutura"}), //Glamour
-				        "1625", "20408", Replacer.ReplaceText, {"Cód Estrutura"}), //Lily
-				    "10362", "20510", Replacer.ReplaceText, {"Cód Estrutura"}), //Liz
+				                                                                Table.ReplaceValue(
+				                                                                    Table.ReplaceValue(
+				                                                                        Table.ReplaceValue(RemoveDot,
+				                                                                        "6270", "20507", Replacer.ReplaceText, {"Cód Estrutura"}), //Malbec
+				                                                                    "6182", "20498", Replacer.ReplaceText, {"Cód Estrutura"}), //Portinari
+				                                                                "4551", "20495", Replacer.ReplaceText, {"Cód Estrutura"}), //Arbo
+				                                                            "16927", "20514", Replacer.ReplaceText, {"Cód Estrutura"}), //Coffee
+				                                                        "13032", "20511", Replacer.ReplaceText, {"Cód Estrutura"}), //Egeo
+				                                                    "18876", "20516", Replacer.ReplaceText, {"Cód Estrutura"}), //Iconique
+				                                                "18676", "20515", Replacer.ReplaceText, {"Cód Estrutura"}), //Madeleine
+				                                            "6271", "20509", Replacer.ReplaceText, {"Cód Estrutura"}), //Quasar
+				                                        "18878", "20518", Replacer.ReplaceText, {"Cód Estrutura"}), //Scapin
+				                                    "1602", "20383", Replacer.ReplaceText, {"Cód Estrutura"}), //Zaad
+				                                "6085", "20497", Replacer.ReplaceText, {"Cód Estrutura"}), //Crescimento
+				                            "5468", "20496", Replacer.ReplaceText, {"Cód Estrutura"}), //Acordes
+				                        "6225", "20505", Replacer.ReplaceText, {"Cód Estrutura"}), //Elysée
+				                    "10058", "20384", Replacer.ReplaceText, {"Cód Estrutura"}), //Glamour
+				                "1625", "20408", Replacer.ReplaceText, {"Cód Estrutura"}), //Lily
+				            "10362", "20510", Replacer.ReplaceText, {"Cód Estrutura"}), //Liz
 				
-				    // Adiciona uma coluna que separa Captação de ER
-				    AddColumnPDV = 
-				        Table.AddColumn(SusbtituirCodigos, "PDV", each
-				            if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] <> "Modelo - Autosserviço" then "20844 Captação"
-				            else if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] = "Modelo - Autosserviço" then "20844 ER UDI"
-				            else if [CanalDistribuicao] = "23275 - ATT PERFUMARIA E COSMETICOS LTDA" then "23275 ER ARI"
-				            else if [CanalDistribuicao] = "13793 - COMERCIAL ATT LTDA" then "13793 Captação"
-				            else if [CanalDistribuicao] = "21433 - COMERCIAL ATT LTDA" then "21433 ER Rib. Neves"
-				            else if [CanalDistribuicao] = "22372 - COMERCIAL ATT LTDA" then "22372 ER Venda Nova"
-				            else "Unidade não cadastrada", type text
-				        ),
+				            // Adiciona uma coluna que separa Captação de ER
+				            AddColumnPDV = 
+				                Table.AddColumn(SusbtituirCodigos, "PDV", each
+				                    if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] <> "Modelo - Autosserviço" then "20844 Captação"
+				                    else if [CanalDistribuicao] = "20844 - ATT PERFUMARIA E COSMETICOS LTDA" and [ModeloComercial] = "Modelo - Autosserviço" then "20844 ER UDI"
+				                    else if [CanalDistribuicao] = "23275 - ATT PERFUMARIA E COSMETICOS LTDA" then "23275 ER ARI"
+				                    else if [CanalDistribuicao] = "13793 - COMERCIAL ATT LTDA" then "13793 Captação"
+				                    else if [CanalDistribuicao] = "21433 - COMERCIAL ATT LTDA" then "21433 ER Rib. Neves"
+				                    else if [CanalDistribuicao] = "22372 - COMERCIAL ATT LTDA" then "22372 ER Venda Nova"
+				                    else "Unidade não cadastrada", type text
+				                ),
+				            
+				            AddColumnCodPDV = Table.AddColumn( AddColumnPDV, "CodPDV", each Text.BeforeDelimiter( [CanalDistribuicao], " -" ), type text ),
+				
+				            // Criando um mapeamento para a coluna EstruturaPDV
+				            EstruturaPDVMap = Record.FromList(
+				                {"Captação", "Captação", "ER", "ER", "ER", "ER"}, 
+				                {
+				                    "20844 Captação", 
+				                    "13793 Captação", 
+				                    "20844 ER UDI", 
+				                    "23275 ER ARI", 
+				                    "21433 ER Rib. Neves", 
+				                    "22372 ER Venda Nova"
+				                }
+				            ),
+				
+				            // Adicionar uma coluna pai para separar Captação de ER de acordo com o mapeamento realizado
+				            AddColumnEstruturaPDV = Table.AddColumn( AddColumnCodPDV, "EstruturaPDV", each 
+				                Record.FieldOrDefault( EstruturaPDVMap, [PDV], "Unidade não cadastrada" ), type text ),
+				
+				            // Adiciona algumas colunas chave para identificação de relacionamentos 
+				            AddColumnsKey = 
+				                Table.AddColumn(
+				                    Table.AddColumn(
+				                        Table.AddColumn(AddColumnEstruturaPDV,
+				                        "Key PDVCiclo", each Text.From( [PDV] ) & " - " & Text.From( [Ciclo Captação] ), type text ), //Necessário para relacionar com a tabela de MetaPDV
+				                    "Key CicloData", each [Ciclo Captação] & " - " & Text.From( [DataFaturamento] ), type text ), //Necessário para separar os Inicios Safra e Backlog
+				                "Key PessoaCiclo", each Text.From( Number.ToText( [Pessoa] ) ) & " - " & Text.From( [Ciclo Captação] ), type text),
+				
+				            // União com a tabela Base Inicial
+				            MergeBase = Table.NestedJoin(
+				                AddColumnsKey, { "Key PessoaCiclo" }, 
+				                f_BaseAtivaINICIAL, { "Key PessoaCiclo" }, 
+				                "f_BaseAtivaINICIAL", JoinKind.LeftOuter ),
+				            
+				            // Expandir a coluna de Codigo Estrutura para identificar os revendedores presentes na base congelada
+				            ExpandBase = Table.ExpandTableColumn( MergeBase, "f_BaseAtivaINICIAL", { "CodigoEstruturaComercial" }, { "CodBaseInicial" } ),
+				
+				            // Alteração do tipo da coluna expandida para corresponder a texto
+				            ChangeTypeBase = Table.TransformColumnTypes( ExpandBase, { {"CodBaseInicial", type text } } ),
+				
+				            // Substituição de retorno dos revendedores que não estão na base congelada, para trazer a informação que se trata de um IR
+				            ReplaceNull = Table.ReplaceValue( ChangeTypeBase, null, "Revendedor IR", Replacer.ReplaceValue, { "CodBaseInicial" } ),
+				
+				            // Adiciona uma coluna para definir a estruta dele de acordo com a informação da base congelada ou se tratando de um IR
+				            AddColumnCodFinal = Table.AddColumn(
+				                ReplaceNull, "CodFinal", each
+				                    if [CodBaseInicial] = "Revendedor IR"
+				                    then Text.From( [Cód Estrutura] )
+				                    else Text.From( [CodBaseInicial] ),
+				                type text
+				            ),
+				
+				            // Adiciona a coluna de chave de estrutura
+				            AddColumnKeysStructure = 
+				                Table.AddColumn(
+				                    Table.AddColumn(AddColumnCodFinal, 
+				                    "Key CodEstruturaCiclo", each Text.From( [CodFinal]) & " - " & Text.From( [Ciclo Captação] ), type text), //Necessário para relacionar as metas de cada estrutura no ciclo devido)
+				                "Key PapelCodEstruturaCiclo", each Text.From( [Papel]) & " - " & Text.From( [Key CodEstruturaCiclo] ), type text), //Necessario para identificar os papeis que cada estrutura possui
+				
+				            // Seleção das colunas definitivas e ordenação das informações
+				            SelectColumnsFinal = Table.SelectColumns(AddColumnKeysStructure,
+				                {
+				                    "CodigoPedido", //determinar o ID do pedido, desempate para o primeiro pedido
+				                    "Pessoa", //ID do revendedor
+				                    "Papel", //necessário para segmentação de base
+				                    "QtdeMateriais", //volume de itens
+				                    "ValorPedido", //valor em R$
+				                    "Tipo de Entrega", //Necessário para DAX "pedido medio"
+				                    "MeioCaptacao", //separação de pedido omnichannel
+				                    "DataFaturamento", //ordenação do primeiro pedido pela data minima de faturamento no ciclo
+				                    "Ciclo Captação", //ciclo atual
+				                    "CodFinal", //estrutura a ser considerada para os calculos
+				                    "Cód Usuário Finalização", //uso para a tabela "Vendas por assistente"
+				                    "Usuario de Finalização", //Nome do vendedor
+				                    "CodCD", //Separação do codigo de cada PDV -- Codigo interno Boticario. Qual a necessidade ?
+				                    "Unidade", //RMBH ou UDI
+				                    "CodPDV", // Codigo de cada PDV sem o nome, somente o numero
+				                    "PDV", //codigo Captação ou ER
+				                    "EstruturaPDV", //Nome Captação ou ER
+				                    "Key CodEstruturaCiclo", //Capturar os resultados da estrutura no ciclo
+				                    "Key PDVCiclo" //usado no relacionamento com a tabela de MetaPDV
+				                }),
+				            // Definir tipagem das colunas
+				            ChangedType = Table.TransformColumnTypes(
+				                SelectColumnsFinal,{
+				                    {"QtdeMateriais", Int64.Type}, 
+				                    {"ValorPedido", Currency.Type}, 
+				                    {"DataFaturamento", type date}, 
+				                    {"Pessoa", Int64.Type}, 
+				                    {"Ciclo Captação", type text}, 
+				                    {"CodigoPedido", type text}, 
+				                    {"MeioCaptacao", type text}, 
+				                    {"Tipo de Entrega", type text}
+				                })
+				        in
+				            ChangedType,
 				    
-				    AddColumnCodPDV = 
-				        Table.AddColumn( AddColumnPDV, "CodPDV", each Text.BeforeDelimiter([CanalDistribuicao], " -"), type text ),
-				
-				    // Criando um mapeamento para a coluna EstruturaPDV
-				    EstruturaPDVMap = Record.FromList(
-				        {"Captação", "Captação", "ER", "ER", "ER", "ER"}, 
-				        {
-				            "20844 Captação", 
-				            "13793 Captação", 
-				            "20844 ER UDI", 
-				            "23275 ER ARI", 
-				            "21433 ER Rib. Neves", 
-				            "22372 ER Venda Nova"
-				        }
-				    ),
-				
-				    // Adicionar uma coluna pai para separar Captação de ER de acordo com o mapeamento realizado
-				    AddColumnEstruturaPDV = Table.AddColumn(AddColumnCodPDV, "EstruturaPDV", each 
-				        Record.FieldOrDefault(EstruturaPDVMap, [PDV], "Unidade não cadastrada"), type text),
-				
-				    // Adiciona algumas colunas chave para identificação de relacionamentos 
-				    AddColumnsKey = 
-				        Table.AddColumn(
-				            Table.AddColumn(AddColumnEstruturaPDV,
-				            "Key PDVCiclo", each Text.From([PDV]) & " - " & Text.From([Ciclo Captação]), type text), //Necessário para relacionar com a tabela de MetaPDV
-				        "Key CicloData", each [Ciclo Captação] & " - " & Text.From([DataFaturamento]), type text), //Necessário para separar os Inicios Safra e Backlog
-				
-				    KeyPessoaCiclo = 
-				        Table.AddColumn(AddColumnsKey, 
-				        "Key PessoaCiclo", each Text.From(Number.ToText([Pessoa])) & " - " & Text.From([Ciclo Captação]), type text),
-				
-				    // União com a tabela Base Inicial
-				    MergeBase = Table.NestedJoin(
-				        KeyPessoaCiclo, {"Key PessoaCiclo"}, 
-				        f_BaseAtivaINICIAL, {"Key PessoaCiclo"}, 
-				        "f_BaseAtivaINICIAL", JoinKind.LeftOuter),
+				    ListaTabelas = Table.AddColumn( ColunasSelecionadas, 
+				    "Tabelas", each fxConsultaPedidos( [Content] ), type table)[Tabelas],
 				    
-				    // Expandir a coluna de Codigo Estrutura para identificar os revendedores presentes na base congelada
-				    ExpandBase = Table.ExpandTableColumn(
-				        MergeBase, "f_BaseAtivaINICIAL", {"CodigoEstruturaComercial"}, {"CodBaseInicial"}
-				    ),
-				
-				    // Alteração do tipo da coluna expandida para corresponder a texto
-				    ChangeTypeBase = Table.TransformColumnTypes(ExpandBase, {{"CodBaseInicial", type text}}),
-				
-				    // Substituição de retorno dos revendedores que não estão na base congelada, para trazer a informação que se trata de um IR
-				    ReplaceNull = Table.ReplaceValue(
-				        ChangeTypeBase, null, "Revendedor IR", Replacer.ReplaceValue, {"CodBaseInicial"}
-				    ),
-				
-				    // Adiciona uma coluna para definir a estruta dele de acordo com a informação da base congelada ou se tratando de um IR
-				    AddColumnCodFinal = Table.AddColumn(
-				        ReplaceNull, "CodFinal", each
-				            if [CodBaseInicial] = "Revendedor IR"
-				            then Text.From([Cód Estrutura])
-				            else Text.From([CodBaseInicial]),
-				        type text
-				    ),
-				
-				    // Adiciona a coluna de chave de estrutura
-				    AddColumnKeysStructure = 
-				        Table.AddColumn(
-				            Table.AddColumn(AddColumnCodFinal, 
-				            "Key CodEstruturaCiclo", each Text.From([CodFinal]) & " - " & Text.From([Ciclo Captação]), type text), //Necessário para relacionar as metas de cada estrutura no ciclo devido)
-				        "Key PapelCodEstruturaCiclo", each Text.From([Papel]) & " - " & Text.From([Key CodEstruturaCiclo]), type text), //Necessario para identificar os papeis que cada estrutura possui
-				
-				    // Seleção das colunas definitivas e ordenação das informações
-				    SelectColumnsFinal = Table.SelectColumns(AddColumnKeysStructure,
-				        {
-				            "Date modified", // Necessaria para o Incremental Refresh
-				            "CodigoPedido", //determinar o ID do pedido, desempate para o primeiro pedido
-				            "Pessoa", //ID do revendedor
-				            "Papel", //necessário para segmentação de base
-				            "QtdeMateriais", //volume de itens
-				            "ValorPedido", //valor em R$
-				            "Tipo de Entrega", //Necessário para DAX "pedido medio"
-				            "MeioCaptacao", //separação de pedido omnichannel
-				            "DataFaturamento", //ordenação do primeiro pedido pela data minima de faturamento no ciclo
-				            "Ciclo Captação", //ciclo atual
-				            "CodFinal", //estrutura a ser considerada para os calculos
-				            "Cód Usuário Finalização", //uso para a tabela "Vendas por assistente"
-				            "Usuario de Finalização", //Nome do vendedor
-				            "CodCD", //Separação do codigo de cada PDV -- Codigo interno Boticario. Qual a necessidade ?
-				            "Unidade", //RMBH ou UDI
-				            "CodPDV", // Codigo de cada PDV sem o nome, somente o numero
-				            "PDV", //codigo Captação ou ER
-				            "EstruturaPDV", //Nome Captação ou ER
-				            "Key CodEstruturaCiclo", //Capturar os resultados da estrutura no ciclo
-				            "Key PDVCiclo" //usado no relacionamento com a tabela de MetaPDV
-				        }),
-				    // Definir tipagem das colunas
-				    ChangedType = Table.TransformColumnTypes(
-				        SelectColumnsFinal,{
-				            {"QtdeMateriais", Int64.Type}, 
-				            {"ValorPedido", Currency.Type}, 
-				            {"DataFaturamento", type date}, 
-				            {"Pessoa", Int64.Type}, 
-				            {"Ciclo Captação", type text}, 
-				            {"CodigoPedido", type text}, 
-				            {"MeioCaptacao", type text}, 
-				            {"Tipo de Entrega", type text}
-				        })
+				    CombinarTabelas = Table.Combine ( ListaTabelas )
 				in
-				    ChangedType
+				    CombinarTabelas
 				```
 
 	annotation PBI_NavigationStepName = Navegação
